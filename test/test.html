@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="src/css/jAutochecklist.css" rel="stylesheet" />
+        <script src="jquery-1.10.2.js"></script>
+        <script src="src/js/jAutochecklist.js"></script>
+
+    </head>
+    <body style="padding-top: 50px">
+
+        <select id="list" name="toto"  multiple>
+            <option data-test="toto">Item</option>
+            <option>Another one</option>
+            <optgroup label="group">
+                <option>Last one</option>
+                <option>Last one</option>
+            </optgroup>
+            <option>Last one</option>
+            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee</option>
+        </select>
+
+        <script>
+            var i = 0;
+            $('#list')
+            .jAutochecklist({
+                onItemClick: function(value, item){
+                    console.log(item.data('test'));
+                },
+                autocompleteStyle: {
+//                    enable: true,
+//                    attachTo: '#toto'
+                },
+//                remote: {
+//                    source: 'source.json'
+//                },
+                width: 400
+            });
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,38 @@
+{
+    "name": "jAutochecklist",
+    "version": "1.2.8",
+    "authors": [
+        "Thanh Trung NGUYEN <flyingangel1987@gmail.com>"
+    ],
+    "description": "Create an user-friendly select list with autocomplete",
+    "main": [
+        "dist/js/jautochecklist.js",
+        "dist/js/jautochecklist.min.js",
+        "dist/css/jautochecklist.css",
+        "dist/css/jautochecklist.min.js",
+    ],
+    "keywords": [
+        "jautochecklist",
+        "select",
+        "list",
+        "list",
+        "autocomplete"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/flyingangel/jAutochecklist",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests",
+        ".jshintrc",
+        "Gruntfile.js",
+        "package.json",
+        "*.md",
+        "AUTHORS.txt"
+    ],
+    "devDependencies": {
+        "jquery": ">=1.7.2"
+    }
+}
