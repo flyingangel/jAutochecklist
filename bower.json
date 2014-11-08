@@ -1,5 +1,5 @@
 {
-    "name": "jAutochecklist",
+    "name": "jautochecklist",
     "version": "1.2.8",
     "authors": [
         "Thanh Trung NGUYEN <flyingangel1987@gmail.com>"
@@ -9,12 +9,11 @@
         "dist/js/jautochecklist.js",
         "dist/js/jautochecklist.min.js",
         "dist/css/jautochecklist.css",
-        "dist/css/jautochecklist.min.js",
+        "dist/css/jautochecklist.min.js"
     ],
     "keywords": [
         "jautochecklist",
         "select",
-        "list",
         "list",
         "autocomplete"
     ],

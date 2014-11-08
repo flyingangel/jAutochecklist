@@ -139,7 +139,7 @@
                 autocompleteStyle: {
                     enable: false,   //enable autocomplete style
 //                    attachTo: null,  //if no set, attach to the internal input by default (selector) @TODO
-                    separator: [';', ' ', '.', ',', '?', '!', ';', '/', '(', ')', '&', '<', '>', '|'],   //trigger word search after these chars only
+                    separator: ' ;.,?!;/()&<>|',   //trigger word search after these chars only
                     minLength: 3
                 }
             },
@@ -1248,21 +1248,19 @@
                 });
 
         },
-        _getWordsList: function(str, separator){
-            var charList = separator.join('');
+        _getWordsList: function(str, charList){
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[' + charList + ']+');
 
             return str.split(regex);
         },
-        _getLastWord: function(str, separator){
-            var str_arr = fn._getWordsList(str, separator);
+        _getLastWord: function(str, charList){
+            var str_arr = fn._getWordsList(str, charList);
             var val = str_arr[str_arr.length - 1] || '';
 
             return val;
         },
-        _replaceLastWord: function(str, replacement, separator){
-            var charList = separator.join('');
+        _replaceLastWord: function(str, replacement, charList){
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[^' + charList + ']+$');
             str = str.replace(regex, replacement);
@@ -3068,7 +3066,7 @@
                     var json = [];
                     //if values are set otherwise it's an empty list
                     if ((!settings.multiple && values !== null) || (settings.multiple && values.length))
-                        json = settings.chainableSource(obj, values);
+                        json = settings.chainableSource(obj, values, $this);
                     $this.jAutochecklist('buildFromJSON', json);
                     //return false to stop update of the next of the next one
                     return false;

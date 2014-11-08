@@ -512,7 +512,7 @@
     left: 0;
     z-index: 1030;
     width: 100% !important;
-    height: 100%;
+    height: 100% !important;
     font-size: 18px;
 }
 .mobile-style * {
@@ -537,17 +537,20 @@
 .mobile-style .jAutochecklist_listItem {
     background: white;
     line-height: 50px;
+    filter:none;
 }
 .mobile-style .jAutochecklist_listItem:hover {
     color: black;
     text-shadow: none;
+    background: white;
 }
 .mobile-style .jAutochecklist_listItem_group_empty:hover {
     color: #ccc;
 }
 .mobile-style .jAutochecklist_listItem.selected {
-    color: cornflowerblue;
+    color: cornflowerblue !important;
     text-shadow: none;
+    background: white;
 }
 .mobile-style .jAutochecklist_listItem.locked {
     background: #f8f8f8

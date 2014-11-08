@@ -3,9 +3,9 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="src/css/jAutochecklist.css" rel="stylesheet" />
-        <script src="jquery-1.10.2.js"></script>
-        <script src="src/js/jAutochecklist.js"></script>
+        <link href="../src/css/jAutochecklist.css" rel="stylesheet" />
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../src/js/jAutochecklist.js"></script>
 
     </head>
     <body style="padding-top: 50px">
@@ -25,17 +25,8 @@
             var i = 0;
             $('#list')
             .jAutochecklist({
-                onItemClick: function(value, item){
-                    console.log(item.data('test'));
-                },
-                autocompleteStyle: {
-//                    enable: true,
-//                    attachTo: '#toto'
-                },
-//                remote: {
-//                    source: 'source.json'
-//                },
-                width: 400
+                width: 400,
+                theme: 'bootstrap2'
             });
         </script>
 

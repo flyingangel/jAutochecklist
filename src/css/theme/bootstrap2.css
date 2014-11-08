@@ -1,4 +1,4 @@
-.bootstrap2.jAutochecklist {height: 30px; border-radius: 4px}
+.bootstrap2.jAutochecklist_wrapper {height: 30px; border-radius: 4px}
 .bootstrap2 .jAutochecklist_dropdown_wrapper {
     border-radius: 4px;
     background-color: #F5F5F5;
@@ -25,7 +25,7 @@
 .bootstrap2 .jAutochecklist_dropdown input {padding: 0 18px}
 .bootstrap2 .jAutochecklist_list {padding: 5px 0; border-radius: 6px; margin-top: 2px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)}
 .bootstrap2 .jAutochecklist_listItem, .bootstrap2 .jAutochecklist_noresult {padding: 3px 20px}
-.bootstrap2 .jAutochecklist_listItem:hover, .bootstrap2 .jAutochecklist_listItem.selected {
+.bootstrap2 .jAutochecklist_listItem:hover {
     text-shadow: none;
     color: #FFF;
     background-color: #0081C2;
@@ -37,7 +37,13 @@
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
+.bootstrap2 .jAutochecklist_listItem.selected {
+    background-color: #0081C2;
+    background-image: none;
+    filter: none;
+}
 .bootstrap2 .jAutochecklist_listItem.jAutochecklist_listItem_group_empty { font-size: 11px; text-transform:uppercase; color: #999;}
+.bootstrap2 .jAutochecklist_listItem.jAutochecklist_listItem_group_empty.selected { color: white;}
 .bootstrap2.jAutochecklist_single .jAutochecklist_listItem.jAutochecklist_listItem_group_empty:hover {
     background: white;
     background: rgba(255, 255, 255, 0.95);
