@@ -595,11 +595,11 @@
                 json = $.parseJSON(json);
 
             //it's an array
-            var new_json = [];
+            var i, new_json = [];
             if (json instanceof Array){
                 //convert if it's an array of non object item
                 if (json.length && typeof json[0] !== 'object'){
-                    for (var i = 0; i < json.length; i++) {
+                    for (i = 0; i < json.length; i++) {
                         new_json.push({
                             html: json[i],
                             val: i
@@ -611,11 +611,13 @@
             }
             //json of value=>label items
             else {
-                for (var i in json) {
-                    new_json.push({
-                        html: json[i],
-                        val: i
-                    });
+                for (i in json) {
+                    if (json.hasOwnProperty(i)){
+                        new_json.push({
+                            html: json[i],
+                            val: i
+                        });
+                    }
                 }
 
                 json = new_json;
@@ -688,9 +690,9 @@
                 if (key === 27){
                     //if use absolute position simulate escape key on dummy element
                     if (!isMobile && settings.absolutePosition){
-                        var e = $.Event("keydown");
+                        var ev = $.Event('keydown');
                         key = 27;
-                        $('div.' + pluginName + '_dummy').trigger(e);
+                        $('div.' + pluginName + '_dummy').trigger(ev);
                     }
                     fn._close(self);
                 }
@@ -741,9 +743,9 @@
                             fn._open(self, false);
                         
                         //clear the previous timer
-                        clearTimeout(timer);
+                        window.clearTimeout(timer);
                         //set a timer to reduce server charge
-                        timer = setTimeout(function(){
+                        timer = window.setTimeout(function(){
                             //predict the next word
                             if (remote.fnPredict && !settings.autocompleteStyle.enable)
                                 remote.fnPredict(val, prediction, fn._predict);
@@ -788,8 +790,8 @@
             //show popup
             if (popup){
                 dropdown.on('mouseover.' + pluginName, function(){
-                    clearTimeout(popup.data('timeout'));
-                    var timeout = setTimeout(function(){
+                    window.clearTimeout(popup.data('timeout'));
+                    var timeout = window.setTimeout(function(){
                         //if have at least one element
                         if (fn._count(self) && !wrapper.hasClass(pluginName + '_disabled')){
                             //if using absolute position, we need to move the popup to outside
@@ -804,8 +806,8 @@
                 //if list is not opened, hide popup if mouse leave
                 dropdown.add(popup).on('mouseout.' + pluginName, function(){
                     if (ul.is(':hidden')){
-                        clearTimeout(popup.data('timeout'));
-                        var timeout = setTimeout(function(){
+                        window.clearTimeout(popup.data('timeout'));
+                        var timeout = window.setTimeout(function(){
                             popup.hide();
                             //move back to the list
                             if (settings.absolutePosition && ul.is(':hidden'))
@@ -816,7 +818,7 @@
                 });
 
                 popup.on('mouseover.' + pluginName, function(){
-                    clearTimeout(popup.data('timeout'));
+                    window.clearTimeout(popup.data('timeout'));
                 })
                 //on popup item click, deselect that item
                 .on('mousedown.' + pluginName, 'div', function(){
@@ -971,7 +973,7 @@
                     if (settings.onItemClick){
                         //if return false, revert to previous selection
                         if (settings.onItemClick && settings.onItemClick(input.prop('value'), $this, valBefore, fn._get(self), checked) === false){
-                            for (var i = 0; i < checkboxes.length; i++) {
+                            for (i = 0; i < checkboxes.length; i++) {
                                 if (checkboxes[i])
                                     checkboxes[i].prop('checked', !checked);
                             }
@@ -1056,7 +1058,7 @@
                         scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
                     },
                     menuStyle.scrollSpyAnimationDuration, function(){
-                        setTimeout(function(){
+                        window.setTimeout(function(){
                             //deselect all then select the clicked one
                             var li = $this.closest('li.' + pluginName + '_listItem');
                             li.closest('ul').children('li.selected').removeClass('selected');
@@ -1108,7 +1110,7 @@
                 //as long as the wrapper has focus, focus on the input
                 //IE hack
                 if (!isMobile)
-                    setTimeout(function(){
+                    window.setTimeout(function(){
                         input.focus();
                     });
             })
@@ -1117,7 +1119,7 @@
                 if (!settings.labelStyle && $(e.target).is($(this)) || isMobile)
                     return;
                 //need to add delay for activeElement to be set
-                setTimeout(function(){
+                window.setTimeout(function(){
                     //close list if the active element isn't any child of the wrapper
                     if (!$(document.activeElement).closest(wrapper).length)
                         fn._close(self);
@@ -1231,11 +1233,11 @@
             if (settings.openOnHover){
                 var timeout;
                 wrapper.on('mouseenter.' + pluginName, function(){
-                    clearTimeout(timeout);
+                    window.clearTimeout(timeout);
                     fn._open(self);
                 })
                 .on('mouseleave.' + pluginName, function(){
-                    timeout = setTimeout(function(){
+                    timeout = window.setTimeout(function(){
                         fn._close(self);
                     }, 500);
                 });
@@ -1503,7 +1505,7 @@
                 original = obj.find('li');
                 //update original
                 if (elements.listItem.li && elements.listItem.li.length)
-                    elements.listItem.li.each(function(k, v){
+                    elements.listItem.li.each(function(k){
                         $(this).data(original.eq(k).data());
                     });
             }
@@ -1513,7 +1515,7 @@
                     original = original.slice(1);
 
                 if (elements.listItem.checkbox && elements.listItem.checkbox.length)
-                    elements.listItem.checkbox.each(function(k, v){
+                    elements.listItem.checkbox.each(function(k){
                         $(this).closest('li').data(original.eq(k).data());
                     });
             }
@@ -2039,13 +2041,13 @@
                 return;
 
             var children = fn._getChildren(li, settings.selectorChild);
-            var select;
+            var select, i;
             var checkbox = li.children('input.' + pluginName + '_listItem_input');
 
             if (groupType === 0 || groupType === 3){
                 //by default selected, find at least one item not selected
                 select = true;
-                for (var i = 0; i < children.length; i++) {
+                for (i = 0; i < children.length; i++) {
                     if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === false){
                         select = false;
                         break;
@@ -2055,7 +2057,7 @@
             else if (groupType === 1 || groupType === 4){
                 //by default not selected, find at least one selected
                 select = false;
-                for (var i = 0; i < children.length; i++) {
+                for (i = 0; i < children.length; i++) {
                     if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === true){
                         select = true;
                         break;
@@ -2097,7 +2099,7 @@
             var json = [];
             var locked_origin = null;
 
-            obj.children().each(function(k, v){
+            obj.children().each(function(k){
                 var t = $(this);
                 var className = this.className || '';
                 var locked = t.data('locked');
@@ -2347,15 +2349,17 @@
         },
         _createObjectRelationship: function(obj){
             for (var i in obj) {
-                var e = obj[i];
-                //if is not a child
-                if (!e.parentIndex)
-                    continue;
+                if (obj.hasOwnProperty(i)){
+                    var e = obj[i];
+                    //if is not a child
+                    if (!e.parentIndex)
+                        continue;
 
-                if (!obj[e.parentIndex].children)
-                    obj[e.parentIndex].children = {};
+                    if (!obj[e.parentIndex].children)
+                        obj[e.parentIndex].children = {};
 
-                obj[e.parentIndex].children[i] = obj[i];
+                    obj[e.parentIndex].children[i] = obj[i];
+                }
             }
 
             return obj;
@@ -3006,7 +3010,7 @@
                 //no need to handle firstItemSelectAll
                 //update original
                 if (data.elements.listItem.li && data.elements.listItem.li.length)
-                    data.elements.listItem.li.each(function(k, v){
+                    data.elements.listItem.li.each(function(k){
                         if ($(this).children('input.jAutochecklist_listItem_input').prop('checked'))
                             original.eq(k).attr('data-selected', '1');
                         else
@@ -3019,7 +3023,7 @@
                     original = original.slice(1);
 
                 if (data.elements.listItem.checkbox && data.elements.listItem.checkbox.length)
-                    data.elements.listItem.checkbox.each(function(k, v){
+                    data.elements.listItem.checkbox.each(function(k){
                         //we use .attr to force add the attribute to the DOM
                         if (this.checked)
                             original.eq(k).attr('selected', 'selected');
@@ -3078,6 +3082,7 @@
          * http://stackoverflow.com/questions/11919065/sort-an-array-by-the-levenshtein-distance-with-best-performance-in-javascript
          */
         _levenshtein: function(s, t){
+            var i, j;
             var d = []; //2d matrix
 
             // Step 1
@@ -3090,21 +3095,21 @@
                 return n;
 
             //Create an array of arrays in javascript (a descending loop is quicker)
-            for (var i = n; i >= 0; i--)
+            for (i = n; i >= 0; i--)
                 d[i] = [];
 
             // Step 2
-            for (var i = n; i >= 0; i--)
+            for (i = n; i >= 0; i--)
                 d[i][0] = i;
-            for (var j = m; j >= 0; j--)
+            for (j = m; j >= 0; j--)
                 d[0][j] = j;
 
             // Step 3
-            for (var i = 1; i <= n; i++) {
+            for (i = 1; i <= n; i++) {
                 var s_i = s.charAt(i - 1);
 
                 // Step 4
-                for (var j = 1; j <= m; j++) {
+                for (j = 1; j <= m; j++) {
 
                     //Check the jagged ld total so far
                     if (i === j && d[i][j] > 4)
@@ -3126,7 +3131,7 @@
                     d[i][j] = mi; // Step 6
 
                     //Damerau transposition
-                    if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j){
+                    if (i > 1 && j > 1 && s_i === t.charAt(j - 2) && s.charAt(i - 2) === t_j){
                         d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
                     }
                 }
