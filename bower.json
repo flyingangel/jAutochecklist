@@ -6,10 +6,8 @@
     ],
     "description": "Create an user-friendly select list with autocomplete",
     "main": [
-        "dist/js/jautochecklist.js",
-        "dist/js/jautochecklist.min.js",
-        "dist/css/jautochecklist.css",
-        "dist/css/jautochecklist.min.js"
+        "build/js/jautochecklist.min.js",
+        "build/css/jautochecklist.min.js"
     ],
     "keywords": [
         "jautochecklist",
@@ -32,6 +30,7 @@
         "AUTHORS.txt"
     ],
     "devDependencies": {
-        "jquery": ">=1.7.2"
+        "jquery": ">=1.7.2",
+        "jautochecklist": "~1.2.8"
     }
 }
