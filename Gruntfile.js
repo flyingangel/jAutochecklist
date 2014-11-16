@@ -31,7 +31,7 @@ module.exports = function(grunt){
             },
             my_target: {
                 files: {
-                    "build/js/<%= pkg.name %>.min.js": ['src/js/<%= pkg.name %>.js']
+                    "build/<%= pkg.name %>/js/<%= pkg.name %>.min.js": ['src/js/<%= pkg.name %>.js']
                 }
             }
         },
@@ -49,7 +49,7 @@ module.exports = function(grunt){
                 cwd: 'src/css/',
 //                src: ['*.css', '!*.min.css'],
                 src: ['<%= pkg.name %>.css'],
-                dest: 'build/css/',
+                dest: 'build/<%= pkg.name %>/css/',
                 ext: '.min.css'
             }
         }
