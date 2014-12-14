@@ -10,7 +10,7 @@
         "build/css/jautochecklist.min.js",
         "build/css/images/arrow.png",
         "build/css/images/loading.gif",
-        "build/css/images/valid.png",
+        "build/css/images/valid.png"
     ],
     "keywords": [
         "jautochecklist",
