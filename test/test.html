@@ -3,9 +3,9 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="../build/css/jAutochecklist.min.css" rel="stylesheet" />
+        <link href="../src/css/jAutochecklist.css" rel="stylesheet" />
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="../build/js/jAutochecklist.min.js"></script>
+        <script src="../src/js/jAutochecklist.js"></script>
 
     </head>
     <body style="padding-top: 50px">
@@ -18,15 +18,38 @@
                 <option>Last one</option>
             </optgroup>
             <option>Last one</option>
-            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee</option>
+            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
+            <option data-test="toto">Item</option>
+            <option>Another one</option>
+            <optgroup label="group">
+                <option>Last one</option>
+                <option>Last one</option>
+            </optgroup>
+            <option>Last one</option>
+            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
+            <option data-test="toto">Item</option>
+            <option>Another one</option>
+            <optgroup label="group">
+                <option>Last one</option>
+                <option>Last one</option>
+            </optgroup>
+            <option>Last one</option>
+            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
         </select>
+
+        <!--        <ul id="list">
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>4</li>
+                </ul>-->
 
         <script>
             var i = 0;
             $('#list')
             .jAutochecklist({
                 width: 400,
-                theme: 'bootstrap2'
+                listWidth: 'auto'
             });
         </script>
 

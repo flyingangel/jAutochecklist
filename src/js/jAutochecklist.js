@@ -173,6 +173,12 @@
 
                 if (isSelect)
                     settings.multiple = this.multiple;
+                else {
+                    var multiple = $this.data('multiple');
+                    //if data attribute is set, override JS setting
+                    if (multiple !== undefined)
+                        settings.multiple = multiple===1;
+                }
 
                 if (!settings.multiple){
                     settings.popup = false;
@@ -1510,7 +1516,7 @@
                     });
             }
             else {
-                original = obj.find('option');
+                original = obj.find('option, optgroup');
                 if (settings.firstItemSelectAll)
                     original = original.slice(1);
 
@@ -1795,7 +1801,7 @@
 
                 settings.animation ? list.fadeIn() : list.show();
                 if (settings.listWidth === 'auto' || settings.labelStyle)
-                    list.css('display', 'table');
+                    list.css('display', 'inline-block');
 
                 if (elements.popup)
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();

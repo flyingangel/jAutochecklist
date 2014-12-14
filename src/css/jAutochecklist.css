@@ -225,6 +225,7 @@
     border-bottom-right-radius: 3px;
     background: white; 	/*old browsers*/
     background: rgba(255, 255, 255, 0.95);
+    min-width: 100%;
 }
 .jAutochecklist_list::-webkit-scrollbar {
     width: 8px;
@@ -241,6 +242,10 @@
 .jAutochecklist_list::-webkit-scrollbar-track {
     border-left: 1px #eee dotted;
     border-top: 1px #eee dotted;
+}
+.jAutochecklist_list.display-table {
+    padding-right: 2px;
+    overflow-x: hidden;
 }
 .jAutochecklist_list.display-table li {
     white-space: nowrap;

@@ -1,13 +1,16 @@
 {
     "name": "jautochecklist",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "authors": [
         "Thanh Trung NGUYEN <flyingangel1987@gmail.com>"
     ],
     "description": "Create an user-friendly select list with autocomplete",
     "main": [
         "build/js/jautochecklist.min.js",
-        "build/css/jautochecklist.min.js"
+        "build/css/jautochecklist.min.js",
+        "build/css/images/arrow.png",
+        "build/css/images/loading.gif",
+        "build/css/images/valid.png",
     ],
     "keywords": [
         "jautochecklist",
@@ -30,7 +33,6 @@
         "AUTHORS.txt"
     ],
     "devDependencies": {
-        "jquery": ">=1.7.2",
-        "jautochecklist": "~1.2.8"
+        "jquery": ">=1.7.2"
     }
 }

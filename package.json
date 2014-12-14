@@ -1,6 +1,6 @@
 {
     "name": "jautochecklist",
-    "version": "1.2.80",
+    "version": "1.2.9",
     "description": "Create an user-friendly select list with autocomplete",
     "main": "Gruntfile.js",
     "directories": {
@@ -24,7 +24,9 @@
         "jautochecklist",
         "select",
         "list",
-        "autocomplete"
+        "multilist",
+        "autocomplete",
+        "jquery-plugin"
     ],
     "author": "Thanh Trung NGUYEN <flyingangel1987@gmail.com>",
     "license": "MIT",
