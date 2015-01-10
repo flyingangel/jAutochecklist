@@ -1,5 +1,5 @@
 /* jQuery plugin : jAutochecklist
- @Version: 1.28
+ @Version: 1.3.0
  @Desctrition: Create a list of checkbox with autocomplete
  @Website: https://code.google.com/p/jautochecklist/
  @Licence: MIT
@@ -111,6 +111,7 @@
                 remote: {
                     cache: true, //whether to cache found data (should be disable when loadMoreOnScroll is enable)
                     delay: 0, //the delay (in ms) before setting query to the remote source to reduce charge
+                    filter: false,  //autofilter after fetching data from the remote source, it means that the client side will handle word match
                     loadMoreOnScroll: false, //when scroll down, next data will be loaded (will conflict with cache)
                     minLength: 0, //the minimum length of the text
                     source: null, //source of data to fetch if fnQuery isn't defined
@@ -1495,7 +1496,7 @@
 
             if (!hasError){
                 //filter list item
-                var hasResult = fn._filterListItem(obj);
+                var hasResult = settings.remote.filter ? fn._filterListItem(obj) : true;
                 
                 if (!hasResult && settings.autocompleteStyle.enable)
                     fn._close(obj);
@@ -2433,8 +2434,10 @@
             //empty object
             var selectAll, checkbox;
 
-            if (!li)
+            if (!li){
+                ul.html(null);
                 li = $();
+            }
             else {
                 if (isAdd)
                     ul.append(li);

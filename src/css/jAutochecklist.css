@@ -1,4 +1,4 @@
-/*jAutochecklist CSS v1.28*/
+/*jAutochecklist CSS v1.3.0*/
 @import url(theme.css);
 
 .jAutochecklist_wrapper {
@@ -517,7 +517,7 @@
     z-index: 1030;
     width: 100% !important;
     height: 100% !important;
-    font-size: 18px;
+    font-size: 16px;
 }
 .mobile-style * {
     background-color: white;
@@ -575,6 +575,7 @@
 }
 .mobile-style .jAutochecklist_dropdown input {
     width: 50%;
+    font-size: 16px !important;
 }
 .mobile-style .jAutochecklist_remove_all {
     top: 18px;
