@@ -178,7 +178,7 @@
                     var multiple = $this.data('multiple');
                     //if data attribute is set, override JS setting
                     if (multiple !== undefined)
-                        settings.multiple = multiple===1;
+                        settings.multiple = multiple === 1;
                 }
 
                 if (!settings.multiple){
@@ -434,6 +434,9 @@
         getText: function(){
             return fn._getText(this);
         },
+        getValueAndText: function(){
+            return fn._getValueAndText(this);
+        },
         //set the values
         set: function(vals, clearAll){
             if (clearAll === undefined)
@@ -588,7 +591,7 @@
         /*
          *  PRIVATE
          */
-        _buildFromJSON: function(obj, json, showNoResult, isAdd){
+        _buildFromJSON: function(obj, json, showNoResult, isAdd, selected){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -632,7 +635,7 @@
 
             var elements = data.elements;
             var settings = data.settings;
-            var li = fn._buildItemFromJSON(json || [], settings, obj.data('name'));
+            var li = fn._buildItemFromJSON(json || [], settings, obj.data('name'), selected);
             var tmp = fn._insertList(elements.list, li, settings, isAdd, elements.mobile_popup);
 
             elements.dropdown.removeClass('loading');
@@ -743,12 +746,15 @@
                     if (val.length < remote.minLength)
                         return;
 
+                    //before emptying the list, we must remember the selected values
+                    var selected = fn._getValueAndText(self);
+
                     //if cache not exist, fetch from remote source
                     if (!cache || cache[val] === undefined){
                         //we dont know if there are results, open the list anyway
                         if (settings.autocompleteStyle.enable)
                             fn._open(self, false);
-                        
+
                         //clear the previous timer
                         window.clearTimeout(timer);
                         //set a timer to reduce server charge
@@ -757,7 +763,7 @@
                             if (remote.fnPredict && !settings.autocompleteStyle.enable)
                                 remote.fnPredict(val, prediction, fn._predict);
                             //user defined func
-                            fn._fetchData(self, val, 0);
+                            fn._fetchData(self, val, 0, selected);
                             //predict from local source
                             if (!remote.fnPredict && !settings.autocompleteStyle.enable)
                                 fn._setPredictionFromLocalSource(self);
@@ -767,7 +773,7 @@
                     else {  //load from cache
                         var json = cache[val];
                         if (json && json.length){
-                            fn._buildFromJSON(self, json);
+                            fn._buildFromJSON(self, json, true, false, selected);
                             hasResult = true;
                         }
                     }
@@ -775,7 +781,7 @@
                 else {  //using local source
                     hasResult = fn._filterListItem(self);
                 }
-                
+
                 if (hasResult && settings.autocompleteStyle.enable)
                     fn._open(self, false);
 
@@ -1310,7 +1316,7 @@
 
                     if (settings.accentInsensitive)
                         text = fn._removeAccent(text);
-                    
+
                     var index = text.indexOf(search);
                     var found = index !== -1;
                     //found but not begin of the sentence
@@ -1391,7 +1397,7 @@
             });
         },
         //fetch date from remote source
-        _fetchData: function(obj, val, offset){
+        _fetchData: function(obj, val, offset, selected){
             var data = obj.data(pluginName);
             var settings = data.settings;
             var remote = settings.remote;
@@ -1412,13 +1418,13 @@
                     //convert to array if empty
                     if (!json)
                         json = [];
-                    
+
                     var showNoResult = true;
                     if (settings.autocompleteStyle.enable)
                         showNoResult = false;
 
                     //build the list from a VALID json
-                    fn._buildFromJSON(obj, json, showNoResult, offset > 0);
+                    fn._buildFromJSON(obj, json, showNoResult, offset > 0, selected);
 
                     //cache only when offset=0
                     if (remote.cache && !offset){
@@ -1497,14 +1503,14 @@
             if (!hasError){
                 //filter list item
                 var hasResult = settings.remote.filter ? fn._filterListItem(obj) : true;
-                
+
                 if (!hasResult && settings.autocompleteStyle.enable)
                     fn._close(obj);
 
                 if (showNoResult)
                     fn._setClosestMatch(obj, hasResult);
             }
-            
+
             //copy attributes data
             var original;
             if (obj.is('ul')){
@@ -1951,6 +1957,25 @@
 
             return val;
         },
+        _getValueAndText: function(obj){
+            var data = obj.data(pluginName);
+            if (!data || !data.elements.listItem.li)
+                return [];
+
+            var val = [];
+            data.elements.listItem.li.filter('li.selected').each(function(){
+                var $this = $(this);
+                var o = {};
+                var v = $this.children('input.jAutochecklist_listItem_input').val();
+                o[v] = $this.text();
+                val.push(o);
+                //break the loop if is single select
+                if (!data.settings.multiple)
+                    return false;
+            });
+
+            return val;
+        },
         _set: function(obj, vals, clearAll){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
@@ -2216,7 +2241,7 @@
 
             return json;
         },
-        _buildItemFromJSON: function(json, settings, name){
+        _buildItemFromJSON: function(json, settings, name, selected){
             //strip white spaces
             if (name)
                 name = name.replace(/^\s+|\s+$/g, '');
@@ -2234,13 +2259,39 @@
             var li = '';
             var type = settings.multiple ? 'checkbox' : 'radio';
             var count = 0;
+            var i;
 
             //sort items
             if (settings.alphabetical)
                 json = fn._sortListItems(json);
+            
+            //clone because we dont want to modify the original json
+            var list = selected && selected.length ? json.slice() : json;
 
-            for (var i = 0; i < json.length; i++) {
-                var e = json[i];
+            //add element if additional selected element
+            if (selected && selected.length){
+                //add delimiter class
+                list[list.length-1].className = 'delimiter';
+                
+                for (i = 0; i < selected.length; i++) {
+                    //get the first key value pair
+                    var txt;
+                    for (var k in selected[i])
+                        if (selected[i].hasOwnProperty(k)){
+                            txt = selected[i][k];
+                            break;
+                        }
+
+                    list.push({
+                        val: k,
+                        html: txt,
+                        selected: true
+                    });
+                }
+            }
+
+            for (i = 0; i < list.length; i++) {
+                var e = list[i];
                 var val = (e.val === '' || e.val === undefined || e.val === null) ? '' : e.val;
                 var className = (e.className ? e.className + ' ' : '') + pluginName + '_listItem';
                 var isGroup = e.isGroup || false;

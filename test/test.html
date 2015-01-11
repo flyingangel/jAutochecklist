@@ -11,30 +11,7 @@
     <body style="padding-top: 50px">
 
         <select id="list" name="toto"  multiple>
-            <option data-test="toto">Item</option>
-            <option>Another one</option>
-            <optgroup label="group">
-                <option>Last one</option>
-                <option>Last one</option>
-            </optgroup>
-            <option>Last one</option>
-            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
-            <option data-test="toto">Item</option>
-            <option>Another one</option>
-            <optgroup label="group">
-                <option>Last one</option>
-                <option>Last one</option>
-            </optgroup>
-            <option>Last one</option>
-            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
-            <option data-test="toto">Item</option>
-            <option>Another one</option>
-            <optgroup label="group">
-                <option>Last one</option>
-                <option>Last one</option>
-            </optgroup>
-            <option>Last one</option>
-            <option>Last onelllllllllllll ong text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee  text aaaaaaaaa eeeeeeeeeeee</option>
+            <option value="test" data-test="toto" selected>Item</option>
         </select>
 
         <!--        <ul id="list">
@@ -44,12 +21,21 @@
                     <li>4</li>
                 </ul>-->
 
+        <button type="button" id="check">Check</button>
+
         <script>
             var i = 0;
             $('#list')
             .jAutochecklist({
-                width: 400,
-                listWidth: 'auto'
+                remote: {
+                    source: 'source.json',
+                    minLength: 2
+                }
+            });
+
+            $('#check').click(function(){
+                var val = $('#list').val();
+                alert(val);
             });
         </script>
 

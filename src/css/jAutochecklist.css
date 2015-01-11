@@ -368,6 +368,10 @@
 .jAutochecklist_listItem .overflow {
     overflow: auto;
 }
+.jAutochecklist_listItem.delimiter {
+    border-bottom: 1px #AAA dotted;
+    margin-bottom: 2px;
+}
 .jAutochecklist_disabled .jAutochecklist_result,
 .jAutochecklist_disabled .jAutochecklist_input,
 .jAutochecklist_disabled .jAutochecklist_dropdown_wrapper,
