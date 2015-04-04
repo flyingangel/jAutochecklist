@@ -10,7 +10,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-(function($, document, window, undefined) {
+(function($, document, window, undefined){
     'use strict';
 
     var pluginName = 'jAutochecklist';
@@ -20,27 +20,27 @@
     var dragging_state;
 
     //detect mobile. http://detectmobilebrowsers.com/
-    var isMobile = (function(a) {
+    var isMobile = (function(a){
         return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)));
     })(navigator.userAgent || navigator.vendor || window.opera);
 
     //if format isn't implemented
-    if (!String.prototype.format) {
-        String.prototype.format = function() {
+    if (!String.prototype.format){
+        String.prototype.format = function(){
             var args = arguments;
-            return this.replace(/{(\d+)}/g, function(match, number) {
+            return this.replace(/{(\d+)}/g, function(match, number){
                 return args[number] !== undefined ? args[number] : match;
             });
         };
     }
 
     //drag handling
-    $(window).on('mouseup.' + pluginName, function() {
+    $(window).on('mouseup.' + pluginName, function(){
         dragging = false;
     });
 
     var fn = {
-        init: function(options) {
+        init: function(options){
             //default setting
             var config = $.extend(true, {
                 absolutePosition: false, //use absolute position instead of inline
@@ -77,6 +77,7 @@
                 popupSizeDelta: 100, //this will add to the popup width
                 //text
                 textAllSelected: 'All', //text when all selected
+                textClose: 'Done',  //text close in mobile style
                 textCloseMatch: 'Did you mean "{0}" ?', //text when found a close match, {0} will be replaced by a word
                 textEmpty: 'Please select...', //the default text
                 textMoreItem: 'and {0} more...', //text on popup when there are more items, {0} will be replaced with a number
@@ -120,10 +121,10 @@
                     //input = the underlying input object
                     //callback  = callback function used to build suggestion
                     fnQuery: null      //func(obj, text, offset, callback)   custom function that handle query
-                            //obj       = the current jQuery list object
-                            //text      = the typing search text
-                            //offset    = the offset position of the result
-                            //callback  = callback function used to build the list
+                    //obj       = the current jQuery list object
+                    //text      = the typing search text
+                    //offset    = the offset position of the result
+                    //callback  = callback function used to build the list
                 },
                 menuStyle: {
                     enable: false, //enable menu style
@@ -135,18 +136,23 @@
                     scrollSpyAnimationDuration: 500,
                     scrollSpyOffsetTop: 20,
                     onScrollSpyActivate: null   //func(element) event when scroll spy triggered
-                            //element = triggered list item element
+                    //element = triggered list item element
                 },
                 autocompleteStyle: {
                     enable: false, //enable autocomplete style
                     //                    attachTo: null,  //if no set, attach to the internal input by default (selector) @TODO
                     separator: ' ;.,?!;/()&<>|', //trigger word search after these chars only
                     minLength: 3
+                },
+                widget: {
+                    source: null, //widget to append to the list: selector, DOM, jquery object, function
+                    onInputChange: null,    //input inside widget is changed
+                    onValidate: null    //validate, close the list
                 }
             },
             options);
 
-            return this.each(function() {
+            return this.each(function(){
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 var id = this.id;
@@ -167,7 +173,7 @@
 
                 //data passed by attribute json will override the settings
                 var json = $this.data('json');
-                if (json) {
+                if (json){
                     //json = $.parseJSON(json); //it's already an object
                     settings = $.extend(true, settings, json);
                 }
@@ -181,7 +187,7 @@
                         settings.multiple = multiple === 1;
                 }
 
-                if (!settings.multiple) {
+                if (!settings.multiple){
                     settings.popup = false;
                     settings.firstItemSelectAll = false;
                 }
@@ -190,7 +196,7 @@
                     settings.inline = true;
 
                 //if has menu-style consider it's an inline list
-                if ($this.hasClass('menu-style') || settings.menuStyle.enable) {
+                if ($this.hasClass('menu-style') || settings.menuStyle.enable){
                     settings.inline = true;
                     settings.arrow = false;
                     settings.menuStyle.enable = true;
@@ -200,7 +206,7 @@
                     settings.popup = false;
 
                 //label style
-                if ($this.hasClass('label-style') || settings.labelStyle) {
+                if ($this.hasClass('label-style') || settings.labelStyle){
                     settings.arrow = false;
                     settings.allowDeselectSingleList = false;
                     settings.popup = false;
@@ -208,7 +214,7 @@
                     settings.width = 'auto';
                 }
 
-                if ($this.hasClass('autocomplete-style') || settings.autocompleteStyle.enable) {
+                if ($this.hasClass('autocomplete-style') || settings.autocompleteStyle.enable){
                     settings.arrow = false;
                     settings.autocompleteStyle.enable = true;
                     settings.popup = false;
@@ -219,14 +225,29 @@
                     'class': pluginName + '_wrapper',
                     'tabindex': 0
                 })
-                        .width(settings.width === null ? $this.width() : settings.width)
-                        .append(
-                                ('<div class="{0}_popup"></div>'
-                                        + '<div class="{0}_dropdown_wrapper">'
-                                        + '<div class="{0}_arrow"><div></div></div>'
-                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" /><input class="{0}_input" placeholder="{1}" /><div class="{0}_remove_all"></div><div class="{0}_close">Done</div></div></div>'
-                                        + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch)
-                                );
+                .width(settings.width === null ? $this.width() : settings.width)
+                .append(
+                ('<div class="{0}_popup"></div>'
+                + '<div class="{0}_dropdown_wrapper">'
+                + '<div class="{0}_arrow"><div></div></div>'
+                + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" /><input class="{0}_input" placeholder="{1}" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
+                + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch, settings.textClose)
+                );
+
+                if (settings.widget.source){
+                    var wg_html;
+                    if (typeof settings.widget.source === 'string' || settings.widget.source instanceof window.Element)
+                        wg_html = $(settings.widget.source);
+                    else if (settings.widget.source instanceof jQuery)
+                        wg_html = settings.widget.source;
+                    else if (typeof settings.widget.source === 'function')
+                        wg_html = settings.widget.source();
+
+                    if (widget){
+                        var wg = $('<div>').html(wg_html).addClass(pluginName + '_widget');
+                        wrapper.append(wg).addClass('has-widget');
+                    }
+                }
 
                 if (id)
                     wrapper.attr('id', pluginName + '_wrapper_' + id);
@@ -274,9 +295,10 @@
                 var ul = wrapper.find('ul.' + pluginName + '_list');
                 var removeAll = wrapper.find('div.' + pluginName + '_remove_all');
                 var close = isMobile ? wrapper.find('div.' + pluginName + '_close') : null;
+                var widget = wrapper.find('div.' + pluginName + '_widget');
 
                 //manual size of the list
-                if (settings.listWidth) {
+                if (settings.listWidth){
                     if (settings.listWidth === 'auto' && !isMobile)
                         ul.addClass('display-table');
                     else
@@ -288,7 +310,7 @@
                     });
                 if (!settings.menuStyle.search && settings.menuStyle.enable)
                     wrapper.find('div.' + pluginName + '_dropdown_wrapper').remove();
-                if (!settings.arrow) {
+                if (!settings.arrow){
                     arrow.remove();
                     arrow = null;
                     if (settings.rtl)
@@ -300,11 +322,11 @@
                             right: 5
                         });
                 }
-                if (!settings.popup) {
+                if (!settings.popup){
                     popup.remove();
                     popup = null;
                 }
-                if (settings.inline || settings.autocompleteStyle.enable) {
+                if (settings.inline || settings.autocompleteStyle.enable){
                     result.remove();
                     result = null;
                 }
@@ -316,7 +338,7 @@
 
                 //list item
                 var name;
-                if (isSelect) {
+                if (isSelect){
                     json = fn._buildFromSelect($this, settings);
                     name = this.name || $this.data('name') || '';
                     //remove name to prevent bug
@@ -352,6 +374,7 @@
                     selectAll: tmp.selectAll,
                     removeAll: removeAll,
                     close: close,
+                    widget: widget,
                     list: ul,
                     listItem: {
                         li: tmp.li,
@@ -378,8 +401,8 @@
                     settings.onInit();
             });
         },
-        destroy: function() {
-            return this.each(function() {
+        destroy: function(){
+            return this.each(function(){
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -395,55 +418,55 @@
                 this.setAttribute('name', $this.data('name'));
             });
         },
-        selectAll: function() {
-            return this.each(function() {
+        selectAll: function(){
+            return this.each(function(){
                 fn._selectAll($(this), true);
             });
         },
-        deselectAll: function() {
-            return this.each(function() {
+        deselectAll: function(){
+            return this.each(function(){
                 fn._selectAll($(this), false);
             });
         },
         //open the list, can only open one a time
-        open: function() {
-            return this.each(function() {
+        open: function(){
+            return this.each(function(){
                 fn._open($(this));
             });
         },
         //close the list
-        close: function() {
-            return this.each(function() {
+        close: function(){
+            return this.each(function(){
                 fn._close($(this));
             });
         },
         //update the result box basing on the selected element
-        update: function() {
-            return this.each(function() {
+        update: function(){
+            return this.each(function(){
                 fn._update($(this));
             });
         },
         //count selected item, can only count one instance
-        count: function() {
+        count: function(){
             return fn._count(this);
         },
         //get the values, can only get value of one instance
-        get: function() {
+        get: function(){
             return fn._get(this);
         },
         //get all values, including non selected values
-        getAll: function() {
+        getAll: function(){
             return fn._getAll($(this));
         },
         //get text of selected items
-        getText: function() {
+        getText: function(){
             return fn._getText(this);
         },
-        getValueAndText: function() {
+        getValueAndText: function(){
             return fn._getValueAndText(this);
         },
         //set the values
-        set: function(vals, clearAll) {
+        set: function(vals, clearAll){
             if (clearAll === undefined)
                 clearAll = false;
 
@@ -455,11 +478,11 @@
             for (var i = 0; i < vals.length; i++)
                 vals[i] = vals[i] === null || vals[i] === undefined ? vals[i] : vals[i].toString();
 
-            return this.each(function() {
+            return this.each(function(){
                 fn._set($(this), vals, clearAll);
             });
         },
-        unset: function(vals) {
+        unset: function(vals){
             //convert to array if not array
             if (!(vals instanceof Array))
                 vals = [vals];
@@ -468,13 +491,13 @@
             for (var i = 0; i < vals.length; i++)
                 vals[i] = vals[i].toString();
 
-            return this.each(function() {
+            return this.each(function(){
                 fn._unset($(this), vals);
             });
         },
         //disable
-        disable: function(vals) {
-            return this.each(function() {
+        disable: function(vals){
+            return this.each(function(){
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
@@ -483,13 +506,13 @@
                 if (vals === undefined)
                     data.elements.wrapper.addClass(pluginName + '_disabled');
                 //disable element
-                else if (vals) {
+                else if (vals){
                     //convert to array if not array
                     if (!(vals instanceof Array))
                         vals = [vals];
 
-                    if (vals.length && data.elements.listItem.checkbox) {
-                        data.elements.listItem.checkbox.each(function() {
+                    if (vals.length && data.elements.listItem.checkbox){
+                        data.elements.listItem.checkbox.each(function(){
                             //found matched value
                             if (vals.indexOf(this.value) >= 0)
                                 $(this).parent().addClass('locked');
@@ -499,8 +522,8 @@
             });
         },
         //enable
-        enable: function(vals) {
-            return this.each(function() {
+        enable: function(vals){
+            return this.each(function(){
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
@@ -509,13 +532,13 @@
                 if (vals === undefined)
                     data.elements.wrapper.removeClass(pluginName + '_disabled');
                 //enable element
-                else if (vals) {
+                else if (vals){
                     //convert to array if not array
                     if (!(vals instanceof Array))
                         vals = [vals];
 
-                    if (vals.length && data.elements.listItem.checkbox) {
-                        data.elements.listItem.checkbox.each(function() {
+                    if (vals.length && data.elements.listItem.checkbox){
+                        data.elements.listItem.checkbox.each(function(){
                             //found matched value
                             if (vals.indexOf(this.value) >= 0)
                                 $(this).parent().removeClass('locked');
@@ -525,9 +548,9 @@
             });
         },
         //change the settings
-        settings: function(json) {
+        settings: function(json){
             //get setting
-            if (json === undefined) {
+            if (json === undefined){
                 var d = this.data(pluginName);
                 if (!d)
                     return null;
@@ -536,7 +559,7 @@
             }
 
             //set settings
-            return this.each(function() {
+            return this.each(function(){
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -546,8 +569,8 @@
             });
         },
         //refresh the list memory
-        refresh: function(totalRefresh) {
-            return this.each(function() {
+        refresh: function(totalRefresh){
+            return this.each(function(){
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -574,13 +597,13 @@
 
             });
         },
-        refreshPosition: function() {
-            return this.each(function() {
+        refreshPosition: function(){
+            return this.each(function(){
                 fn._refreshPosition($(this));
             });
         },
         //return object elements that construct the list
-        widget: function() {
+        widget: function(){
             var data = this.data(pluginName);
             if (!data)
                 return null;
@@ -594,27 +617,27 @@
          * @param isAdd BOOLEAN if true, data will be add to the end of the list instead of replacing the current list
          * @returns object 
          */
-        buildFromJSON: function(json, showNoResult, isAdd) {
+        buildFromJSON: function(json, showNoResult, isAdd){
             if (showNoResult === undefined)
                 showNoResult = true;
 
             if (isAdd === undefined)
                 isAdd = false;
 
-            return this.each(function() {
+            return this.each(function(){
                 fn._buildFromJSON($(this), json, showNoResult, isAdd);
             });
         },
         /**
          * Intentionally release the drag status to prevent some bugs
          */
-        releaseDrag: function() {
+        releaseDrag: function(){
             dragging = false;
         },
         /*
          *  PRIVATE
          */
-        _buildFromJSON: function(obj, json, showNoResult, isAdd, selected, offset) {
+        _buildFromJSON: function(obj, json, showNoResult, isAdd, selected, offset){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -629,9 +652,9 @@
 
             //it's an array
             var i, new_json = [];
-            if (json instanceof Array) {
+            if (json instanceof Array){
                 //convert if it's an array of non object item
-                if (json.length && typeof json[0] !== 'object') {
+                if (json.length && typeof json[0] !== 'object'){
                     for (i = 0; i < json.length; i++) {
                         new_json.push({
                             html: json[i],
@@ -645,7 +668,7 @@
             //json of value=>label items
             else {
                 for (i in json) {
-                    if (json.hasOwnProperty(i)) {
+                    if (json.hasOwnProperty(i)){
                         new_json.push({
                             html: json[i],
                             val: i
@@ -672,7 +695,7 @@
             obj.data(pluginName, data);
             fn._postProcessing(obj, showNoResult);
         },
-        _registerEvent: function(self) {
+        _registerEvent: function(self){
             var data = self.data(pluginName);
             var settings = data.settings;
             var elements = data.elements;
@@ -685,19 +708,20 @@
             var popup = elements.popup;
             var arrow = elements.arrow;
             var close = elements.close;
+            var widget = elements.widget;
             var shift_on = false;
             var timer;
 
             if (arrow)
-                arrow.on('mousedown.' + pluginName, function() {
-                    if (!ul.is(':hidden')) {
+                arrow.on('mousedown.' + pluginName, function(){
+                    if (!ul.is(':hidden')){
                         fn._close(self);
                         return false;
                     }
                 });
 
             //searching
-            input.on('keydown.' + pluginName, function(e) {
+            input.on('keydown.' + pluginName, function(e){
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
@@ -714,15 +738,15 @@
                 prediction.val(null);
 
                 //if TAB and underlying input is different
-                if (key === 9 && v && this.value !== v) {
+                if (key === 9 && v && this.value !== v){
                     this.value = v;
                     return false;
                 }
 
                 //if escape
-                if (key === 27) {
+                if (key === 27){
                     //if use absolute position simulate escape key on dummy element
-                    if (!isMobile && settings.absolutePosition) {
+                    if (!isMobile && settings.absolutePosition){
                         var ev = $.Event('keydown');
                         key = 27;
                         $('div.' + pluginName + '_dummy').trigger(ev);
@@ -730,106 +754,106 @@
                     fn._close(self);
                 }
             })
-                    .on('keyup.' + pluginName, function(e) {
-                        if (!fn._isAlphabetKey(e.keyCode) && e.keyCode !== 9)
-                            return;
+            .on('keyup.' + pluginName, function(e){
+                if (!fn._isAlphabetKey(e.keyCode) && e.keyCode !== 9)
+                    return;
 
-                        var $this = $(this);
-                        var val = this.value;
-                        var hasResult = false;
-                        var remote = settings.remote;
+                var $this = $(this);
+                var val = this.value;
+                var hasResult = false;
+                var remote = settings.remote;
 
-                        ul.children('li.' + pluginName + '_noresult').remove();
-                        prediction.val(val);
+                ul.children('li.' + pluginName + '_noresult').remove();
+                prediction.val(val);
 
-                        //if menu-style, show removeAll button, doesn't matter if items are selected or not
-                        if (settings.menuStyle.enable) {
-                            if (val)
-                                removeAll.show();
-                            else
-                                removeAll.hide();
-                        }
+                //if menu-style, show removeAll button, doesn't matter if items are selected or not
+                if (settings.menuStyle.enable){
+                    if (val)
+                        removeAll.show();
+                    else
+                        removeAll.hide();
+                }
 
-                        if (settings.autocompleteStyle.enable) {
-                            //val is the last word
-                            val = fn._getLastWord(val, settings.autocompleteStyle.separator);
-                            //do nothing if too few character
-                            if (val.length < settings.autocompleteStyle.minLength) {
-                                fn._close(self);
-                                //stop here
-                                return;
-                            }
-                        }
+                if (settings.autocompleteStyle.enable){
+                    //val is the last word
+                    val = fn._getLastWord(val, settings.autocompleteStyle.separator);
+                    //do nothing if too few character
+                    if (val.length < settings.autocompleteStyle.minLength){
+                        fn._close(self);
+                        //stop here
+                        return;
+                    }
+                }
 
-                        //if remote, replace the current list with new data
-                        if (remote.source || remote.fnQuery) {
-                            var cache = $this.data('remote');
+                //if remote, replace the current list with new data
+                if (remote.source || remote.fnQuery){
+                    var cache = $this.data('remote');
 
-                            //if text length < minLength do nothing
-                            if (val.length < remote.minLength)
-                                return;
+                    //if text length < minLength do nothing
+                    if (val.length < remote.minLength)
+                        return;
 
-                            //before emptying the list, we must remember the selected values
-                            var selected = fn._getValueAndText(self);
+                    //before emptying the list, we must remember the selected values
+                    var selected = fn._getValueAndText(self);
 
-                            //if cache not exist, fetch from remote source
-                            if (!cache || cache[val] === undefined) {
-                                //we dont know if there are results, open the list anyway
-                                if (settings.autocompleteStyle.enable)
-                                    fn._open(self, false);
-
-                                //clear the previous timer
-                                window.clearTimeout(timer);
-                                //set a timer to reduce server charge
-                                timer = window.setTimeout(function() {
-                                    //predict the next word
-                                    if (remote.fnPredict && !settings.autocompleteStyle.enable)
-                                        remote.fnPredict(val, prediction, fn._predict);
-                                    //user defined func
-                                    fn._fetchData(self, val, 0, selected);
-                                    //predict from local source
-                                    if (!remote.fnPredict && !settings.autocompleteStyle.enable)
-                                        fn._setPredictionFromLocalSource(self);
-                                }, remote.delay);
-                                return; //break the code here
-                            }
-                            else {  //load from cache
-                                var json = cache[val];
-                                if (json && json.length) {
-                                    fn._buildFromJSON(self, json, true, false, selected);
-                                    hasResult = true;
-                                }
-                            }
-                        }
-                        else {  //using local source
-                            hasResult = fn._filterListItem(self);
-                        }
-
-                        if (hasResult && settings.autocompleteStyle.enable)
+                    //if cache not exist, fetch from remote source
+                    if (!cache || cache[val] === undefined){
+                        //we dont know if there are results, open the list anyway
+                        if (settings.autocompleteStyle.enable)
                             fn._open(self, false);
 
-                        fn._setClosestMatch(self, hasResult);
-                    })
-                    //stop propagoation to the wrapper
-                    .on('focusin.' + pluginName, function(e) {
-                        if (wrapper.hasClass(pluginName + '_disabled'))
-                            return false;
+                        //clear the previous timer
+                        window.clearTimeout(timer);
+                        //set a timer to reduce server charge
+                        timer = window.setTimeout(function(){
+                            //predict the next word
+                            if (remote.fnPredict && !settings.autocompleteStyle.enable)
+                                remote.fnPredict(val, prediction, fn._predict);
+                            //user defined func
+                            fn._fetchData(self, val, 0, selected);
+                            //predict from local source
+                            if (!remote.fnPredict && !settings.autocompleteStyle.enable)
+                                fn._setPredictionFromLocalSource(self);
+                        }, remote.delay);
+                        return; //break the code here
+                    }
+                    else {  //load from cache
+                        var json = cache[val];
+                        if (json && json.length){
+                            fn._buildFromJSON(self, json, true, false, selected);
+                            hasResult = true;
+                        }
+                    }
+                }
+                else {  //using local source
+                    hasResult = fn._filterListItem(self);
+                }
 
-                        e.stopPropagation();
-                    });
+                if (hasResult && settings.autocompleteStyle.enable)
+                    fn._open(self, false);
+
+                fn._setClosestMatch(self, hasResult);
+            })
+            //stop propagoation to the wrapper
+            .on('focusin.' + pluginName, function(e){
+                if (wrapper.hasClass(pluginName + '_disabled'))
+                    return false;
+
+                e.stopPropagation();
+            });
 
             if (isMobile)
-                input.on('focusout.' + pluginName, function(e) {
+                input.on('focusout.' + pluginName, function(e){
                     e.stopPropagation();
                 });
 
             //show popup
-            if (popup) {
-                dropdown.on('mouseover.' + pluginName, function() {
+            if (popup){
+                dropdown.on('mouseover.' + pluginName, function(){
                     window.clearTimeout(popup.data('timeout'));
-                    var timeout = window.setTimeout(function() {
+                    var timeout = window.setTimeout(function(){
                         //if have at least one element
-                        if (fn._count(self) && !wrapper.hasClass(pluginName + '_disabled')) {
+                        if (fn._count(self) && !wrapper.hasClass(pluginName + '_disabled')){
                             //if using absolute position, we need to move the popup to outside
                             if (settings.absolutePosition && ul.is(':hidden'))
                                 fn._movePopupAway(elements);
@@ -840,10 +864,10 @@
                     popup.data('timeout', timeout);
                 });
                 //if list is not opened, hide popup if mouse leave
-                dropdown.add(popup).on('mouseout.' + pluginName, function() {
-                    if (ul.is(':hidden')) {
+                dropdown.add(popup).on('mouseout.' + pluginName, function(){
+                    if (ul.is(':hidden')){
                         window.clearTimeout(popup.data('timeout'));
-                        var timeout = window.setTimeout(function() {
+                        var timeout = window.setTimeout(function(){
                             popup.hide();
                             //move back to the list
                             if (settings.absolutePosition && ul.is(':hidden'))
@@ -853,296 +877,307 @@
                     }
                 });
 
-                popup.on('mouseover.' + pluginName, function() {
+                popup.on('mouseover.' + pluginName, function(){
                     window.clearTimeout(popup.data('timeout'));
                 })
-                        //on popup item click, deselect that item
-                        .on('mousedown.' + pluginName, 'div', function() {
-                            var $this = $(this);
+                //on popup item click, deselect that item
+                .on('mousedown.' + pluginName, 'div', function(){
+                    var $this = $(this);
 
-                            if ($this.hasClass('stack') || $this.hasClass('locked'))
-                                return;
+                    if ($this.hasClass('stack') || $this.hasClass('locked'))
+                        return;
 
-                            //if this is a "more" button
-                            if ($this.hasClass(pluginName + '_more'))
-                                fn._update(self, false, true);
-                            else {
-                                if (settings.popupGroupValue) {
-                                    //find anything that has the same value and deselect it
-                                    $this.children('div.stack').remove();
-                                    var val = $this.text();
+                    //if this is a "more" button
+                    if ($this.hasClass(pluginName + '_more'))
+                        fn._update(self, false, true);
+                    else {
+                        if (settings.popupGroupValue){
+                            //find anything that has the same value and deselect it
+                            $this.children('div.stack').remove();
+                            var val = $this.text();
 
-                                    ul.children('li.selected').each(function() {
-                                        var $t = $(this);
-                                        var input = $t.children('input.' + pluginName + '_listItem_input');
-                                        var v = settings.showValue ? input.val() : $t.text();
-                                        //found the bound item, deselect the checkbox
-                                        if (val === v) {
-                                            input.prop('checked', false);
-                                            $t.removeClass('selected');
-                                        }
-                                    });
+                            ul.children('li.selected').each(function(){
+                                var $t = $(this);
+                                var input = $t.children('input.' + pluginName + '_listItem_input');
+                                var v = settings.showValue ? input.val() : $t.text();
+                                //found the bound item, deselect the checkbox
+                                if (val === v){
+                                    input.prop('checked', false);
+                                    $t.removeClass('selected');
                                 }
-                                else {
-                                    var id = this.className.replace(pluginName + '_popup_item_', '');
-                                    ul.find('input.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
-                                }
+                            });
+                        }
+                        else {
+                            var id = this.className.replace(pluginName + '_popup_item_', '');
+                            ul.find('input.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
+                        }
 
-                                fn._update(self);
-                            }
-                            return false;
-                        });
+                        fn._update(self);
+                    }
+                    return false;
+                });
+
+                widget.on('click', '.trigger-close', function(){
+                    if (settings.widget.onValidate && settings.widget.onValidate(self) === false)
+                        return false;
+
+                    fn._close(self);
+                })
+                .on('change', ':input', function(){
+                    if (settings.widget.onInputChange)
+                        settings.widget.onInputChange(self);
+                });
             }
 
             //on checkbox click prevent default behaviour
-            ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function(e) {
+            ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function(e){
                 e.preventDefault();
             })
-                    //on item mouse down
-                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem', function(e) {
-                        var $this = $(this);
+            //on item mouse down
+            .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem', function(e){
+                var $this = $(this);
 
-                        //if locked or blocked or menu-style
-                        if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(pluginName + '_disabled') || $this.hasClass('isError'))
-                            return false;
+                //if locked or blocked or menu-style
+                if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(pluginName + '_disabled') || $this.hasClass('isError'))
+                    return false;
 
-                        //on select text, disable click
-                        var text;
-                        if (window.getSelection)
-                            text = window.getSelection().toString();
-                        else if (document.getSelection)
-                            text = document.getSelection();
-                        else if (document.selection)
-                            text = document.selection.createRange().text;
+                //on select text, disable click
+                var text;
+                if (window.getSelection)
+                    text = window.getSelection().toString();
+                else if (document.getSelection)
+                    text = document.getSelection();
+                else if (document.selection)
+                    text = document.selection.createRange().text;
 
-                        if (text)
-                            return false;
+                if (text)
+                    return false;
 
-                        //disable propagation for live event
-                        e.stopPropagation();
+                //disable propagation for live event
+                e.stopPropagation();
 
-                        //handle menu style
-                        var input = $this.children('input.' + pluginName + '_listItem_input');
-                        if (settings.autocompleteStyle.enable) {
-                            var val = input.val();
-                            var str = elements.input.val();
-                            //replace last found word
-                            str = fn._replaceLastWord(str, val, settings.autocompleteStyle.separator);
-                            elements.input.val(str);
-                            elements.prediction.val(str);
-                            fn._close(self);
-                            return false;
-                        }
+                //handle menu style
+                var input = $this.children('input.' + pluginName + '_listItem_input');
+                if (settings.autocompleteStyle.enable){
+                    var val = input.val();
+                    var str = elements.input.val();
+                    //replace last found word
+                    str = fn._replaceLastWord(str, val, settings.autocompleteStyle.separator);
+                    elements.input.val(str);
+                    elements.prediction.val(str);
+                    fn._close(self);
+                    return false;
+                }
 
-                        var checked = $this.hasClass('selected');
+                var checked = $this.hasClass('selected');
 
-                        //do nothing if single list and prevent deselect
-                        if (checked && !settings.multiple && !settings.allowDeselectSingleList)
-                            return false;
+                //do nothing if single list and prevent deselect
+                if (checked && !settings.multiple && !settings.allowDeselectSingleList)
+                    return false;
 
-                        //reset the drag memory
-                        if (!dragging)
-                            drag_memory = [];
+                //reset the drag memory
+                if (!dragging)
+                    drag_memory = [];
 
-                        //add to the drag memory to notify that this element has been processed
-                        drag_memory.push($this);
+                //add to the drag memory to notify that this element has been processed
+                drag_memory.push($this);
 
-                        //if is dragging and the checkbox has same state, exit
-                        if (dragging && dragging_state === checked)
-                            return false;
+                //if is dragging and the checkbox has same state, exit
+                if (dragging && dragging_state === checked)
+                    return false;
 
-                        var valBefore = [];
-                        elements.listItem.checkbox.filter(':checked').each(function() {
-                            valBefore.push(this.value);
-                        });
+                var valBefore = [];
+                elements.listItem.checkbox.filter(':checked').each(function(){
+                    valBefore.push(this.value);
+                });
 
-                        //reverse the checkbox status if the event is not from the checkbox
-                        checked = !checked;
+                //reverse the checkbox status if the event is not from the checkbox
+                checked = !checked;
 
-                        //checkall
-                        if ($this.hasClass(pluginName + '_checkall')) {
-                            //call user defined function click
-                            if (settings.onItemClick) {
-                                //if return false, prevent the selection
-                                if (settings.onItemClick(null, $this, valBefore, fn._getAll(self), checked) === false) {
-                                    dragging = false;
-                                    return false;
-                                }
-                            }
-
-                            //do not select all if maxSelected enable
-                            if (checked && settings.maxSelected)
-                                return false;
-
-                            fn._selectAll(self, checked);
-                        }
-                        else {  //simple checkbox
-                            //if is label do nothing if type radio
-                            if (!settings.multiple && $this.hasClass(settings.selectorGroup))
-                                return false;
-
-                            var groupType = fn._getGroupType($this, settings);
-                            var checkboxes = [];
-                            var i;
-
-                            //if a group is checked and is not exclusive, get the list of children
-                            if ($this.hasClass(settings.selectorGroup) && groupType !== 2 && groupType !== 3 && groupType !== 4) {
-                                //do not select childrens if maxSelected enable
-                                if (checked && settings.maxSelected)
-                                    return false;
-
-                                var children = fn._getChildren($this, settings.selectorChild, undefined, true);
-                                for (i = 0; i < children.length; i++)
-                                    checkboxes.push(children[i].children('input.' + pluginName + '_listItem_input'));
-                            }
-
-                            checkboxes.push(input);
-                            for (i = 0; i < checkboxes.length; i++) {
-                                //if is already checked, remove this item from the list
-                                if (checkboxes[i].prop('checked') === checked)
-                                    checkboxes[i] = null;
-                                else
-                                    checkboxes[i].prop('checked', checked);
-                            }
-
-                            //call user defined function click
-                            if (settings.onItemClick) {
-                                //if return false, revert to previous selection
-                                if (settings.onItemClick && settings.onItemClick(input.prop('value'), $this, valBefore, fn._get(self), checked) === false) {
-                                    for (i = 0; i < checkboxes.length; i++) {
-                                        if (checkboxes[i])
-                                            checkboxes[i].prop('checked', !checked);
-                                    }
-
-                                    dragging = false;
-                                    return false;
-                                }
-                            }
-
-                            fn._update(self);
-                        }
-
-                        //start dragging handling, only the first clicked li can reach here
-                        if (!dragging && settings.multiple) {
-                            dragging = true;
-                            //the state of checkbox at the moment of dragging (the first checked)
-                            dragging_state = checked;
-                        }
-
-                        //if is radio, close the list on click
-                        if (!settings.multiple && !settings.autocompleteStyle.enable) {
-                            fn._close(self);
+                //checkall
+                if ($this.hasClass(pluginName + '_checkall')){
+                    //call user defined function click
+                    if (settings.onItemClick){
+                        //if return false, prevent the selection
+                        if (settings.onItemClick(null, $this, valBefore, fn._getAll(self), checked) === false){
+                            dragging = false;
                             return false;
                         }
-                    })
-                    //on close match click
-                    .on('click.' + pluginName, 'li.hasCloseMatch', function() {
-                        var str = $(this).find('span.closeMatch').text();
-                        input.val(str).trigger('keyup');
-                    })
-                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem', function() {
-                        if (!dragging)
-                            return;
-                        var $this = $(this);
-                        var found = false;
+                    }
 
-                        //do not click the item twice
-                        for (var i = 0; i < drag_memory.length; i++) {
-                            if ($this.is(drag_memory[i])) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                            $(this).trigger('mousedown');
-                    })
-                    .on('click.' + pluginName, 'a', function(e) {
-                        if (wrapper.hasClass(pluginName + '_disabled'))
-                            return false;
-
-                        e.stopPropagation();
-
-                        var $this = $(this);
-                        var href = $this.attr('href');
-                        var menuStyle = settings.menuStyle;
-
-                        //if contain an anchor, scroll to that item
-                        if (href !== '#' && /^#/.test(href)) {
-                            var container = menuStyle.scrollSpyContainer;
-                            if (container === 'window')
-                                container = 'body';
-
-                            var target = $(href);
-                            if (!target.length)
-                                return false;
-
-                            var pos = $(href).offset().top;
-
-                            if (container !== 'body')
-                                pos += $(container).scrollTop();
-
-                            container = $(container);
-
-                            var offsetTop = container.offset().top;
-                            var marginTop = parseInt(container.css('marginTop'));
-
-                            if (container.is('body') && fn._isIE())
-                                container = $('html');
-
-                            container.animate({
-                                scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
-                            },
-                            menuStyle.scrollSpyAnimationDuration, function() {
-                                window.setTimeout(function() {
-                                    //deselect all then select the clicked one
-                                    var li = $this.closest('li.' + pluginName + '_listItem');
-                                    li.closest('ul').children('li.selected').removeClass('selected');
-                                    li.addClass('selected');
-                                });
-                            });
-
-                            return false;
-                        }
-                    })
-                    .on('mousedown.' + pluginName, 'a', function(e) {
-                        e.stopPropagation();
+                    //do not select all if maxSelected enable
+                    if (checked && settings.maxSelected)
                         return false;
-                    })
-                    .on('scroll.' + pluginName, function() {
-                        var $this = $(this);
 
-                        //reduce server load
-                        window.clearTimeout(timer);
-                        timer = window.setTimeout(function() {
-                            if (!settings.remote.loadMoreOnScroll)
-                                return;
+                    fn._selectAll(self, checked);
+                }
+                else {  //simple checkbox
+                    //if is label do nothing if type radio
+                    if (!settings.multiple && $this.hasClass(settings.selectorGroup))
+                        return false;
 
-                            //load more only if the list reach its bottom
-                            if ($this.height() + 5 < ($this.get(0).scrollHeight - $this.scrollTop()))
-                                return;
+                    var groupType = fn._getGroupType($this, settings);
+                    var checkboxes = [];
+                    var i;
 
-                            var offset = $this.children('li').length;
-                            var val = input.val();
+                    //if a group is checked and is not exclusive, get the list of children
+                    if ($this.hasClass(settings.selectorGroup) && groupType !== 2 && groupType !== 3 && groupType !== 4){
+                        //do not select childrens if maxSelected enable
+                        if (checked && settings.maxSelected)
+                            return false;
 
-                            fn._fetchData(self, val, offset);
-                        }, 500);
-                    })
-                    .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function() {
-                        var $this = $(this);
-                        //the current group li
-                        var group = $this.parent();
+                        var children = fn._getChildren($this, settings.selectorChild, undefined, true);
+                        for (i = 0; i < children.length; i++)
+                            checkboxes.push(children[i].children('input.' + pluginName + '_listItem_input'));
+                    }
 
-                        //already expanded
-                        if ($this.hasClass('expanded'))
-                            fn._collapse(group, settings);
+                    checkboxes.push(input);
+                    for (i = 0; i < checkboxes.length; i++) {
+                        //if is already checked, remove this item from the list
+                        if (checkboxes[i].prop('checked') === checked)
+                            checkboxes[i] = null;
                         else
-                            fn._expand(group, settings);
+                            checkboxes[i].prop('checked', checked);
+                    }
 
+                    //call user defined function click
+                    if (settings.onItemClick){
+                        //if return false, revert to previous selection
+                        if (settings.onItemClick && settings.onItemClick(input.prop('value'), $this, valBefore, fn._get(self), checked) === false){
+                            for (i = 0; i < checkboxes.length; i++) {
+                                if (checkboxes[i])
+                                    checkboxes[i].prop('checked', !checked);
+                            }
+
+                            dragging = false;
+                            return false;
+                        }
+                    }
+
+                    fn._update(self);
+                }
+
+                //start dragging handling, only the first clicked li can reach here
+                if (!dragging && settings.multiple){
+                    dragging = true;
+                    //the state of checkbox at the moment of dragging (the first checked)
+                    dragging_state = checked;
+                }
+
+                //if is radio, close the list on click
+                if (!settings.multiple && !settings.autocompleteStyle.enable){
+                    fn._close(self);
+                    return false;
+                }
+            })
+            //on close match click
+            .on('click.' + pluginName, 'li.hasCloseMatch', function(){
+                var str = $(this).find('span.closeMatch').text();
+                input.val(str).trigger('keyup');
+            })
+            .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem', function(){
+                if (!dragging)
+                    return;
+                var $this = $(this);
+                var found = false;
+
+                //do not click the item twice
+                for (var i = 0; i < drag_memory.length; i++) {
+                    if ($this.is(drag_memory[i])){
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    $(this).trigger('mousedown');
+            })
+            .on('click.' + pluginName, 'a', function(e){
+                if (wrapper.hasClass(pluginName + '_disabled'))
+                    return false;
+
+                e.stopPropagation();
+
+                var $this = $(this);
+                var href = $this.attr('href');
+                var menuStyle = settings.menuStyle;
+
+                //if contain an anchor, scroll to that item
+                if (href !== '#' && /^#/.test(href)){
+                    var container = menuStyle.scrollSpyContainer;
+                    if (container === 'window')
+                        container = 'body';
+
+                    var target = $(href);
+                    if (!target.length)
                         return false;
+
+                    var pos = $(href).offset().top;
+
+                    if (container !== 'body')
+                        pos += $(container).scrollTop();
+
+                    container = $(container);
+
+                    var offsetTop = container.offset().top;
+                    var marginTop = parseInt(container.css('marginTop'));
+
+                    if (container.is('body') && fn._isIE())
+                        container = $('html');
+
+                    container.animate({
+                        scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
+                    },
+                    menuStyle.scrollSpyAnimationDuration, function(){
+                        window.setTimeout(function(){
+                            //deselect all then select the clicked one
+                            var li = $this.closest('li.' + pluginName + '_listItem');
+                            li.closest('ul').children('li.selected').removeClass('selected');
+                            li.addClass('selected');
+                        });
                     });
 
-            wrapper.on('focusin.' + pluginName, function() {
+                    return false;
+                }
+            })
+            .on('mousedown.' + pluginName, 'a', function(e){
+                e.stopPropagation();
+                return false;
+            })
+            .on('scroll.' + pluginName, function(){
+                var $this = $(this);
+
+                //reduce server load
+                window.clearTimeout(timer);
+                timer = window.setTimeout(function(){
+                    if (!settings.remote.loadMoreOnScroll)
+                        return;
+
+                    //load more only if the list reach its bottom
+                    if ($this.height() + 5 < ($this.get(0).scrollHeight - $this.scrollTop()))
+                        return;
+
+                    var offset = $this.children('li').length;
+                    var val = input.val();
+
+                    fn._fetchData(self, val, offset);
+                }, 500);
+            })
+            .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function(){
+                var $this = $(this);
+                //the current group li
+                var group = $this.parent();
+
+                //already expanded
+                if ($this.hasClass('expanded'))
+                    fn._collapse(group, settings);
+                else
+                    fn._expand(group, settings);
+
+                return false;
+            });
+
+            wrapper.on('focusin.' + pluginName, function(){
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
@@ -1152,113 +1187,113 @@
                 //as long as the wrapper has focus, focus on the input
                 //IE hack
                 if (!isMobile)
-                    window.setTimeout(function() {
+                    window.setTimeout(function(){
                         input.focus();
                     });
             })
-                    //blur not triggered in FF
-                    .on('focusout.' + pluginName, function(e) {
-                        if (!settings.labelStyle && $(e.target).is($(this)) || isMobile)
-                            return;
-                        //need to add delay for activeElement to be set
-                        window.setTimeout(function() {
-                            //close list if the active element isn't any child of the wrapper
-                            if (!$(document.activeElement).closest(wrapper).length)
-                                fn._close(self);
-                        }, 10);
-                    })
-                    .on('keydown.' + pluginName, function(e) {
-                        var key = e.keyCode;
-                        //if menustyle or character key, do nothing
-                        if (settings.menuStyle.enable || fn._isAlphabetKey(key))
-                            return;
+            //blur not triggered in FF
+            .on('focusout.' + pluginName, function(e){
+                if (!settings.labelStyle && $(e.target).is($(this)) || isMobile)
+                    return;
+                //need to add delay for activeElement to be set
+                window.setTimeout(function(){
+                    //close list if the active element isn't any child of the wrapper
+                    if (!$(document.activeElement).closest(wrapper).length)
+                        fn._close(self);
+                }, 10);
+            })
+            .on('keydown.' + pluginName, function(e){
+                var key = e.keyCode;
+                //if menustyle or character key, do nothing
+                if (settings.menuStyle.enable || fn._isAlphabetKey(key))
+                    return;
 
-                        var li = ul.children('li:visible');
-                        var current = li.filter('li.over');
-                        var next, index;
+                var li = ul.children('li:visible');
+                var current = li.filter('li.over');
+                var next, index;
 
-                        //up/down
-                        if (key === 40 || key === 38) {
-                            //find the next over item
-                            if (current.length) {
-                                //down
-                                if (key === 40) {
-                                    index = li.index(current.last());
-                                    next = li.eq(index + 1);
-                                }
-                                //up
-                                else {
-                                    index = li.index(current.first());
-                                    next = (index - 1 < 0) ? $() : li.eq(index - 1);
-                                }
-                            }
-                            else
-                                next = li.first();
-
-                            //if has the next element
-                            if (next && next.length) {
-                                //if shift is on, do not remove the current item
-                                if (!shift_on)
-                                    ul.children('li.over').removeClass('over');
-                                next.addClass('over');
-
-                                //scroll handling
-                                if (key === 40 && next.position().top + next.height() > ul.height())
-                                    ul.scrollTop(ul.scrollTop() + 50);
-                                else if (key === 38 && next.position().top < 0)
-                                    ul.scrollTop(ul.scrollTop() - 50);
-                            }
+                //up/down
+                if (key === 40 || key === 38){
+                    //find the next over item
+                    if (current.length){
+                        //down
+                        if (key === 40){
+                            index = li.index(current.last());
+                            next = li.eq(index + 1);
                         }
-                        //enter: do not submit form and select item
-                        else if (key === 13) {
-                            //if no selection, (de)select the first visible item
-                            if (!current.length)
-                                current = li.filter(':visible').first();
-
-                            //if the first item is hasCloseMatch, then trigger a search on it
-                            if (current.hasClass('hasCloseMatch')) {
-                                var txt = current.find('span.closeMatch').text();
-                                input.val(txt).trigger('keyup');
-                            }
-                            else {
-                                current.trigger('mousedown').trigger('mouseup');
-                                input.val(null);
-                                prediction.val(null);
-                            }
-
-                            return false;
+                        //up
+                        else {
+                            index = li.index(current.first());
+                            next = (index - 1 < 0) ? $() : li.eq(index - 1);
                         }
-                        //shift
-                        else if (key === 16)
-                            shift_on = true;
-                    })
-                    .on('keyup.' + pluginName, function(e) {
-                        if (e.keyCode === 16)
-                            shift_on = false;
-                    })
-                    .on('mouseup.' + pluginName, function(e) {
-                        dragging = false;
-                        e.stopPropagation();
-                    })
-                    .on('mousedown.' + pluginName, function(e) {
-                        e.stopPropagation();
+                    }
+                    else
+                        next = li.first();
 
-                        if (wrapper.hasClass('mobile-style'))
-                            return;
+                    //if has the next element
+                    if (next && next.length){
+                        //if shift is on, do not remove the current item
+                        if (!shift_on)
+                            ul.children('li.over').removeClass('over');
+                        next.addClass('over');
 
-                        if (settings.labelStyle) {
-                            if (ul.is(':hidden'))
-                                fn._open(self);
-                            else
-                                fn._close(self);
-                        }
-                    });
+                        //scroll handling
+                        if (key === 40 && next.position().top + next.height() > ul.height())
+                            ul.scrollTop(ul.scrollTop() + 50);
+                        else if (key === 38 && next.position().top < 0)
+                            ul.scrollTop(ul.scrollTop() - 50);
+                    }
+                }
+                //enter: do not submit form and select item
+                else if (key === 13){
+                    //if no selection, (de)select the first visible item
+                    if (!current.length)
+                        current = li.filter(':visible').first();
 
-            removeAll.on('mousedown.' + pluginName, function() {
+                    //if the first item is hasCloseMatch, then trigger a search on it
+                    if (current.hasClass('hasCloseMatch')){
+                        var txt = current.find('span.closeMatch').text();
+                        input.val(txt).trigger('keyup');
+                    }
+                    else {
+                        current.trigger('mousedown').trigger('mouseup');
+                        input.val(null);
+                        prediction.val(null);
+                    }
+
+                    return false;
+                }
+                //shift
+                else if (key === 16)
+                    shift_on = true;
+            })
+            .on('keyup.' + pluginName, function(e){
+                if (e.keyCode === 16)
+                    shift_on = false;
+            })
+            .on('mouseup.' + pluginName, function(e){
+                dragging = false;
+                e.stopPropagation();
+            })
+            .on('mousedown.' + pluginName, function(e){
+                e.stopPropagation();
+
+                if (wrapper.hasClass('mobile-style'))
+                    return;
+
+                if (settings.labelStyle){
+                    if (ul.is(':hidden'))
+                        fn._open(self);
+                    else
+                        fn._close(self);
+                }
+            });
+
+            removeAll.on('mousedown.' + pluginName, function(){
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
-                if (settings.onRemoveAll) {
+                if (settings.onRemoveAll){
                     if (settings.onRemoveAll($(this), fn._get(self)) === false)
                         return false;
                 }
@@ -1272,46 +1307,46 @@
             });
 
             //show/hide list on hover
-            if (settings.openOnHover) {
+            if (settings.openOnHover){
                 var timeout;
-                wrapper.on('mouseenter.' + pluginName, function() {
+                wrapper.on('mouseenter.' + pluginName, function(){
                     window.clearTimeout(timeout);
                     fn._open(self);
                 })
-                        .on('mouseleave.' + pluginName, function() {
-                            timeout = window.setTimeout(function() {
-                                fn._close(self);
-                            }, 500);
-                        });
+                .on('mouseleave.' + pluginName, function(){
+                    timeout = window.setTimeout(function(){
+                        fn._close(self);
+                    }, 500);
+                });
             }
 
             if (close)
-                close.on('click.' + pluginName, function() {
+                close.on('click.' + pluginName, function(){
                     fn._close(self);
                     return false;
                 });
 
         },
-        _getWordsList: function(str, charList) {
+        _getWordsList: function(str, charList){
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[' + charList + ']+');
 
             return str.split(regex);
         },
-        _getLastWord: function(str, charList) {
+        _getLastWord: function(str, charList){
             var str_arr = fn._getWordsList(str, charList);
             var val = str_arr[str_arr.length - 1] || '';
 
             return val;
         },
-        _replaceLastWord: function(str, replacement, charList) {
+        _replaceLastWord: function(str, replacement, charList){
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[^' + charList + ']+$');
             str = str.replace(regex, replacement);
 
             return str;
         },
-        _filterListItem: function(obj) {
+        _filterListItem: function(obj){
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
@@ -1323,7 +1358,7 @@
             if (val && settings.autocompleteStyle.enable)
                 val = fn._getLastWord(val, settings.autocompleteStyle.separator);
 
-            if (val === '') {
+            if (val === ''){
                 //show all including checkall
                 listItem.show();
                 hasResult = true;
@@ -1339,7 +1374,7 @@
                 if (settings.accentInsensitive)
                     search = fn._removeAccent(search);
 
-                listItem.not(elements.selectAll).each(function() {
+                listItem.not(elements.selectAll).each(function(){
                     var $this = $(this);
                     var text = $this.text().toLowerCase();
 
@@ -1352,7 +1387,7 @@
                     if (settings.autocompleteStyle.enable && index !== 0)
                         found = false;
 
-                    if (found) {
+                    if (found){
                         $this.show();
                         hasResult = true;
                         //if this is a child, also show the parent if collapseGroup mode is on
@@ -1371,7 +1406,7 @@
 
             return hasResult;
         },
-        _setClosestMatch: function(obj, hasResult) {
+        _setClosestMatch: function(obj, hasResult){
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
@@ -1380,7 +1415,7 @@
             var listItem = elements.listItem.li;
 
             //if is not menu or inline style and noresult
-            if (!settings.menuStyle.enable && !settings.inline && !hasResult) {
+            if (!settings.menuStyle.enable && !settings.inline && !hasResult){
                 //val is the last word
                 if (settings.autocompleteStyle.enable)
                     val = fn._getLastWord(val, settings.autocompleteStyle.separator);
@@ -1393,7 +1428,7 @@
 
                 //found a close match
                 var dom;
-                if (closest) {
+                if (closest){
                     dom = '<li class="{0}_noresult hasCloseMatch">{1}</li>'.format(pluginName, settings.textCloseMatch);
                     dom = dom.replace('{0}', '<span class="closeMatch">' + closest + '</span>');
                 }
@@ -1402,7 +1437,7 @@
                 elements.list.append(dom);
             }
         },
-        _movePopupBackToList: function(elements) {
+        _movePopupBackToList: function(elements){
             if (!elements.popup)
                 return;
 
@@ -1410,23 +1445,23 @@
                 top: 'auto',
                 left: 'auto'
             })
-                    .prependTo(elements.wrapper)
-                    .removeClass(pluginName + '_absolute');
+            .prependTo(elements.wrapper)
+            .removeClass(pluginName + '_absolute');
         },
-        _movePopupAway: function(elements) {
+        _movePopupAway: function(elements){
             if (!elements.popup)
                 return;
 
             var offset = elements.wrapper.offset();
             elements.popup.addClass(pluginName + '_absolute')
-                    .appendTo('body')
-                    .css({
-                        top: offset.top - elements.popup.height() - 25,
-                        left: offset.left
-                    });
+            .appendTo('body')
+            .css({
+                top: offset.top - elements.popup.height() - 25,
+                left: offset.left
+            });
         },
         //fetch date from remote source
-        _fetchData: function(obj, val, offset, selected) {
+        _fetchData: function(obj, val, offset, selected){
             var data = obj.data(pluginName);
             var settings = data.settings;
             var remote = settings.remote;
@@ -1443,7 +1478,7 @@
                     text: val,
                     offset: offset
                 },
-                function(json) {
+                function(json){
                     //convert to array if empty
                     if (!json)
                         json = [];
@@ -1456,7 +1491,7 @@
                     fn._buildFromJSON(obj, json, showNoResult, offset > 0, selected, offset);
 
                     //cache only when offset=0
-                    if (remote.cache && !offset) {
+                    if (remote.cache && !offset){
                         var cache = input.data('remote') || [];
                         cache[val] = json;
                         input.data('remote', cache);
@@ -1464,7 +1499,7 @@
                 });
             }
         },
-        _postProcessing: function(obj, showNoResult) {
+        _postProcessing: function(obj, showNoResult){
             var data = obj.data(pluginName);
             var elements = data.elements;
             var wrapper = elements.wrapper;
@@ -1475,7 +1510,7 @@
             ul.find('a,button,:input,object').attr('tabIndex', -1);
 
             //dynamic positioning, do not handle mobile support
-            if (!isMobile) {
+            if (!isMobile){
                 var pos = wrapper.offset();
                 var wrapperH = wrapper.height();
                 var x = pos.left - $(window).scrollLeft();
@@ -1486,7 +1521,7 @@
                 var wH = $(window).height();
 
                 //dynamic-x
-                if (x + w > wW) {
+                if (x + w > wW){
                     var left = -(wW - x) + 2;   //with border
                     if (x - left >= 0)
                         ul.css({
@@ -1495,7 +1530,7 @@
                 }
 
                 //dynamic-y only when option is activated
-                if (settings.dynamicPosition && y + h > wH) {
+                if (settings.dynamicPosition && y + h > wH){
                     var top = -h - wrapperH + 1;
                     if (top)
                         ul.css({
@@ -1513,7 +1548,7 @@
             //hide removeAll at the start
             elements.removeAll.hide();
 
-            if (settings.menuStyle.enable) {
+            if (settings.menuStyle.enable){
                 fn._registerMenuStyle(obj);
                 //collapse group at start
                 fn._collapseGroup(obj);
@@ -1529,7 +1564,7 @@
             if (settings.remote.source || settings.remote.fnQuery)
                 hasError = ul.children('li.isError').length > 0;
 
-            if (!hasError) {
+            if (!hasError){
                 //filter list item
                 var hasResult = settings.remote.filter ? fn._filterListItem(obj) : true;
 
@@ -1542,12 +1577,12 @@
 
             //copy attributes data
             var original;
-            if (obj.is('ul')) {
+            if (obj.is('ul')){
                 //get the list of original item
                 original = obj.find('li');
                 //update original
                 if (elements.listItem.li && elements.listItem.li.length)
-                    elements.listItem.li.each(function(k) {
+                    elements.listItem.li.each(function(k){
                         $(this).data(original.eq(k).data());
                     });
             }
@@ -1557,12 +1592,12 @@
                     original = original.slice(1);
 
                 if (elements.listItem.checkbox && elements.listItem.checkbox.length)
-                    elements.listItem.checkbox.each(function(k) {
+                    elements.listItem.checkbox.each(function(k){
                         $(this).closest('li').data(original.eq(k).data());
                     });
             }
         },
-        _selectAll: function(obj, state) {
+        _selectAll: function(obj, state){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1570,7 +1605,7 @@
             data.elements.listItem.li.not('li.locked').children('input.' + pluginName + '_listItem_input').prop('checked', state);
             this._update(obj);
         },
-        _update: function(obj, isInitialisation, showFullItems) {
+        _update: function(obj, isInitialisation, showFullItems){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1586,7 +1621,7 @@
             settings.popupMaxItem = showFullItems ? 1000 : settings.popupMaxItem;
 
             //list the selected values
-            li.each(function() {
+            li.each(function(){
                 var $this = $(this);
                 if ($this.hasClass(pluginName + '_checkall'))
                     return;
@@ -1600,7 +1635,7 @@
                     return;
 
                 //prepare the data, if uniqueValue activated, check whether the item of the same value-text is selected twice
-                if (input.prop('checked')) {
+                if (input.prop('checked')){
                     var v = input.val();
                     var text = settings.showValue && v !== '' ? v : $this.text();
 
@@ -1609,7 +1644,7 @@
                         text = $this.find('img.logo').attr('src');
 
                     //update popup if enable
-                    if (settings.popup) {
+                    if (settings.popup){
                         var txt = text;
 
                         if (count >= settings.popupMaxItem)
@@ -1636,12 +1671,12 @@
                 else    //not check
                 {
                     $this.removeClass('selected');
-                        selectAll = false;
+                    selectAll = false;
                 }
             });
 
             //handle max item
-            if (settings.maxSelected) {
+            if (settings.maxSelected){
                 //if count > max, lock all item that isn't selected yet
                 if (count >= settings.maxSelected)
                     li.not('li.selected').addClass('maxBlocked');
@@ -1650,8 +1685,8 @@
             }
 
             //if unique value, do the loop for a second time to gray out whatever has the same value
-            if (settings.uniqueValue) {
-                li.not('li.selected').each(function() {
+            if (settings.uniqueValue){
+                li.not('li.selected').each(function(){
                     var $this = $(this);
                     var v = settings.showValue ? $this.children('input.' + pluginName + '_listItem_input').val() : $this.text();
 
@@ -1667,7 +1702,7 @@
             }
 
             //update selected status of checkall
-            if (elements.selectAll) {
+            if (elements.selectAll){
                 if (selectAll)
                     elements.selectAll.addClass('selected');
                 else {
@@ -1676,9 +1711,9 @@
             }
 
             //update popup if enable
-            if (settings.popup) {
+            if (settings.popup){
                 //if group value, need to rebuild the html, only loop through unique item
-                if (settings.popupGroupValue) {
+                if (settings.popupGroupValue){
                     //reset
                     html = '';
                     more = 0;
@@ -1689,20 +1724,20 @@
                     for (var i = 0; i < tmp_val.length; i++) {
                         var v = tmp_val[i];
                         //count the number of time this text has appeared in the original list
-                        var c = val.filter(function(x) {
+                        var c = val.filter(function(x){
                             return x === v;
                         }).length;
 
                         if (count >= settings.popupMaxItem)
                             more++;
                         else {
-                            if (settings.popupLogoAsValue) {
+                            if (settings.popupLogoAsValue){
                                 v = '<img class="logo" src="{0}" />'.format(v);
                             }
 
                             html += '<div>';
                             //if count more than one
-                            if (c > 1) {
+                            if (c > 1){
                                 html += '<div class="stack">' + c + '</div>';
                             }
                             html += v + '</div>';
@@ -1723,7 +1758,7 @@
             if (!settings.menuStyle.enable)
             {
                 var text;
-                if (val.length) {
+                if (val.length){
                     text = settings.textAllSelected && settings.multiple && selectAll && count > 1 ? settings.textAllSelected : val.join(', ');
                     //show only if list multiple or allowDeselectSingleList
                     if (settings.multiple || settings.allowDeselectSingleList)
@@ -1749,10 +1784,10 @@
             fn._updateChainedList(obj, settings);
         },
         //search if an event exist
-        _eventExist: function(obj, evt_type) {
+        _eventExist: function(obj, evt_type){
             var evt = $._data(obj.get(0), 'events');
             //find if event exist first
-            if (evt && evt[evt_type] !== undefined) {
+            if (evt && evt[evt_type] !== undefined){
                 for (var i = 0; i < evt[evt_type].length; i++) {
                     if (evt[evt_type][i].namespace === pluginName)
                         return true;
@@ -1761,7 +1796,7 @@
 
             return false;
         },
-        _open: function(obj, triggerSearch) {
+        _open: function(obj, triggerSearch){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1780,7 +1815,7 @@
 
             var val = fn._get(obj);
 
-            if (settings.onOpen) {
+            if (settings.onOpen){
                 //if return false, do not open the list
                 if (settings.onOpen(val) === false)
                     return;
@@ -1792,19 +1827,19 @@
             elements.prediction.show();
             wrapper.addClass(pluginName + '_active');
 
-            if (isMobile) {
+            if (isMobile){
                 wrapper.addClass('mobile-style');
                 list.show();
             }
             else {
                 //before showing the list, convert to absolute position if enable
-                if (settings.absolutePosition) {
+                if (settings.absolutePosition){
                     var offset = wrapper.offset();
                     //create dummy element to fill up space
                     $('<div></div>').attr('class', pluginName + '_dummy ' + pluginName + '_wrapper')
-                            .width(wrapper.width())
-                            .height(wrapper.height())
-                            .insertAfter(obj);
+                    .width(wrapper.width())
+                    .height(wrapper.height())
+                    .insertAfter(obj);
 
                     //move the list so the absolute position can become effective
                     wrapper.addClass(pluginName + '_absolute').appendTo('body').css({
@@ -1814,16 +1849,16 @@
 
                     //bind an event to the document to detect lost of focus
                     var doc = $(document);
-                    if (!fn._eventExist(doc, 'mousedown')) {
-                        doc.on('mousedown.' + pluginName, function() {
+                    if (!fn._eventExist(doc, 'mousedown')){
+                        doc.on('mousedown.' + pluginName, function(){
                             $('ul.' + pluginName + ', select.' + pluginName).jAutochecklist('close');
                         });
                     }
 
                     //update position when window resize, scroll
                     var win = $(window);
-                    if (!fn._eventExist(win, 'resize') || !fn._eventExist(win, 'scroll')) {
-                        win.on('resize.' + pluginName + ', scroll.' + pluginName, function() {
+                    if (!fn._eventExist(win, 'resize') || !fn._eventExist(win, 'scroll')){
+                        win.on('resize.' + pluginName + ', scroll.' + pluginName, function(){
                             fn._refreshPosition(obj);
                         });
                     }
@@ -1835,10 +1870,15 @@
                 if (settings.labelStyle)
                     wrapper.width(wrapper.outerWidth() + 1);
 
+                //display list
                 settings.animation ? list.fadeIn() : list.show();
                 if (settings.listWidth === 'auto' || settings.labelStyle)
                     list.css('display', 'inline-block');
 
+                //display widget
+                settings.animation ? elements.widget.fadeIn() : elements.widget.show();
+
+                //display popup
                 if (elements.popup)
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();
 
@@ -1867,7 +1907,7 @@
             //close all other checklist
             $('ul.' + pluginName + ', select.' + pluginName).not(obj).jAutochecklist('close');
         },
-        _close: function(obj) {
+        _close: function(obj){
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1889,7 +1929,7 @@
             if (settings.inline || settings.menuStyle.enable)
                 return;
 
-            if (settings.onClose) {
+            if (settings.onClose){
                 //if return false, do not close the list
                 var val = fn._get(obj);
                 var valBefore = obj.data('value');
@@ -1901,19 +1941,20 @@
                 elements.popup.hide();
             if (elements.result)
                 elements.result.show();
-            if (!settings.autocompleteStyle.enable) {
+            if (!settings.autocompleteStyle.enable){
                 elements.input.addClass('fakeHidden');
                 elements.input.val(null);
             }
             elements.prediction.hide().val(null);
             elements.list.hide().children('li.' + pluginName + '_noresult').remove();
             elements.listItem.li.show().filter('li.over').removeClass('over');
+            elements.widget.hide();
             wrapper.removeClass(pluginName + '_active');
             if (settings.collapseGroup)
                 fn._collapseGroup(obj);
 
             //convert back absolute position to inline
-            if (!isMobile && settings.absolutePosition) {
+            if (!isMobile && settings.absolutePosition){
                 wrapper.css({
                     top: 0,
                     left: 0
@@ -1934,20 +1975,20 @@
 
             dragging = false;
         },
-        _count: function(obj) {
+        _count: function(obj){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return 0;
 
             return data.elements.listItem.checkbox.filter(':checked').length;
         },
-        _get: function(obj) {
+        _get: function(obj){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return data.settings.multiple ? [] : null;
 
             var val = [];
-            data.elements.listItem.checkbox.filter(':checked').each(function() {
+            data.elements.listItem.checkbox.filter(':checked').each(function(){
                 val.push(this.value);
             });
 
@@ -1956,25 +1997,25 @@
 
             return val;
         },
-        _getAll: function(obj) {
+        _getAll: function(obj){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return [];
             var val = [];
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function(){
                 val.push(this.value);
             });
 
             return val;
         },
-        _getText: function(obj) {
+        _getText: function(obj){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.li)
                 return [];
 
             var val = [];
-            data.elements.listItem.li.filter('li.selected').each(function() {
+            data.elements.listItem.li.filter('li.selected').each(function(){
                 val.push($(this).text());
                 //break the loop if is single select
                 if (!data.settings.multiple)
@@ -1986,13 +2027,13 @@
 
             return val;
         },
-        _getValueAndText: function(obj) {
+        _getValueAndText: function(obj){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.li)
                 return [];
 
             var val = [];
-            data.elements.listItem.li.filter('li.selected').each(function() {
+            data.elements.listItem.li.filter('li.selected').each(function(){
                 var $this = $(this);
                 var o = {};
                 var v = $this.children('input.jAutochecklist_listItem_input').val();
@@ -2005,14 +2046,14 @@
 
             return val;
         },
-        _set: function(obj, vals, clearAll) {
+        _set: function(obj, vals, clearAll){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return;
             if (clearAll)
                 fn._selectAll(obj, false);
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function(){
                 //value found
                 if (vals.indexOf(this.value) !== -1)
                     this.checked = true;
@@ -2020,12 +2061,12 @@
 
             fn._update(obj);
         },
-        _unset: function(obj, vals) {
+        _unset: function(obj, vals){
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return;
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function(){
                 //value found
                 if (vals.indexOf(this.value) !== -1)
                     this.checked = false;
@@ -2033,11 +2074,11 @@
 
             fn._update(obj);
         },
-        _getLevel: function(li) {
+        _getLevel: function(li){
             var match = li.attr('class').match(/level(\d+)/);
             return match ? parseInt(match[1]) : null;
         },
-        _getChildren: function(li, selectorChild, level, ignoreLocked) {
+        _getChildren: function(li, selectorChild, level, ignoreLocked){
             if (level === undefined)
                 level = fn._getLevel(li);
 
@@ -2056,7 +2097,7 @@
 
             return next ? [next].concat(fn._getChildren(next, selectorChild, level, ignoreLocked)) : [];
         },
-        _getDirectChildren: function(li, selectorChild, selectorGroup, ignoreLocked) {
+        _getDirectChildren: function(li, selectorChild, selectorGroup, ignoreLocked){
             var level_group = fn._getLevel(li);
             var children = fn._getChildren(li, selectorChild, level_group, ignoreLocked);
             var directChildren = [];
@@ -2067,14 +2108,14 @@
 
                 if (child.hasClass(selectorChild) && level === level_group)
                     directChildren.push(child);
-                else if (child.hasClass(selectorGroup) && level === (level_group + 1)) {
+                else if (child.hasClass(selectorGroup) && level === (level_group + 1)){
                     directChildren.push(child);
                 }
             }
 
             return directChildren;
         },
-        _getParents: function(li, selectorChild, selectorGroup) {
+        _getParents: function(li, selectorChild, selectorGroup){
             var isGroup = li.hasClass(selectorGroup);
             var isChild = li.hasClass(selectorChild);
 
@@ -2084,7 +2125,7 @@
 
             var level = fn._getLevel(li);
             //if group first level
-            if (isGroup) {
+            if (isGroup){
                 if (li.hasClass('level1'))
                     return [];
                 level--;
@@ -2094,7 +2135,7 @@
 
             return parent ? [parent].concat(fn._getParents(parent, selectorChild, selectorGroup)) : [];
         },
-        _updateParent: function(li, settings) {
+        _updateParent: function(li, settings){
             var groupType = fn._getGroupType(li, settings);
 
             //children exclusive, so we don't handle this parent
@@ -2105,21 +2146,21 @@
             var select, i;
             var checkbox = li.children('input.' + pluginName + '_listItem_input');
 
-            if (groupType === 0 || groupType === 3) {
+            if (groupType === 0 || groupType === 3){
                 //by default selected, find at least one item not selected
                 select = true;
                 for (i = 0; i < children.length; i++) {
-                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === false) {
+                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === false){
                         select = false;
                         break;
                     }
                 }
             }
-            else if (groupType === 1 || groupType === 4) {
+            else if (groupType === 1 || groupType === 4){
                 //by default not selected, find at least one selected
                 select = false;
                 for (i = 0; i < children.length; i++) {
-                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === true) {
+                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === true){
                         select = true;
                         break;
                     }
@@ -2138,7 +2179,7 @@
                 checkbox.prop('checked', true);
 
         },
-        _getGroupType: function(li, settings) {
+        _getGroupType: function(li, settings){
             var groupType = settings.groupType;
             //detect the type of the group if overriden
             if (li.hasClass('groupType0')) //all
@@ -2156,11 +2197,11 @@
 
             return groupType;
         },
-        _buildFromUl: function(obj, settings) {
+        _buildFromUl: function(obj, settings){
             var json = [];
             var locked_origin = null;
 
-            obj.children().each(function(k) {
+            obj.children().each(function(k){
                 var t = $(this);
                 var className = this.className || '';
                 var locked = t.data('locked');
@@ -2198,16 +2239,16 @@
 
             return json;
         },
-        _buildFromSelect: function(obj, settings) {
+        _buildFromSelect: function(obj, settings){
             var json = [];
             var isFirstOption = true;
             var i = 0;
 
-            obj.children().each(function() {
+            obj.children().each(function(){
                 var t = $(this);
 
                 //if is a group
-                if (t.is('optgroup')) {
+                if (t.is('optgroup')){
                     //if group is disabled/locked the children has to be locked too
                     var forceLocked = t.data('locked') || this.disabled;
 
@@ -2228,7 +2269,7 @@
                     });
 
                     //foreach option in group
-                    t.children().each(function() {
+                    t.children().each(function(){
                         json.push({
                             className: (this.className || '') + ' ' + settings.selectorChild,
                             groupType: 0,
@@ -2270,7 +2311,7 @@
 
             return json;
         },
-        _buildItemFromJSON: function(json, settings, name, preSelected, offset) {
+        _buildItemFromJSON: function(json, settings, name, preSelected, offset){
             //strip white spaces
             if (name)
                 name = name.replace(/^\s+|\s+$/g, '');
@@ -2297,7 +2338,7 @@
             //to ignore
             var selectArr = [];
             //add element if additional selected element
-            if (preSelected && preSelected.length) {
+            if (preSelected && preSelected.length){
                 for (i = 0; i < preSelected.length; i++) {
                     //get the first key value pair
                     for (var k in preSelected[i])
@@ -2310,7 +2351,7 @@
                     //find if exist in list
                     var exist = false;
                     for (var l in list)
-                        if (list.hasOwnProperty(l) && list[l].val === k && list[l].html === txt) {
+                        if (list.hasOwnProperty(l) && list[l].val === k && list[l].html === txt){
                             exist = true;
                             break;
                         }
@@ -2353,7 +2394,7 @@
                 if (!level)
                     level = 1;
 
-                if (level > 1) {
+                if (level > 1){
                     px += (level - 1) * 20;
                     className += ' level' + level;
                 }
@@ -2362,11 +2403,11 @@
 
                 //if is a group
                 var style = e.style ? [e.style] : [];
-                if (isGroup) {   //group
+                if (isGroup){   //group
                     if (val === '')
                         className += ' ' + pluginName + '_listItem_group_empty ';
                 }
-                else if (isChild) {   //child
+                else if (isChild){   //child
                     className += ' ' + pluginName + '_listItem_child';
                     px += 20;
                     if (settings.collapseGroup)
@@ -2389,12 +2430,12 @@
                     li += '<div class="{0}_expandable"></div>'.format(pluginName);
 
                 //if is not a group, or empty label or select all
-                if ((!isGroup || val !== '') && (!settings.firstItemSelectAll || i > 0)) {
+                if ((!isGroup || val !== '') && (!settings.firstItemSelectAll || i > 0)){
                     //multiple, add []
                     var n = name;
-                    if (settings.multiple) {
+                    if (settings.multiple){
                         //fallback, only apply to multiple element
-                        if (settings.fallback) {
+                        if (settings.fallback){
                             n += '[' + count + ']';
                             li += '<input type="hidden" name="{0}" value="{1}" />'.format(n, settings.defaultFallbackValue);
                         }
@@ -2410,7 +2451,7 @@
 
             return li;
         },
-        _sortListItems: function(json) {
+        _sortListItems: function(json){
             var indexed = {};
             var lastGroupIndex = {};
             var i;
@@ -2419,7 +2460,7 @@
             for (i = 0; i < json.length; i++) {
                 var e = json[i];
                 e.effectiveIndex = i;
-                if (e.isGroup) {
+                if (e.isGroup){
                     lastGroupIndex[e.level || 1] = i;
                     if (e.level > 1)
                         e.parentIndex = lastGroupIndex[e.level - 1];
@@ -2447,9 +2488,9 @@
 
             return json;
         },
-        _createObjectRelationship: function(obj) {
+        _createObjectRelationship: function(obj){
             for (var i in obj) {
-                if (obj.hasOwnProperty(i)) {
+                if (obj.hasOwnProperty(i)){
                     var e = obj[i];
                     //if is not a child
                     if (!e.parentIndex)
@@ -2464,10 +2505,10 @@
 
             return obj;
         },
-        _destroyObjectRelationship: function(arr) {
+        _destroyObjectRelationship: function(arr){
             var a = [], tmp;
             for (var i = 0; i < arr.length; i++) {
-                if (arr[i].children) {
+                if (arr[i].children){
                     tmp = arr[i].children;
                     delete arr[i].children;
                     a.push(arr[i]);
@@ -2479,10 +2520,10 @@
 
             return a;
         },
-        _sortRecursive: function(json) {
+        _sortRecursive: function(json){
             //to array
             if (json instanceof Object)
-                json = $.map(json, function(v) {
+                json = $.map(json, function(v){
                     return v;
                 });
 
@@ -2499,7 +2540,7 @@
                 json.splice(i, 1);
             }
 
-            json.sort(function(a, b) {
+            json.sort(function(a, b){
                 var aV = (a.html === '' || a.html === undefined || a.html === null) ? '' : a.html.toLowerCase();
                 var bV = (b.html === '' || b.html === undefined || b.html === null) ? '' : b.html.toLowerCase();
                 aV = fn._removeAccent(aV);
@@ -2523,11 +2564,11 @@
 
             return json;
         },
-        _insertList: function(ul, li, settings, isAdd) {
+        _insertList: function(ul, li, settings, isAdd){
             //empty object
             var selectAll, checkbox;
 
-            if (!li && !settings.remote.loadMoreOnScroll) {
+            if (!li && !settings.remote.loadMoreOnScroll){
                 ul.html(null);
                 li = $();
             }
@@ -2556,7 +2597,7 @@
             };
 
         },
-        _setPredictionFromLocalSource: function(self) {
+        _setPredictionFromLocalSource: function(self){
             var data = self.data(pluginName);
             var settings = data.settings;
             //if RTL, do not handle prediction
@@ -2574,7 +2615,7 @@
             else {
                 var text = [];
                 //we already know that each li contain our value, search for the next word after the value
-                li.filter(':visible').each(function() {
+                li.filter(':visible').each(function(){
                     text.push($(this).text());
                 });
 
@@ -2582,13 +2623,13 @@
             }
         },
         //predict the next word
-        _predict: function(val, input, suggest, accentInsensitive) {
+        _predict: function(val, input, suggest, accentInsensitive){
             var result;
             var val_lower = val.toLowerCase();
             var valIns = fn._removeAccent(val_lower);
 
             //sort the text tab using the levenhstein algorithm
-            suggest = suggest.sort(function(a, b) {
+            suggest = suggest.sort(function(a, b){
                 return fn._levenshtein(a, val_lower) - fn._levenshtein(b, val_lower);
             });
 
@@ -2596,7 +2637,7 @@
                 var text = suggest[i].toLowerCase();
                 var index;
 
-                if (accentInsensitive) {
+                if (accentInsensitive){
                     var textIns = fn._removeAccent(text);
                     index = textIns.indexOf(valIns);
                 }
@@ -2616,24 +2657,24 @@
                 //if reaching the end without space, get all text from starting index
                 result = val + (sp_index === -1 ? text.substr(index) : text.substring(index, sp_index));
                 //as we found the first matched element, stop the search
-                if (result !== val) {
+                if (result !== val){
                     input.val(result);
                     return false;
                 }
             }
         },
         //collapse all groups
-        _collapseGroup: function(obj) {
+        _collapseGroup: function(obj){
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
             var li = elements.listItem.li;
 
-            li.filter(function() {
+            li.filter(function(){
                 var $this = $(this);
                 if ($this.hasClass(settings.selectorChild))
                     return true;
-                if ($this.hasClass(settings.selectorGroup)) {
+                if ($this.hasClass(settings.selectorGroup)){
                     if (fn._getLevel($this) > 1)
                         return true;
                 }
@@ -2641,7 +2682,7 @@
 
             elements.list.find('div.expanded').removeClass('expanded');
         },
-        _collapse: function(li, settings) {
+        _collapse: function(li, settings){
             //if is not a group
             if (!li.hasClass(settings.selectorGroup))
                 return;
@@ -2653,7 +2694,7 @@
             for (var i = 0; i < children.length; i++)
                 children[i].hide();
         },
-        _expand: function(li, settings) {
+        _expand: function(li, settings){
             //if is not a group
             if (!li.hasClass(settings.selectorGroup))
                 return;
@@ -2669,7 +2710,7 @@
             }
         },
         //group item in the popup together. Return true if success, false if the item doesn't exist
-        _getUniqueArray: function(arr) {
+        _getUniqueArray: function(arr){
             var u = {}, a = [], val;
             for (var i = 0; i < arr.length; i++) {
                 val = arr[i];
@@ -2682,27 +2723,27 @@
 
             return a;
         },
-        _registerMenuStyle: function(obj) {
+        _registerMenuStyle: function(obj){
             var data = obj.data(pluginName);
             var settings = data.settings;
             var container = settings.menuStyle.fixedPositionContainer;
             var scrollSpyContainer = settings.menuStyle.scrollSpyContainer;
 
             //handle menu fixed
-            if (settings.menuStyle.fixedPosition) {
+            if (settings.menuStyle.fixedPosition){
                 if (container === 'window')
                     container = window;
 
                 obj.data('originalPosition', data.elements.wrapper.offset());
 
-                $(container).on('scroll.' + pluginName, function() {
+                $(container).on('scroll.' + pluginName, function(){
                     fn._handleFixedMenu(obj);
                 });
             }
 
             //handle scrollspy
             var anchor = [];
-            data.elements.listItem.li.each(function() {
+            data.elements.listItem.li.each(function(){
                 var target = $(this).find('a').attr('href');
                 //if target contain a #
                 if (!/^#/.test(target))
@@ -2718,24 +2759,24 @@
             });
 
             //if at least one anchor exist
-            if (anchor.length) {
+            if (anchor.length){
                 obj.data('anchor', anchor);
 
                 if (scrollSpyContainer === 'window')
                     scrollSpyContainer = window;
 
-                $(scrollSpyContainer).on('scroll.' + pluginName, function() {
+                $(scrollSpyContainer).on('scroll.' + pluginName, function(){
                     fn._handleScrollSpy(obj);
                 });
             }
         },
-        _handleFixedMenu: function(obj) {
+        _handleFixedMenu: function(obj){
             var data = obj.data(pluginName);
             var settings = data.settings;
             var menuStyle = settings.menuStyle;
             var container = menuStyle.fixedPositionContainer;
             var container_pos, container_scroll;
-            if (container === 'window') {
+            if (container === 'window'){
                 container_pos = $('body').offset().top;
                 container_scroll = $(window).scrollTop();
             }
@@ -2749,17 +2790,17 @@
             var placeholder = obj.data('placeholder');
 
             //if the menu is off the screen
-            if (menuStyle.fixedPositionOffsetTop >= top - container_scroll - container_pos) {
+            if (menuStyle.fixedPositionOffsetTop >= top - container_scroll - container_pos){
                 //if is not fixed yet
-                if (wrapper.css('position') !== 'fixed') {
+                if (wrapper.css('position') !== 'fixed'){
                     wrapper.css({
                         position: 'fixed',
                         top: top - container_scroll
                     })
-                            .animate({
-                                top: menuStyle.fixedPositionOffsetTop + container_pos
-                            },
-                            'fast');
+                    .animate({
+                        top: menuStyle.fixedPositionOffsetTop + container_pos
+                    },
+                    'fast');
 
                     placeholder = $('<div>').attr('class', pluginName + '_menustyle_placeholder').css({
                         width: wrapper.outerWidth(),
@@ -2771,7 +2812,7 @@
             }
             //reset to original position if is currently fixed
             else {
-                if (wrapper.css('position') === 'fixed') {
+                if (wrapper.css('position') === 'fixed'){
                     wrapper.css({
                         position: 'static'
                     });
@@ -2780,14 +2821,14 @@
                 }
             }
         },
-        _handleScrollSpy: function(obj) {
+        _handleScrollSpy: function(obj){
             var data = obj.data(pluginName);
             var settings = data.settings;
             var menuStyle = settings.menuStyle;
             var anchor = obj.data('anchor');
             var container = menuStyle.scrollSpyContainer;
             var container_pos, container_scroll;
-            if (container === 'window') {
+            if (container === 'window'){
                 container_pos = 0;
                 container_scroll = $(window).scrollTop();
             }
@@ -2801,11 +2842,11 @@
 
             //use pop to do a reverse scan
             var a;
-            while (a = anchor.pop()) {
-                if (menuStyle.scrollSpyOffsetTop >= a.position - container_scroll - container_pos) {
+            while (a = anchor.pop()){
+                if (menuStyle.scrollSpyOffsetTop >= a.position - container_scroll - container_pos){
                     var source = a.source;
 
-                    if (menuStyle.onScrollSpyActivate) {
+                    if (menuStyle.onScrollSpyActivate){
                         if (menuStyle.onScrollSpyActivate(source) === false)
                             return;
                     }
@@ -2818,7 +2859,7 @@
                     fn._expand(a.source, settings);
                     //also select the parent
                     var parents = fn._getParents(a.source, settings.selectorChild, settings.selectorGroup);
-                    if (parents.length) {
+                    if (parents.length){
                         for (var i = 0; i < parents.length; i++) {
                             parents[i].addClass('selected');
                             fn._expand(parents[i], settings);
@@ -2831,10 +2872,10 @@
                 }
             }
         },
-        _escapeRegexpString: function(regex) {
+        _escapeRegexpString: function(regex){
             return regex.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         },
-        _removeAccent: function(str) {
+        _removeAccent: function(str){
             var defaultDiacriticsRemovalMap = [
                 {
                     base: 'A',
@@ -3180,17 +3221,17 @@
 
             return str;
         },
-        _updateOriginal: function(obj) {
+        _updateOriginal: function(obj){
             var data = obj.data(pluginName);
             var original;
 
-            if (obj.is('ul')) {
+            if (obj.is('ul')){
                 //get the list of original item
                 original = obj.find('li');
                 //no need to handle firstItemSelectAll
                 //update original
                 if (data.elements.listItem.li && data.elements.listItem.li.length)
-                    data.elements.listItem.li.each(function(k) {
+                    data.elements.listItem.li.each(function(k){
                         if ($(this).children('input.jAutochecklist_listItem_input').prop('checked'))
                             original.eq(k).attr('data-selected', '1');
                         else
@@ -3203,7 +3244,7 @@
                     original = original.slice(1);
 
                 if (data.elements.listItem.checkbox && data.elements.listItem.checkbox.length)
-                    data.elements.listItem.checkbox.each(function(k) {
+                    data.elements.listItem.checkbox.each(function(k){
                         //we use .attr to force add the attribute to the DOM
                         if (this.checked)
                             original.eq(k).attr('selected', 'selected');
@@ -3212,7 +3253,7 @@
                     });
             }
         },
-        _isIE: function() {
+        _isIE: function(){
             if (/Trident.*rv[ :]*11\./i.test(navigator.userAgent))
                 return 11;
             else if (/MSIE/i.test(navigator.userAgent))
@@ -3220,11 +3261,11 @@
 
             return false;
         },
-        _isAlphabetKey: function(keyCode) {
+        _isAlphabetKey: function(keyCode){
             return $.inArray(keyCode, [9, 13, 16, 27, 35, 36, 37, 38, 39, 40]) === -1;
         },
         //A updates B, B updates C, C updates D...
-        _updateChainedList: function(obj, settings) {
+        _updateChainedList: function(obj, settings){
             //if no chaining selector
             if (!settings.chainable)
                 return;
@@ -3234,19 +3275,19 @@
             var foundThis = false;
 
             //parse through the lists
-            $(settings.chainable).each(function() {
+            $(settings.chainable).each(function(){
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 //if it's not jautochecklist
                 if (!data)
                     return;
                 //found this one
-                if ($this.is(obj)) {
+                if ($this.is(obj)){
                     foundThis = true;
                     return;
                 }
                 //this is the next one
-                if (foundThis) {
+                if (foundThis){
                     var json = [];
                     //if values are set otherwise it's an empty list
                     if ((!settings.multiple && values !== null) || (settings.multiple && values.length))
@@ -3261,7 +3302,7 @@
          * Calculate the levenshtein to get the nearest word prediction
          * http://stackoverflow.com/questions/11919065/sort-an-array-by-the-levenshtein-distance-with-best-performance-in-javascript
          */
-        _levenshtein: function(s, t) {
+        _levenshtein: function(s, t){
             var i, j;
             var d = []; //2d matrix
 
@@ -3311,7 +3352,7 @@
                     d[i][j] = mi; // Step 6
 
                     //Damerau transposition
-                    if (i > 1 && j > 1 && s_i === t.charAt(j - 2) && s.charAt(i - 2) === t_j) {
+                    if (i > 1 && j > 1 && s_i === t.charAt(j - 2) && s.charAt(i - 2) === t_j){
                         d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
                     }
                 }
@@ -3320,7 +3361,7 @@
             // Step 7
             return d[n][m];
         },
-        _getClosestMatchToken: function(li, val, accentInsensitive) {
+        _getClosestMatchToken: function(li, val, accentInsensitive){
             //if no value or list is empty
             if (!val || !li.length)
                 return null;
@@ -3328,18 +3369,18 @@
             var closest = null;
             var diff = null;
 
-            li.each(function() {
+            li.each(function(){
                 var text = $(this).text().toLowerCase();
                 if (accentInsensitive)
                     text = fn._removeAccent(text);
                 //split sentence by words
                 var words = text.match(/\S+/g);
-                if (words) {
+                if (words){
                     for (var i = 0; i < words.length; i++) {
                         var w = words[i];
                         //calculate the levenstein for each words
                         var lv = fn._levenshtein(val, w);
-                        if (diff === null || lv < diff) {
+                        if (diff === null || lv < diff){
                             diff = lv;
                             closest = w;
                         }
@@ -3358,7 +3399,7 @@
 
             return closest;
         },
-        _isSelected: function(dom, isMultiple, isFirstOption) {
+        _isSelected: function(dom, isMultiple, isFirstOption){
             var selected = dom.selected && dom.getAttribute('selected') !== null;   //require that the attribute is defined
 
             //is simple select and is IE <= 8, check if the first option is selected through attribute
@@ -3367,14 +3408,14 @@
 
             return selected;
         },
-        _refreshPosition: function(obj) {
+        _refreshPosition: function(obj){
             var data = obj.data(pluginName);
             if (!data)
                 return;
 
             var dummy = obj.next();
             //find the current position of the dummy
-            if (dummy.hasClass(pluginName + '_dummy')) {
+            if (dummy.hasClass(pluginName + '_dummy')){
                 var offset = dummy.offset();
                 data.elements.wrapper.css({
                     top: offset.top + 3,
@@ -3384,13 +3425,13 @@
         }
     };
 
-    $.fn.jAutochecklist = function(method) {
+    $.fn.jAutochecklist = function(method){
         //main
-        if (fn[method]) {
+        if (fn[method]){
             if (method.substr(0, 1) === '_')
                 $.error('Method ' + method + ' does not exist on jQuery.' + pluginName);
             return fn[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
+        } else if (typeof method === 'object' || !method){
             return fn.init.apply(this, arguments);
         } else {
             $.error('Method ' + method + ' does not exist on jQuery.' + pluginName);
@@ -3399,10 +3440,10 @@
 
     //modify the default behavior of the select list
     var old_val = $.fn.val;
-    $.fn.val = function(value) {
+    $.fn.val = function(value){
         var data = this.data(pluginName);
         //if the list has applied the plugin
-        if (data) {
+        if (data){
             //getter
             if (value === undefined)
                 return this.jAutochecklist('get');

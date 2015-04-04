@@ -218,7 +218,7 @@
     margin:0;
     overflow: auto;
     max-height: 300px;
-    min-height: 26px;
+    min-height: 24px;
     z-index: 99;
     text-shadow: 1px 1px white;
     border-bottom-left-radius: 3px;
@@ -452,6 +452,28 @@
     background: linear-gradient(to right,  rgba(255,255,255,1) 0%,rgba(247,247,247,1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=1 ); /* IE6-9 */
 }
+.jAutochecklist_widget {
+    display: none;
+    border: 1px #AAA solid;
+    margin-top: -2px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: 5px 3px;
+}
+.jAutochecklist_wrapper.inline-style .jAutochecklist_widget, .jAutochecklist_wrapper.menu-style .jAutochecklist_widget {
+    display: block;
+}
+.jAutochecklist_wrapper.has-widget .jAutochecklist_list {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.jAutochecklist_widget .trigger-close {
+    float: right;
+    margin-right: 5px;
+}
+.jAutochecklist_widget .clear {
+    clear: both;
+}
 /* INLINE STYLE */
 .inline-style .jAutochecklist_result
 {
@@ -508,6 +530,9 @@
 }
 .menu-style .jAutochecklist_input {
     border-radius: 10px
+}
+.menu-style .jAutochecklist_widget {
+    border: 0;
 }
 /*MOBILE STYLE*/
 .mobile-style {
@@ -570,8 +595,9 @@
 }
 .mobile-style .jAutochecklist_close {
     float: right;
-    padding: 12px;
+    padding: 0 12px;
     display: block;
+    line-height: 50px;
 }
 .mobile-style .jAutochecklist_dropdown input {
     width: 50%;
@@ -588,6 +614,15 @@
 }
 .mobile-style .jAutochecklist_list::-webkit-scrollbar {
     display: none; 
+}
+.mobile-style .jAutochecklist_widget {
+    display: block;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left:0;
+    z-index: 99;
+    padding: 14px 3px;
 }
 /*LABEL STYLE*/
 .label-style {
