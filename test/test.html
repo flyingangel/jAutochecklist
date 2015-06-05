@@ -8,11 +8,16 @@
         <script src="../src/js/jAutochecklist.js"></script>
 
     </head>
-    <body style="padding-top: 50px">
+    <body style="padding-top: 50px; padding-left: 50px">
 
-        <select id="list" name="toto"  multiple>
+        <select id="list" name="toto" class="label-style" multiple>
             <option value="test" data-test="toto" selected>Item</option>
         </select>
+        <div class="widget" id="widget">
+            <label><input type="checkbox" />Voir dossiers archivés</label>
+            <button type="button" class="trigger-close">OK</button>
+            <div class="clear"></div>
+        </div>
 
         <!--        <ul id="list">
                     <li>1</li>
@@ -21,15 +26,17 @@
                     <li>4</li>
                 </ul>-->
 
-        <button type="button" id="check">Check</button>
-
         <script>
             var i = 0;
             $('#list')
             .jAutochecklist({
+                allowDeselectSingleList: false,
                 remote: {
                     source: 'source.json',
                     minLength: 2
+                },
+                widget: {
+                    source: document.getElementById('widget')
                 }
             });
 

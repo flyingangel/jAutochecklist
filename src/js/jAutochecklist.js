@@ -77,6 +77,7 @@
                 popupSizeDelta: 100, //this will add to the popup width
                 //text
                 textAllSelected: 'All', //text when all selected
+                textClose: 'Done', //text close in mobile style
                 textCloseMatch: 'Did you mean "{0}" ?', //text when found a close match, {0} will be replaced by a word
                 textEmpty: 'Please select...', //the default text
                 textMoreItem: 'and {0} more...', //text on popup when there are more items, {0} will be replaced with a number
@@ -142,6 +143,11 @@
                     //                    attachTo: null,  //if no set, attach to the internal input by default (selector) @TODO
                     separator: ' ;.,?!;/()&<>|', //trigger word search after these chars only
                     minLength: 3
+                },
+                widget: {
+                    source: null, //widget to append to the list: selector, DOM, jquery object, function
+                    onInputChange: null, //input inside widget is changed
+                    onValidate: null    //validate, close the list
                 }
             },
             options);
@@ -224,9 +230,24 @@
                                 ('<div class="{0}_popup"></div>'
                                         + '<div class="{0}_dropdown_wrapper">'
                                         + '<div class="{0}_arrow"><div></div></div>'
-                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" /><input class="{0}_input" placeholder="{1}" /><div class="{0}_remove_all"></div><div class="{0}_close">Done</div></div></div>'
-                                        + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch)
+                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" /><input class="{0}_input" placeholder="{1}" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
+                                        + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch, settings.textClose)
                                 );
+
+                if (settings.widget.source) {
+                    var wg_html;
+                    if (typeof settings.widget.source === 'string' || settings.widget.source instanceof window.Element)
+                        wg_html = $(settings.widget.source);
+                    else if (settings.widget.source instanceof jQuery)
+                        wg_html = settings.widget.source;
+                    else if (typeof settings.widget.source === 'function')
+                        wg_html = settings.widget.source();
+
+                    if (widget) {
+                        var wg = $('<div>').html(wg_html).addClass(pluginName + '_widget');
+                        wrapper.append(wg).addClass('has-widget');
+                    }
+                }
 
                 if (id)
                     wrapper.attr('id', pluginName + '_wrapper_' + id);
@@ -274,6 +295,7 @@
                 var ul = wrapper.find('ul.' + pluginName + '_list');
                 var removeAll = wrapper.find('div.' + pluginName + '_remove_all');
                 var close = isMobile ? wrapper.find('div.' + pluginName + '_close') : null;
+                var widget = wrapper.find('div.' + pluginName + '_widget');
 
                 //manual size of the list
                 if (settings.listWidth) {
@@ -352,6 +374,7 @@
                     selectAll: tmp.selectAll,
                     removeAll: removeAll,
                     close: close,
+                    widget: widget,
                     list: ul,
                     listItem: {
                         li: tmp.li,
@@ -685,6 +708,7 @@
             var popup = elements.popup;
             var arrow = elements.arrow;
             var close = elements.close;
+            var widget = elements.widget;
             var shift_on = false;
             var timer;
 
@@ -891,6 +915,17 @@
                                 fn._update(self);
                             }
                             return false;
+                        });
+
+                widget.on('click', '.trigger-close', function() {
+                    if (settings.widget.onValidate && settings.widget.onValidate(self) === false)
+                        return false;
+
+                    fn._close(self);
+                })
+                        .on('change', ':input', function() {
+                            if (settings.widget.onInputChange)
+                                settings.widget.onInputChange(self);
                         });
             }
 
@@ -1837,10 +1872,15 @@
                 if (settings.labelStyle)
                     wrapper.width(wrapper.outerWidth() + 1);
 
+                //display list
                 settings.animation ? list.fadeIn() : list.show();
                 if (settings.listWidth === 'auto' || settings.labelStyle)
                     list.css('display', 'inline-block');
 
+                //display widget
+                settings.animation ? elements.widget.fadeIn() : elements.widget.show();
+
+                //display popup
                 if (elements.popup)
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();
 
@@ -1910,6 +1950,7 @@
             elements.prediction.hide().val(null);
             elements.list.hide().children('li.' + pluginName + '_noresult').remove();
             elements.listItem.li.show().filter('li.over').removeClass('over');
+            elements.widget.hide();
             wrapper.removeClass(pluginName + '_active');
             if (settings.collapseGroup)
                 fn._collapseGroup(obj);
