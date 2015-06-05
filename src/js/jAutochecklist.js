@@ -60,10 +60,12 @@
                 labelStyle: false, //label style
                 listWidth: null, //width of the list
                 listMaxHeight: null, //max height of the list
+                logo: false,   //use value as logo
                 maxSelected: null, //maximum of item selected
                 multiple: true, //checkbox or radio
                 openOnHover: false, //open the list on hover, and close as well
                 rtl: false, //right-to-left text support
+                search: true, //ability to search
                 showValue: false, //show value instead of text
                 theme: null, //use a theme
                 uniqueValue: false, //item with the same text cannot be selected more than one
@@ -243,7 +245,7 @@
                     else if (typeof settings.widget.source === 'function')
                         wg_html = settings.widget.source();
 
-                    if (widget) {
+                    if (wg_html) {
                         var wg = $('<div>').html(wg_html).addClass(pluginName + '_widget');
                         wrapper.append(wg).addClass('has-widget');
                     }
@@ -279,6 +281,9 @@
 
                 if (settings.theme)
                     wrapper.addClass(settings.theme);
+                
+                if (!settings.search)
+                    wrapper.addClass(pluginName + '_nosearch');
 
                 //add a signature of this plugin
                 $this.addClass(pluginName);
@@ -722,7 +727,7 @@
 
             //searching
             input.on('keydown.' + pluginName, function(e) {
-                if (wrapper.hasClass(pluginName + '_disabled'))
+                if (!settings.search || wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
                 var key = e.keyCode;
@@ -1523,7 +1528,7 @@
                 //dynamic-x
                 if (x + w > wW) {
                     var left = -(wW - x) + 2;   //with border
-                    if (x - left >= 0)
+                    if (x - left >= 0 && left >= 0)
                         ul.css({
                             left: left
                         });
@@ -1823,7 +1828,7 @@
                     return;
             }
 
-            if (elements.result)
+            if (elements.result && settings.search)
                 elements.result.hide();
             elements.input.show().removeClass('fakeHidden');
             elements.prediction.show();
@@ -1986,7 +1991,9 @@
         },
         _get: function(obj) {
             var data = obj.data(pluginName);
-            if (!data || !data.elements.listItem.checkbox)
+            if (!data)
+                return obj.val ? obj.val() : null;
+            else if (!data.elements.listItem.checkbox)
                 return data.settings.multiple ? [] : null;
 
             var val = [];
@@ -2422,6 +2429,9 @@
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
                 li += '<li class="{0}" {1} data-index="{2}">'.format(className, style, index);
+                
+                if (settings.logo)
+                    li += '<span class="logo">' + val + '</span>';
 
                 //if case single select and is first item, must add a fallback, if name doesn't contain []
                 if (!settings.multiple && !count && name.indexOf('[]', name.length - 2) === -1)

@@ -474,6 +474,9 @@
 .jAutochecklist_widget .clear {
     clear: both;
 }
+.jAutochecklist_nosearch .jAutochecklist_dropdown input {
+    width: 0;
+}
 /* INLINE STYLE */
 .inline-style .jAutochecklist_result
 {

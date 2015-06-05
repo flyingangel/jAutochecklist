@@ -10,14 +10,15 @@
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
-        <select id="list" name="toto" class="label-style" multiple>
+        <select id="list" name="toto" class="" multiple>
             <option value="test" data-test="toto" selected>Item</option>
         </select>
-        <div class="widget" id="widget">
-            <label><input type="checkbox" />Voir dossiers archivés</label>
+        
+<!--        <div class="widget" id="widget">
+            <label id="check"><input type="checkbox" />Voir dossiers archivés</label>
             <button type="button" class="trigger-close">OK</button>
             <div class="clear"></div>
-        </div>
+        </div>-->
 
         <!--        <ul id="list">
                     <li>1</li>
@@ -30,14 +31,8 @@
             var i = 0;
             $('#list')
             .jAutochecklist({
-                allowDeselectSingleList: false,
-                remote: {
-                    source: 'source.json',
-                    minLength: 2
-                },
-                widget: {
-                    source: document.getElementById('widget')
-                }
+                search: false,
+                logo: true
             });
 
             $('#check').click(function(){
