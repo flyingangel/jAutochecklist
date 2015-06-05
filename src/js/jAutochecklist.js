@@ -1636,6 +1636,8 @@
                 else    //not check
                 {
                     $this.removeClass('selected');
+                    //if this item is locked, don't count it
+                    if (!$this.hasClass('locked'))
                         selectAll = false;
                 }
             });
