@@ -1,5 +1,5 @@
 /* jQuery plugin : jAutochecklist
- @Version: 1.3.0
+ @Version: 1.3.1
  @Desctrition: Create a list of checkbox with autocomplete
  @Website: https://code.google.com/p/jautochecklist/
  @Licence: MIT
@@ -313,7 +313,7 @@
                     ul.css({
                         maxHeight: settings.listMaxHeight + 'px'
                     });
-                if (!settings.menuStyle.search && settings.menuStyle.enable)
+                if (settings.menuStyle.enable && (!settings.menuStyle.search || !settings.search))
                     wrapper.find('div.' + pluginName + '_dropdown_wrapper').remove();
                 if (!settings.arrow) {
                     arrow.remove();
@@ -466,6 +466,9 @@
         //get text of selected items
         getText: function() {
             return fn._getText(this);
+        },
+        getAllText: function() {
+            return fn._getAllText($(this));
         },
         getValueAndText: function() {
             return fn._getValueAndText(this);
@@ -928,10 +931,10 @@
 
                     fn._close(self);
                 })
-                        .on('change', ':input', function() {
-                            if (settings.widget.onInputChange)
-                                settings.widget.onInputChange(self);
-                        });
+                .on('change', ':input', function() {
+                    if (settings.widget.onInputChange)
+                        settings.widget.onInputChange(self);
+                });
             }
 
             //on checkbox click prevent default behaviour
@@ -1642,7 +1645,14 @@
                 //prepare the data, if uniqueValue activated, check whether the item of the same value-text is selected twice
                 if (input.prop('checked')) {
                     var v = input.val();
-                    var text = settings.showValue && v !== '' ? v : $this.text();
+                    var text;
+                    
+                    if (settings.showValue && v !== '')
+                        text = v;
+                    else if (settings.logo)
+                        text = $this.clone().find('span.logo').remove().end().text();
+                    else
+                        text = $this.text();
 
                     //if logo, text is the src
                     if (settings.popupLogoAsValue)
@@ -2023,9 +2033,17 @@
             if (!data || !data.elements.listItem.li)
                 return [];
 
+            var settings = data.settings;
             var val = [];
             data.elements.listItem.li.filter('li.selected').each(function() {
-                val.push($(this).text());
+                var $this = $(this);
+                var txt;
+                if (settings.logo)
+                    txt = $this.clone().find('span.logo').remove().end().text();
+                else
+                    txt = $this.text();
+                
+                val.push(txt);
                 //break the loop if is single select
                 if (!data.settings.multiple)
                     return false;
@@ -2036,17 +2054,43 @@
 
             return val;
         },
+        _getAllText: function(obj) {
+            var data = obj.data(pluginName);
+            if (!data || !data.elements.listItem.checkbox)
+                return [];
+            
+            var settings = data.settings;
+            var val = [];
+            data.elements.listItem.li.each(function() {
+                var $this = $(this);
+                var txt;
+                if (settings.logo)
+                    txt = $this.clone().find('span.logo').remove().end().text();
+                else
+                    txt = $this.text();
+                val.push(txt);
+            });
+
+            return val;
+        },
         _getValueAndText: function(obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.li)
                 return [];
 
+            var settings = data.settings;
             var val = [];
             data.elements.listItem.li.filter('li.selected').each(function() {
                 var $this = $(this);
                 var o = {};
+                var txt;
                 var v = $this.children('input.jAutochecklist_listItem_input').val();
-                o[v] = $this.text();
+                if (settings.logo)
+                    txt = $this.clone().find('span.logo').remove().end().text();
+                else
+                    txt = $this.text();
+                
+                o[v] = txt;
                 val.push(o);
                 //break the loop if is single select
                 if (!data.settings.multiple)
@@ -2431,7 +2475,7 @@
                 li += '<li class="{0}" {1} data-index="{2}">'.format(className, style, index);
                 
                 if (settings.logo)
-                    li += '<span class="logo">' + val + '</span>';
+                    li += '<div class="float-left"><span class="logo">' + val + '</span></div>';
 
                 //if case single select and is first item, must add a fallback, if name doesn't contain []
                 if (!settings.multiple && !count && name.indexOf('[]', name.length - 2) === -1)

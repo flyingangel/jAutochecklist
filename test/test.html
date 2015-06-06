@@ -10,15 +10,17 @@
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
-        <select id="list" name="toto" class="" multiple>
-            <option value="test" data-test="toto" selected>Item</option>
+        <select id="list" name="toto" class="menu-style" multiple>
+            <option value="testda" data-test="toto" selected>Item</option>
+            <option value="azd" data-test="toto" selected>erb</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
         </select>
-        
-<!--        <div class="widget" id="widget">
-            <label id="check"><input type="checkbox" />Voir dossiers archivés</label>
+
+        <div class="widget" id="widget">
+            <label ><input type="checkbox" id="check" />Voir dossiers archivés</label>
             <button type="button" class="trigger-close">OK</button>
             <div class="clear"></div>
-        </div>-->
+        </div>
 
         <!--        <ul id="list">
                     <li>1</li>
@@ -32,13 +34,20 @@
             $('#list')
             .jAutochecklist({
                 search: false,
-                logo: true
+                logo: true,
+                widget: {
+                    source: $('#widget')
+                }
             });
 
             $('#check').click(function(){
                 var val = $('#list').val();
-                alert(val);
+                console.log('abc');
             });
+
+
+
+            console.log($('#list').jAutochecklist('getAllText'));
         </script>
 
     </body>
