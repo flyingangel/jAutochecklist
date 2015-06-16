@@ -632,6 +632,9 @@
     display: block;
     line-height: 50px;
 }
+.mobile-style .jAutochecklist_dropdown.loading {
+    background-position: calc(100% - 70px);
+}
 .mobile-style .jAutochecklist_dropdown input {
     width: 50%;
     font-size: 16px !important;
