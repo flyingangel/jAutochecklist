@@ -60,7 +60,7 @@
                 labelStyle: false, //label style
                 listWidth: null, //width of the list
                 listMaxHeight: null, //max height of the list
-                logo: false,   //use value as logo
+                logo: false, //use value as logo
                 maxSelected: null, //maximum of item selected
                 multiple: true, //checkbox or radio
                 openOnHover: false, //open the list on hover, and close as well
@@ -281,9 +281,10 @@
 
                 if (settings.theme)
                     wrapper.addClass(settings.theme);
-                
                 if (!settings.search)
                     wrapper.addClass(pluginName + '_nosearch');
+                if (settings.remote.source || settings.remote.fnQuery)
+                    wrapper.addClass(pluginName + '_remote');
 
                 //add a signature of this plugin
                 $this.addClass(pluginName);
@@ -692,7 +693,7 @@
             var li = fn._buildItemFromJSON(json || [], settings, obj.data('name'), selected, offset);
             var tmp = fn._insertList(elements.list, li, settings, isAdd, elements.mobile_popup);
 
-            elements.dropdown.removeClass('loading');
+            elements.input.removeClass('loading');
 
             data.elements.listItem = {
                 li: tmp.li,
@@ -931,10 +932,10 @@
 
                     fn._close(self);
                 })
-                .on('change', ':input', function() {
-                    if (settings.widget.onInputChange)
-                        settings.widget.onInputChange(self);
-                });
+                        .on('change', ':input', function() {
+                            if (settings.widget.onInputChange)
+                                settings.widget.onInputChange(self);
+                        });
             }
 
             //on checkbox click prevent default behaviour
@@ -1292,8 +1293,6 @@
                         if (settings.labelStyle) {
                             if (ul.is(':hidden'))
                                 fn._open(self);
-                            else
-                                fn._close(self);
                         }
                     });
 
@@ -1476,7 +1475,7 @@
             var elements = data.elements;
             var input = elements.input;
 
-            elements.dropdown.addClass('loading');
+            input.addClass('loading');
 
             if (remote.fnQuery)
                 remote.fnQuery(obj, val, offset, fn._buildFromJSON);
@@ -1646,7 +1645,7 @@
                 if (input.prop('checked')) {
                     var v = input.val();
                     var text;
-                    
+
                     if (settings.showValue && v !== '')
                         text = v;
                     else if (settings.logo)
@@ -1883,9 +1882,13 @@
                     fn._movePopupBackToList(elements);
                 }
 
-                //set a fix width for the wrapper
-                if (settings.labelStyle)
+                if (settings.labelStyle){
+                    //set a fix width for the wrapper
                     wrapper.width(wrapper.outerWidth() + 1);
+                    //set input width if using remote
+                    if (settings.remote.source || settings.remote.fnQuery)
+                        elements.input.add(elements.prediction).width(list.outerWidth());
+                }
 
                 //display list
                 settings.animation ? list.fadeIn() : list.show();
@@ -2042,7 +2045,7 @@
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
                     txt = $this.text();
-                
+
                 val.push(txt);
                 //break the loop if is single select
                 if (!data.settings.multiple)
@@ -2058,7 +2061,7 @@
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return [];
-            
+
             var settings = data.settings;
             var val = [];
             data.elements.listItem.li.each(function() {
@@ -2089,7 +2092,7 @@
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
                     txt = $this.text();
-                
+
                 o[v] = txt;
                 val.push(o);
                 //break the loop if is single select
@@ -2391,7 +2394,7 @@
             //to ignore
             var selectArr = [];
             //add element if additional selected element
-            if (preSelected && preSelected.length) {
+            if (!settings.labelStyle && preSelected && preSelected.length) {
                 for (i = 0; i < preSelected.length; i++) {
                     //get the first key value pair
                     for (var k in preSelected[i])
@@ -2404,7 +2407,7 @@
                     //find if exist in list
                     var exist = false;
                     for (var l in list)
-                        if (list.hasOwnProperty(l) && list[l].val === k && list[l].html === txt) {
+                        if (list.hasOwnProperty(l) && list[l].val === k && $.trim(list[l].html) === $.trim(txt)) {
                             exist = true;
                             break;
                         }
@@ -2473,7 +2476,7 @@
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
                 li += '<li class="{0}" {1} data-index="{2}">'.format(className, style, index);
-                
+
                 if (settings.logo)
                     li += '<div class="float-left"><span class="logo">' + val + '</span></div>';
 

@@ -10,9 +10,25 @@
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
-        <select id="list" name="toto" class="menu-style" multiple>
+        <select id="list" name="toto" class="">
             <option value="testda" data-test="toto" selected>Item</option>
             <option value="azd" data-test="toto" selected>erb</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto">rtr</option>
+            <option value="thrt" data-test="toto" selected>qdfbqdfb</option>
+            <option value="thrt" data-test="toto">rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
+            <option value="thrt" data-test="toto" selected>rtr</option>
             <option value="thrt" data-test="toto" selected>rtr</option>
         </select>
 
@@ -33,11 +49,15 @@
             var i = 0;
             $('#list')
             .jAutochecklist({
-                search: false,
-                logo: true,
-                widget: {
-                    source: $('#widget')
-                }
+                  labelStyle: true,
+          remote: {
+              source: 'toto.php'
+          }
+//                search: false,
+//                logo: true,
+//                widget: {
+//                    source: $('#widget')
+//                }
             });
 
             $('#check').click(function(){

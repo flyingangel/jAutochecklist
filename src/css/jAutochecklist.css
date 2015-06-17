@@ -185,6 +185,9 @@
     min-height: 0;
     filter: alpha(opacity=0);
 }
+.jAutochecklist_dropdown input.loading {
+    background: url(images/loading.gif) no-repeat 85%;
+}
 .jAutochecklist_arrow {
     height: 100%;
     width:20px;
@@ -216,7 +219,8 @@
     display: none;
     border: 1px #aaa solid;
     margin:0;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     max-height: 300px;
     min-height: 24px;
     z-index: 99;
@@ -455,9 +459,6 @@
 .jAutochecklist_close {
     display: none;
 }
-.jAutochecklist_dropdown.loading {
-    background: url(images/loading.gif) no-repeat right;
-}
 .jAutochecklist_single .jAutochecklist_listItem_group_empty {
     cursor: default;
     color: cornflowerblue;
@@ -632,12 +633,12 @@
     display: block;
     line-height: 50px;
 }
-.mobile-style .jAutochecklist_dropdown.loading {
-    background-position: calc(100% - 70px);
-}
 .mobile-style .jAutochecklist_dropdown input {
     width: 50%;
     font-size: 16px !important;
+}
+.mobile-style .jAutochecklist_dropdown input.loading {
+    background-position: calc(100% - 70px);
 }
 .mobile-style .jAutochecklist_remove_all {
     top: 18px;
@@ -678,11 +679,28 @@
     border: 0;
 }
 .label-style .jAutochecklist_result {
-    display: inline-block !important;
+    display: block !important;
     padding-left: 0;
 }
 .label-style.jAutochecklist_disabled .jAutochecklist_result {
     background: transparent;
+}
+.label-style .jAutochecklist_listItem {
+    white-space: nowrap;
+    padding-right: 16px;
+}
+/*REMOTE + LABEL STYLE*/
+.label-style.jAutochecklist_remote .jAutochecklist_dropdown input {
+    margin-top: 20px;
+    z-index: 100;
+    border: 1px #aaa solid;
+    background-color: white;
+}
+.label-style.jAutochecklist_remote.jAutochecklist_active .jAutochecklist_dropdown input{
+    display: block !important;
+}
+.label-style.jAutochecklist_remote .jAutochecklist_list {
+    top: 22px;
 }
 /*MOBILE STYLE + LABEL STYLE*/
 .label-style.mobile-style .jAutochecklist_result {
@@ -695,9 +713,6 @@
 }
 .label-style.mobile-style .jAutochecklist_listItem {
     line-height: 50px;
-}
-.label-style .jAutochecklist_listItem {
-    white-space: nowrap;
 }
 /*RIGHT-TO-LEFT*/
 .jAutochecklist_rtl,
