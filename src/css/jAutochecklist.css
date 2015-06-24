@@ -691,16 +691,18 @@
 }
 /*REMOTE + LABEL STYLE*/
 .label-style.jAutochecklist_remote .jAutochecklist_dropdown input {
-    margin-top: 20px;
+    margin-top: 25px;
+    margin-left: 5px;
     z-index: 100;
     border: 1px #aaa solid;
     background-color: white;
 }
 .label-style.jAutochecklist_remote.jAutochecklist_active .jAutochecklist_dropdown input{
     display: block !important;
+    border-radius: 3px;
 }
 .label-style.jAutochecklist_remote .jAutochecklist_list {
-    top: 22px;
+    padding-top: 28px;
 }
 /*MOBILE STYLE + LABEL STYLE*/
 .label-style.mobile-style .jAutochecklist_result {

@@ -650,14 +650,14 @@
             var data = obj.data(pluginName);
             if (!data)
                 return;
-
+            
             //convert to array if empty
             if (!json)
                 json = [];
 
             //if json is not an object, such as string, try to convert
             if (typeof json !== 'object')
-                json = $.parseJSON(json);
+                json = JSON && JSON.parse(json) || $.parseJSON(json);
 
             //it's an array
             var i, new_json = [];
@@ -1887,7 +1887,7 @@
                     wrapper.width(wrapper.outerWidth() + 1);
                     //set input width if using remote
                     if (settings.remote.source || settings.remote.fnQuery)
-                        elements.input.add(elements.prediction).width(list.outerWidth());
+                        elements.input.add(elements.prediction).width(list.outerWidth() - 22);
                 }
 
                 //display list
@@ -2394,7 +2394,7 @@
             //to ignore
             var selectArr = [];
             //add element if additional selected element
-            if (!settings.labelStyle && preSelected && preSelected.length) {
+            if (preSelected && preSelected.length) {
                 for (i = 0; i < preSelected.length; i++) {
                     //get the first key value pair
                     for (var k in preSelected[i])
@@ -2407,7 +2407,7 @@
                     //find if exist in list
                     var exist = false;
                     for (var l in list)
-                        if (list.hasOwnProperty(l) && list[l].val === k && $.trim(list[l].html) === $.trim(txt)) {
+                        if (list.hasOwnProperty(l) && list[l].val === k) {//&& $.trim(list[l].html) === $.trim(txt)
                             exist = true;
                             break;
                         }
