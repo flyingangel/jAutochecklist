@@ -1163,7 +1163,7 @@
                                 return;
 
                             //load more only if the list reach its bottom
-                            if ($this.height() + 5 < ($this.get(0).scrollHeight - $this.scrollTop()))
+                            if ($this.innerHeight() + $this.scrollTop() + 50 < $this.get(0).scrollHeight)
                                 return;
 
                             var offset = $this.children('li').length;
