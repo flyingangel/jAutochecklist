@@ -221,6 +221,9 @@
                     settings.autocompleteStyle.enable = true;
                     settings.popup = false;
                 }
+                
+                if ($this.hasClass('absolutePosition'))
+                    settings.absolutePosition = true;
 
                 //create a div wrapper
                 var wrapper = $('<div>').attr({
@@ -285,6 +288,8 @@
                     wrapper.addClass(pluginName + '_nosearch');
                 if (settings.remote.source || settings.remote.fnQuery)
                     wrapper.addClass(pluginName + '_remote');
+                if (settings.absolutePosition)
+                    wrapper.addClass('absolutePosition');
 
                 //add a signature of this plugin
                 $this.addClass(pluginName);
