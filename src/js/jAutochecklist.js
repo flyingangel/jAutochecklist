@@ -2412,7 +2412,7 @@
                     //find if exist in list
                     var exist = false;
                     for (var l in list)
-                        if (list.hasOwnProperty(l) && list[l].val === k) {//&& $.trim(list[l].html) === $.trim(txt)
+                        if (list.hasOwnProperty(l) && list[l].val == k) {//&& $.trim(list[l].html) === $.trim(txt)
                             exist = true;
                             break;
                         }
