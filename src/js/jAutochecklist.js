@@ -60,7 +60,6 @@
                 labelStyle: false, //label style
                 listWidth: null, //width of the list
                 listMaxHeight: null, //max height of the list
-                logo: false, //use value as logo
                 maxSelected: null, //maximum of item selected
                 multiple: true, //checkbox or radio
                 openOnHover: false, //open the list on hover, and close as well
@@ -70,6 +69,7 @@
                 theme: null, //use a theme
                 uniqueValue: false, //item with the same text cannot be selected more than one
                 updateOriginal: false, //whether to update original everytime the list change
+                valueAsLogo: false, //use value as logo
                 width: 200, //width of the wrapper
                 //popup
                 popup: true, //show or hide popup
@@ -1653,7 +1653,7 @@
 
                     if (settings.showValue && v !== '')
                         text = v;
-                    else if (settings.logo)
+                    else if ($this.find('span.logo').length)
                         text = $this.clone().find('span.logo').remove().end().text();
                     else
                         text = $this.text();
@@ -2046,18 +2046,18 @@
             data.elements.listItem.li.filter('li.selected').each(function() {
                 var $this = $(this);
                 var txt;
-                if (settings.logo)
+                if ($this.find('span.logo').length)
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
                     txt = $this.text();
 
                 val.push(txt);
                 //break the loop if is single select
-                if (!data.settings.multiple)
+                if (!settings.multiple)
                     return false;
             });
 
-            if (!data.settings.multiple)
+            if (!settings.multiple)
                 return val[0] === undefined ? '' : val[0];
 
             return val;
@@ -2067,12 +2067,11 @@
             if (!data || !data.elements.listItem.checkbox)
                 return [];
 
-            var settings = data.settings;
             var val = [];
             data.elements.listItem.li.each(function() {
                 var $this = $(this);
                 var txt;
-                if (settings.logo)
+                if ($this.find('span.logo').length)
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
                     txt = $this.text();
@@ -2093,7 +2092,7 @@
                 var o = {};
                 var txt;
                 var v = $this.children('input.jAutochecklist_listItem_input').val();
-                if (settings.logo)
+                if ($this.find('span.logo').length)
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
                     txt = $this.text();
@@ -2101,7 +2100,7 @@
                 o[v] = txt;
                 val.push(o);
                 //break the loop if is single select
-                if (!data.settings.multiple)
+                if (!settings.multiple)
                     return false;
             });
 
@@ -2292,9 +2291,12 @@
                     level: level,
                     locked: locked,
                     selected: t.data('selected'),
+                    style: this.getAttribute('style'),
                     val: t.data('value') === null || t.data('value') === undefined ? '' : t.data('value'),
                     index: k,
-                    orderLocked: t.data('orderlocked')
+                    orderLocked: t.data('orderlocked'),
+                    logo: t.data('logo'),
+                    info: t.data('info')
                 });
             });
 
@@ -2326,11 +2328,14 @@
                         style: this.getAttribute('style'),
                         val: null,
                         index: null,
-                        orderLocked: t.data('orderlocked')
+                        orderLocked: t.data('orderlocked'),
+                        logo: t.data('logo'),
+                        info: t.data('info')
                     });
 
                     //foreach option in group
                     t.children().each(function() {
+                        var c = $(this);
                         json.push({
                             className: (this.className || '') + ' ' + settings.selectorChild,
                             groupType: 0,
@@ -2338,12 +2343,14 @@
                             isChild: true,
                             isGroup: false,
                             level: null,
-                            locked: forceLocked || t.data('locked') || this.disabled,
+                            locked: forceLocked || c.data('locked') || this.disabled,
                             selected: fn._isSelected(this, settings.multiple, isFirstOption),
                             style: this.getAttribute('style'),
                             val: this.value,
                             index: i++,
-                            orderLocked: t.data('orderlocked')
+                            orderLocked: t.data('orderlocked'),
+                            logo: c.data('logo'),
+                            info: c.data('info')
                         });
 
                         isFirstOption = false;
@@ -2362,7 +2369,9 @@
                         style: this.getAttribute('style'),
                         val: this.value,
                         index: i++,
-                        orderLocked: t.data('orderlocked')
+                        orderLocked: t.data('orderlocked'),
+                        logo: t.data('logo'),
+                        info: t.data('info')
                     });
 
                     isFirstOption = false;
@@ -2448,13 +2457,13 @@
                     className += ' locked';
 
                 //add some padding
-                var px = 5;
                 var level = e.level;
 
                 //check the item level
                 if (!level)
                     level = 1;
 
+                var px = 5;
                 if (level > 1) {
                     px += (level - 1) * 20;
                     className += ' level' + level;
@@ -2482,8 +2491,12 @@
 
                 li += '<li class="{0}" {1} data-index="{2}">'.format(className, style, index);
 
-                if (settings.logo)
-                    li += '<div class="float-left"><span class="logo">' + val + '</span></div>';
+                var logo = e.logo;
+                if (settings.valueAsLogo)
+                    logo = val;
+                
+                if (logo)
+                    li += '<div class="float-left"><span class="logo">' + logo + '</span></div> ';  //trailing space necessary
 
                 //if case single select and is first item, must add a fallback, if name doesn't contain []
                 if (!settings.multiple && !count && name.indexOf('[]', name.length - 2) === -1)
@@ -2510,7 +2523,12 @@
                     li += '<input type="{0}" name="{1}" value="{2}" class="{3}_listItem_input {3}_input{5}" {4} />'.format(type, n, val, pluginName, selected ? 'checked' : '', count++);
                 }
 
-                li += e.html + '</li>';
+                li += e.html;
+                
+                if (e.info)
+                    li += ' <span class="info">' + e.info + '</span>';  //beginning space necessary
+                
+                li += '</li>';
             }
 
             return li;

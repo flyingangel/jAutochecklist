@@ -377,6 +377,16 @@
     color: #333;
     text-shadow: 1px 1px #FFF;
 }
+.jAutochecklist_listItem span.info {
+    font-size: 10px;
+    font-family: Verdana;
+    color: #aaa;
+    margin-left: 10px;
+}
+.jAutochecklist_listItem.selected span.info {
+    color: #fff;
+    text-shadow: none;
+}
 .jAutochecklist_list .line-large {
     line-height: 40px;
 }

@@ -10,33 +10,12 @@
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
-        <select id="list" name="toto" class="">
-            <option value="testda" data-test="toto" selected>Item qegserg serg segs fgs fg sdfg </option>
-            <option value="azd" data-test="toto" selected>erb</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto">rtr</option>
-            <option value="thrt" data-test="toto" selected>qdfbqdfb</option>
-            <option value="thrt" data-test="toto">rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-            <option value="thrt" data-test="toto" selected>rtr</option>
-        </select>
-
-        <div class="widget" id="widget">
-            <label ><input type="checkbox" id="check" />Voir dossiers archivés</label>
-            <button type="button" class="trigger-close">OK</button>
-            <div class="clear"></div>
-        </div>
+        <ul id="list"  class="">
+            <li data-logo="test" data-info="aussitôt par e-mail et le supprimer de votre messagerie. ">
+                Item qegserg se 
+            </li>
+            <li data-logo="azdazd_ azd_ a_zd_azd_ azd_">Item qegserg serg segs</li>
+        </ul>
 
         <!--        <ul id="list">
                     <li>1</li>
@@ -49,15 +28,6 @@
             var i = 0;
             $('#list')
             .jAutochecklist({
-                  labelStyle: true,
-          remote: {
-              source: 'toto.php'
-          }
-//                search: false,
-//                logo: true,
-//                widget: {
-//                    source: $('#widget')
-//                }
             });
 
             $('#check').click(function(){
