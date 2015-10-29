@@ -10,7 +10,7 @@
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
-        <ul id="list"  class="">
+        <ul id="list"  class="" title="toto">
             <li data-logo="test" data-info="aussitôt par e-mail et le supprimer de votre messagerie. ">
                 Item qegserg se 
             </li>
@@ -25,19 +25,9 @@
                 </ul>-->
 
         <script>
-            var i = 0;
-            $('#list')
-            .jAutochecklist({
+            $('#list').jAutochecklist({
+                accessbility: true
             });
-
-            $('#check').click(function(){
-                var val = $('#list').val();
-                console.log('abc');
-            });
-
-
-
-            console.log($('#list').jAutochecklist('getAllText'));
         </script>
 
     </body>

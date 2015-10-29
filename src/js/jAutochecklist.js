@@ -45,6 +45,7 @@
             var config = $.extend(true, {
                 absolutePosition: false, //use absolute position instead of inline
                 accentInsensitive: true, //if enable, search autocomplete will be accent insensitive
+                accessibility: false, //enable accessibility mode
                 allowDeselectSingleList: true, //allow deselection on a single list
                 alphabetical: false, //order item alphabetically
                 animation: true, //show popup and list with fade animation
@@ -224,6 +225,11 @@
                 
                 if ($this.hasClass('absolutePosition'))
                     settings.absolutePosition = true;
+                
+                //accessibility mode
+                var title = $this.attr('title');
+                if (title && settings.accessibility)
+                    settings.textSearch = title;
 
                 //create a div wrapper
                 var wrapper = $('<div>').attr({
@@ -1200,7 +1206,7 @@
 
                 //as long as the wrapper has focus, focus on the input
                 //IE hack
-                if (!isMobile)
+                if (!isMobile && !settings.accessibility)
                     window.setTimeout(function() {
                         input.focus();
                     });
@@ -1256,7 +1262,12 @@
                                     ul.scrollTop(ul.scrollTop() + 50);
                                 else if (key === 38 && next.position().top < 0)
                                     ul.scrollTop(ul.scrollTop() - 50);
+                            
+                                if (settings.accessibility)
+                                    next.focus();
                             }
+                            
+                            return false;
                         }
                         //enter: do not submit form and select item
                         else if (key === 13) {
@@ -2489,7 +2500,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}">'.format(className, style, index);
+                li += '<li class="{0}" {1} data-index="{2}" {3}>'.format(className, style, index, settings.accessibility ? 'tabindex="-1"' : '');
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)
