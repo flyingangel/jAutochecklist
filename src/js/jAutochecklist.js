@@ -230,18 +230,21 @@
                 var title = $this.attr('title');
                 if (title && settings.accessibility)
                     settings.textSearch = title;
+                
+                //copy the original tabindex
+                var tabindex = $this.attr('tabindex') || 0;
 
                 //create a div wrapper
                 var wrapper = $('<div>').attr({
                     'class': pluginName + '_wrapper',
-                    'tabindex': 0
+                    tabindex: tabindex
                 })
                         .width(settings.width === null ? $this.width() : settings.width)
                         .append(
                                 ('<div class="{0}_popup"></div>'
                                         + '<div class="{0}_dropdown_wrapper">'
                                         + '<div class="{0}_arrow"><div></div></div>'
-                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" /><input class="{0}_input" placeholder="{1}" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
+                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" tabindex="-1" /><input class="{0}_input" placeholder="{1}" tabindex="-1" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
                                         + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch, settings.textClose)
                                 );
 
@@ -1196,7 +1199,7 @@
 
                         return false;
                     });
-
+                    
             wrapper.on('focusin.' + pluginName, function() {
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
@@ -1939,6 +1942,11 @@
 
             //trigger focus
             obj.triggerHandler('focus');
+            
+            //transfer tabindex to input
+            var tabindex = wrapper.attr('tabindex');
+            wrapper.removeAttr('tabindex');
+            elements.input.attr('tabindex', tabindex);
 
             //close all other checklist
             $('ul.' + pluginName + ', select.' + pluginName).not(obj).jAutochecklist('close');
@@ -2007,6 +2015,11 @@
             if (settings.labelStyle)
                 wrapper.width('auto');
 
+            //reset tabindex
+            var tabindex = elements.input.attr('tabindex');
+            elements.input.removeAttr('tabindex');
+            wrapper.attr('tabindex', tabindex);
+            
             wrapper.trigger('blur');
 
             dragging = false;
