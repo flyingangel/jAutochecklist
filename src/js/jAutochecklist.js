@@ -173,6 +173,9 @@
                 //clone the config setting
                 var settings = $.extend(true, {
                 }, config);
+                
+                //bind the current list
+                settings.originalObject = this;
 
                 //data passed by attribute json will override the settings
                 var json = $this.data('json');
