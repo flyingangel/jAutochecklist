@@ -2516,7 +2516,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}" {3}>'.format(className, style, index, settings.accessibility ? 'tabindex="-1"' : '');
+                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index);
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)
