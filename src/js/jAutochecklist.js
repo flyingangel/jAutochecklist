@@ -87,6 +87,8 @@
                 textNoResult: 'No result found...', //text no result
                 textSearch: 'Type something...', //the default text
                 //group
+                autoCollapse: false,  //use in conjunction with collapseGroup to auto collapse/expand items
+                autoExpand: false,  //use in conjunction with collapseGroup to auto collapse/expand items
                 collapseGroup: false, //ability to collapse
                 selectorGroup: 'group', //the class selector of a group
                 selectorChild: 'child', //the class selector of a child
@@ -94,6 +96,9 @@
                 //0 => default. The parent item will be selected if all of the children items are selected
                 //1 => The parent item will be selected if at least one child item is selected
                 //2 => The parent item acts independantly from the children items (exclusive)
+                //3 => A combination of type0 and type2 - The parent item acts independantly but the children will affect the parent
+                //4 => A combination of type1 and type2 - The parent item acts independantly but the children will affect the parent
+                //5 => The parent item will select all the children but the children will not affect the parent
 
                 onClose: null, //func(vals, valBefore, changed)  
                 //values    = list of selected values
@@ -115,6 +120,7 @@
                 remote: {
                     cache: true, //whether to cache found data (should be disable when loadMoreOnScroll is enable)
                     delay: 0, //the delay (in ms) before setting query to the remote source to reduce charge
+                    data: null, //additional data to append to the source. String | function
                     filter: false, //autofilter after fetching data from the remote source, it means that the client side will handle word match
                     loadMoreOnScroll: false, //when scroll down, next data will be loaded (will conflict with cache)
                     minLength: 0, //the minimum length of the text
@@ -635,6 +641,15 @@
                 return null;
 
             return data.elements;
+        },
+        clearCache: function() {
+            return this.each(function() {
+                var data = $(this).data(pluginName);
+                if (!data)
+                    return;
+                
+                data.elements.input.removeData('remote');
+            });
         },
         /**
          * rebuild the list from JSON
@@ -1201,6 +1216,22 @@
                             fn._expand(group, settings);
 
                         return false;
+                    })
+                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function() {
+                        if (!settings.autoExpand)
+                            return;
+                        
+                        var $this = $(this);
+                        if (!$this.find('div.' + pluginName + '_expandable').hasClass('expanded'))
+                            fn._expand($this, settings);
+                        
+                        //collapse other li
+                        if (settings.autoCollapse){
+                            var group = $this.siblings('li.' + pluginName + '_listItem_group_empty');
+                            group.each(function(){
+                                fn._collapse($(this), settings);
+                            });
+                        }
                     });
                     
             wrapper.on('focusin.' + pluginName, function() {
@@ -1502,12 +1533,20 @@
             if (remote.fnQuery)
                 remote.fnQuery(obj, val, offset, fn._buildFromJSON);
             else {
-                //the built-in fnQuery
-                $.get(remote.source, {
+                var getData = {
                     text: val,
                     offset: offset
-                },
-                function(json) {
+                };
+                
+                //additional data to send
+                if (remote.data){
+                    var d = typeof remote.data==='function' ? remote.data() : remote.data;
+                    if (typeof d==='object')
+                        $.extend(true, getData, d);
+                }
+                    
+                //the built-in fnQuery
+                $.get(remote.source, getData, function(json) {
                     //convert to array if empty
                     if (!json)
                         json = [];
@@ -1797,7 +1836,7 @@
             {
                 var text;
                 if (val.length) {
-                    text = settings.textAllSelected && settings.multiple && selectAll && count > 1 ? settings.textAllSelected : val.join(', ');
+                    text = settings.textAllSelected && settings.multiple && selectAll && count > 1 && !settings.remote.source && !settings.remote.fnQuery ? settings.textAllSelected : val.join(', ');
                     //show only if list multiple or allowDeselectSingleList
                     if (settings.multiple || settings.allowDeselectSingleList)
                         elements.removeAll.show();
@@ -2323,7 +2362,8 @@
                     index: k,
                     orderLocked: t.data('orderlocked'),
                     logo: t.data('logo'),
-                    info: t.data('info')
+                    info: t.data('info'),
+                    json: t.data('json')
                 });
             });
 
@@ -2357,7 +2397,8 @@
                         index: null,
                         orderLocked: t.data('orderlocked'),
                         logo: t.data('logo'),
-                        info: t.data('info')
+                        info: t.data('info'),
+                        json: t.data('json')
                     });
 
                     //foreach option in group
@@ -2377,7 +2418,8 @@
                             index: i++,
                             orderLocked: t.data('orderlocked'),
                             logo: c.data('logo'),
-                            info: c.data('info')
+                            info: c.data('info'),
+                            json: c.data('json')
                         });
 
                         isFirstOption = false;
@@ -2398,7 +2440,8 @@
                         index: i++,
                         orderLocked: t.data('orderlocked'),
                         logo: t.data('logo'),
-                        info: t.data('info')
+                        info: t.data('info'),
+                        json: t.data('json')
                     });
 
                     isFirstOption = false;
@@ -2516,7 +2559,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}" tabindex="-1">'.format(className, style, index);
+                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? 'data-json="' + e.json + '"' : '');
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)

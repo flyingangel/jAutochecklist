@@ -26,7 +26,12 @@
 
         <script>
             $('#list').jAutochecklist({
-                accessibility: true
+                remote: {
+                    source: 'index.php',
+                    data: function(){
+                        return {a: 'b'}
+                    }
+                }
             });
         </script>
 
