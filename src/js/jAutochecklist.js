@@ -87,8 +87,8 @@
                 textNoResult: 'No result found...', //text no result
                 textSearch: 'Type something...', //the default text
                 //group
-                autoCollapse: false,  //use in conjunction with collapseGroup to auto collapse/expand items
-                autoExpand: false,  //use in conjunction with collapseGroup to auto collapse/expand items
+                autoCollapse: false, //use in conjunction with collapseGroup to auto collapse/expand items
+                autoExpand: false, //use in conjunction with collapseGroup to auto collapse/expand items
                 collapseGroup: false, //ability to collapse
                 selectorGroup: 'group', //the class selector of a group
                 selectorChild: 'child', //the class selector of a child
@@ -122,6 +122,7 @@
                     delay: 0, //the delay (in ms) before setting query to the remote source to reduce charge
                     data: null, //additional data to append to the source. String | function
                     filter: false, //autofilter after fetching data from the remote source, it means that the client side will handle word match
+                    forceRefresh: false, //force refresh even if the last request is empty
                     loadMoreOnScroll: false, //when scroll down, next data will be loaded (will conflict with cache)
                     minLength: 0, //the minimum length of the text
                     source: null, //source of data to fetch if fnQuery isn't defined
@@ -179,7 +180,7 @@
                 //clone the config setting
                 var settings = $.extend(true, {
                 }, config);
-                
+
                 //bind the current list
                 settings.originalObject = this;
 
@@ -231,15 +232,15 @@
                     settings.autocompleteStyle.enable = true;
                     settings.popup = false;
                 }
-                
+
                 if ($this.hasClass('absolutePosition'))
                     settings.absolutePosition = true;
-                
+
                 //accessibility mode
                 var title = $this.attr('title');
                 if (title && settings.accessibility)
                     settings.textSearch = title;
-                
+
                 //copy the original tabindex
                 var tabindex = $this.attr('tabindex') || 0;
 
@@ -647,7 +648,7 @@
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
-                
+
                 data.elements.input.removeData('remote');
             });
         },
@@ -682,7 +683,7 @@
             var data = obj.data(pluginName);
             if (!data)
                 return;
-            
+
             //convert to array if empty
             if (!json)
                 json = [];
@@ -735,6 +736,8 @@
             data.elements.selectAll = tmp.selectAll;
             obj.data(pluginName, data);
             fn._postProcessing(obj, showNoResult);
+            
+            return json;
         },
         _registerEvent: function(self) {
             var data = self.data(pluginName);
@@ -1200,8 +1203,10 @@
 
                             var offset = $this.children('li').length;
                             var val = input.val();
-
-                            fn._fetchData(self, val, offset);
+                            var lastRequest = input.data('lastRequest');
+                            //fetch only if last request is not empty
+                            if (settings.remote.forceRefresh || !lastRequest || !lastRequest[val] || !lastRequest[val].empty)
+                                fn._fetchData(self, val, offset);
                         }, 500);
                     })
                     .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function() {
@@ -1220,20 +1225,20 @@
                     .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function() {
                         if (!settings.autoExpand)
                             return;
-                        
+
                         var $this = $(this);
                         if (!$this.find('div.' + pluginName + '_expandable').hasClass('expanded'))
                             fn._expand($this, settings);
-                        
+
                         //collapse other li
-                        if (settings.autoCollapse){
+                        if (settings.autoCollapse) {
                             var group = $this.siblings('li.' + pluginName + '_listItem_group_empty');
-                            group.each(function(){
+                            group.each(function() {
                                 fn._collapse($(this), settings);
                             });
                         }
                     });
-                    
+
             wrapper.on('focusin.' + pluginName, function() {
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
@@ -1299,11 +1304,11 @@
                                     ul.scrollTop(ul.scrollTop() + 50);
                                 else if (key === 38 && next.position().top < 0)
                                     ul.scrollTop(ul.scrollTop() - 50);
-                            
+
                                 if (settings.accessibility)
                                     next.focus();
                             }
-                            
+
                             return false;
                         }
                         //enter: do not submit form and select item
@@ -1537,14 +1542,14 @@
                     text: val,
                     offset: offset
                 };
-                
+
                 //additional data to send
-                if (remote.data){
-                    var d = typeof remote.data==='function' ? remote.data() : remote.data;
-                    if (typeof d==='object')
+                if (remote.data) {
+                    var d = typeof remote.data === 'function' ? remote.data() : remote.data;
+                    if (typeof d === 'object')
                         $.extend(true, getData, d);
                 }
-                    
+
                 //the built-in fnQuery
                 $.get(remote.source, getData, function(json) {
                     //convert to array if empty
@@ -1556,7 +1561,7 @@
                         showNoResult = false;
 
                     //build the list from a VALID json
-                    fn._buildFromJSON(obj, json, showNoResult, offset > 0, selected, offset);
+                    json = fn._buildFromJSON(obj, json, showNoResult, offset > 0, selected, offset);
 
                     //cache only when offset=0
                     if (remote.cache && !offset) {
@@ -1564,6 +1569,15 @@
                         cache[val] = json;
                         input.data('remote', cache);
                     }
+                    
+                    //last request, create if not exist
+                    var lastRequest = input.data('lastRequest') || {};
+                    //update last request
+                    lastRequest[val] = {
+                        value: val,
+                        empty: $.isArray(json) && json.length === 0 || $.isEmptyObject(json)
+                    };
+                    input.data('lastRequest', lastRequest);
                 });
             }
         },
@@ -1943,7 +1957,7 @@
                     fn._movePopupBackToList(elements);
                 }
 
-                if (settings.labelStyle){
+                if (settings.labelStyle) {
                     //set a fix width for the wrapper
                     wrapper.width(wrapper.outerWidth() + 1);
                     //set input width if using remote
@@ -1984,7 +1998,7 @@
 
             //trigger focus
             obj.triggerHandler('focus');
-            
+
             //transfer tabindex to input
             var tabindex = wrapper.attr('tabindex');
             wrapper.removeAttr('tabindex');
@@ -2061,7 +2075,7 @@
             var tabindex = elements.input.attr('tabindex');
             elements.input.removeAttr('tabindex');
             wrapper.attr('tabindex', tabindex);
-            
+
             wrapper.trigger('blur');
 
             dragging = false;
@@ -2564,7 +2578,7 @@
                 var logo = e.logo;
                 if (settings.valueAsLogo)
                     logo = val;
-                
+
                 if (logo)
                     li += '<div class="float-left"><span class="logo">' + logo + '</span></div> ';  //trailing space necessary
 
@@ -2594,10 +2608,10 @@
                 }
 
                 li += e.html;
-                
+
                 if (e.info)
                     li += ' <span class="info">' + e.info + '</span>';  //beginning space necessary
-                
+
                 li += '</li>';
             }
 
