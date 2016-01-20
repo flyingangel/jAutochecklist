@@ -498,6 +498,18 @@
         getValueAndText: function() {
             return fn._getValueAndText(this);
         },
+        getSelectedObject: function(){
+            var data = this.data(pluginName);
+            if (!data || !data.elements.listItem.li.length)
+                return data.settings.multiple ? [] : null;
+
+            var el = data.elements.listItem.li.filter('li.selected');
+
+            if (!data.settings.multiple)
+                return el[0] === undefined ? null : el[0];
+
+            return el;
+        },
         //set the values
         set: function(vals, clearAll) {
             if (clearAll === undefined)
@@ -522,7 +534,7 @@
 
             //convert to string
             for (var i = 0; i < vals.length; i++)
-                vals[i] = vals[i].toString();
+                vals[i] = vals[i] === undefined ? '' : vals[i].toString();
 
             return this.each(function() {
                 fn._unset($(this), vals);
@@ -649,7 +661,7 @@
                 if (!data)
                     return;
 
-                data.elements.input.removeData('remote');
+                data.elements.input.removeData(['remote', 'lastRequest']);
             });
         },
         /**
@@ -839,6 +851,9 @@
 
                             //before emptying the list, we must remember the selected values
                             var selected = fn._getValueAndText(self);
+                            
+                            //force empty the last request
+                            $this.data('lastRequest', null);
 
                             //if cache not exist, fetch from remote source
                             if (!cache || cache[val] === undefined) {
@@ -2531,6 +2546,7 @@
                 var isChild = e.isChild || false;
                 var index = e.index === undefined ? (offset ? i + offset : i) : (e.index === null ? '' : e.index);
                 var selected = e.selected;
+				var json = e.json && typeof e.json === 'object' ? JSON.stringify(e.json) : e.json;
 
                 if (selectArr[val] !== undefined)
                     selected = true;
@@ -2573,7 +2589,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? 'data-json="' + e.json + '"' : '');
+                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? "data-json='" + json + "'" : '');
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)
