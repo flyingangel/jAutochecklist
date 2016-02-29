@@ -1677,22 +1677,18 @@
             if (obj.is('ul')) {
                 //get the list of original item
                 original = obj.find('li');
-                //update original
-                if (elements.listItem.li && elements.listItem.li.length)
-                    elements.listItem.li.each(function(k) {
-                        $(this).data(original.eq(k).data());
-                    });
             }
             else {
                 original = obj.find('option, optgroup');
                 if (settings.firstItemSelectAll)
                     original = original.slice(1);
-
-                if (elements.listItem.checkbox && elements.listItem.checkbox.length)
-                    elements.listItem.checkbox.each(function(k) {
-                        $(this).closest('li').data(original.eq(k).data());
-                    });
             }
+            
+            //update original
+            if (elements.listItem.li && elements.listItem.li.length)
+                elements.listItem.li.each(function(k) {
+                    $(this).data(original.eq(k).data());
+                });
         },
         _selectAll: function(obj, state) {
             var data = obj.data(pluginName);
@@ -2589,7 +2585,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? "data-json='" + json + "'" : '');
+                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? "data-jsons='" + json + "'" : '');
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)
