@@ -10,7 +10,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-(function($, document, window, undefined) {
+(function ($, document, window, undefined) {
     'use strict';
 
     var pluginName = 'jAutochecklist';
@@ -20,27 +20,27 @@
     var dragging_state;
 
     //detect mobile. http://detectmobilebrowsers.com/
-    var isMobile = (function(a) {
+    var isMobile = (function (a) {
         return (/(android|bb\d+|meego)|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)));
     })(navigator.userAgent || navigator.vendor || window.opera);
 
     //if format isn't implemented
     if (!String.prototype.format) {
-        String.prototype.format = function() {
+        String.prototype.format = function () {
             var args = arguments;
-            return this.replace(/{(\d+)}/g, function(match, number) {
+            return this.replace(/{(\d+)}/g, function (match, number) {
                 return args[number] !== undefined ? args[number] : match;
             });
         };
     }
 
     //drag handling
-    $(window).on('mouseup.' + pluginName, function() {
+    $(window).on('mouseup.' + pluginName, function () {
         dragging = false;
     });
 
     var fn = {
-        init: function(options) {
+        init: function (options) {
             //default setting
             var config = $.extend(true, {
                 absolutePosition: false, //use absolute position instead of inline
@@ -162,7 +162,7 @@
             },
             options);
 
-            return this.each(function() {
+            return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 var id = this.id;
@@ -431,8 +431,8 @@
                     settings.onInit();
             });
         },
-        destroy: function() {
-            return this.each(function() {
+        destroy: function () {
+            return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -448,57 +448,57 @@
                 this.setAttribute('name', $this.data('name'));
             });
         },
-        selectAll: function() {
-            return this.each(function() {
+        selectAll: function () {
+            return this.each(function () {
                 fn._selectAll($(this), true);
             });
         },
-        deselectAll: function() {
-            return this.each(function() {
+        deselectAll: function () {
+            return this.each(function () {
                 fn._selectAll($(this), false);
             });
         },
         //open the list, can only open one a time
-        open: function() {
-            return this.each(function() {
+        open: function () {
+            return this.each(function () {
                 fn._open($(this));
             });
         },
         //close the list
-        close: function() {
-            return this.each(function() {
+        close: function () {
+            return this.each(function () {
                 fn._close($(this));
             });
         },
         //update the result box basing on the selected element
-        update: function() {
-            return this.each(function() {
+        update: function () {
+            return this.each(function () {
                 fn._update($(this));
             });
         },
         //count selected item, can only count one instance
-        count: function() {
+        count: function () {
             return fn._count(this);
         },
         //get the values, can only get value of one instance
-        get: function() {
+        get: function () {
             return fn._get(this);
         },
         //get all values, including non selected values
-        getAll: function() {
+        getAll: function () {
             return fn._getAll($(this));
         },
         //get text of selected items
-        getText: function() {
+        getText: function () {
             return fn._getText(this);
         },
-        getAllText: function() {
+        getAllText: function () {
             return fn._getAllText($(this));
         },
-        getValueAndText: function() {
+        getValueAndText: function () {
             return fn._getValueAndText(this);
         },
-        getSelectedObject: function(){
+        getSelectedObject: function () {
             var data = this.data(pluginName);
             if (!data || !data.elements.listItem.li.length)
                 return data.settings.multiple ? [] : null;
@@ -511,7 +511,7 @@
             return el;
         },
         //set the values
-        set: function(vals, clearAll) {
+        set: function (vals, clearAll) {
             if (clearAll === undefined)
                 clearAll = false;
 
@@ -523,11 +523,11 @@
             for (var i = 0; i < vals.length; i++)
                 vals[i] = vals[i] === null || vals[i] === undefined ? vals[i] : vals[i].toString();
 
-            return this.each(function() {
+            return this.each(function () {
                 fn._set($(this), vals, clearAll);
             });
         },
-        unset: function(vals) {
+        unset: function (vals) {
             //convert to array if not array
             if (!(vals instanceof Array))
                 vals = [vals];
@@ -536,13 +536,13 @@
             for (var i = 0; i < vals.length; i++)
                 vals[i] = vals[i] === undefined ? '' : vals[i].toString();
 
-            return this.each(function() {
+            return this.each(function () {
                 fn._unset($(this), vals);
             });
         },
         //disable
-        disable: function(vals) {
-            return this.each(function() {
+        disable: function (vals) {
+            return this.each(function () {
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
@@ -557,7 +557,7 @@
                         vals = [vals];
 
                     if (vals.length && data.elements.listItem.checkbox) {
-                        data.elements.listItem.checkbox.each(function() {
+                        data.elements.listItem.checkbox.each(function () {
                             //found matched value
                             if (vals.indexOf(this.value) >= 0)
                                 $(this).parent().addClass('locked');
@@ -567,8 +567,8 @@
             });
         },
         //enable
-        enable: function(vals) {
-            return this.each(function() {
+        enable: function (vals) {
+            return this.each(function () {
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
@@ -583,7 +583,7 @@
                         vals = [vals];
 
                     if (vals.length && data.elements.listItem.checkbox) {
-                        data.elements.listItem.checkbox.each(function() {
+                        data.elements.listItem.checkbox.each(function () {
                             //found matched value
                             if (vals.indexOf(this.value) >= 0)
                                 $(this).parent().removeClass('locked');
@@ -593,7 +593,7 @@
             });
         },
         //change the settings
-        settings: function(json) {
+        settings: function (json) {
             //get setting
             if (json === undefined) {
                 var d = this.data(pluginName);
@@ -604,7 +604,7 @@
             }
 
             //set settings
-            return this.each(function() {
+            return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -614,8 +614,8 @@
             });
         },
         //refresh the list memory
-        refresh: function(totalRefresh) {
-            return this.each(function() {
+        refresh: function (totalRefresh) {
+            return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 if (!data)
@@ -642,21 +642,21 @@
 
             });
         },
-        refreshPosition: function() {
-            return this.each(function() {
+        refreshPosition: function () {
+            return this.each(function () {
                 fn._refreshPosition($(this));
             });
         },
         //return object elements that construct the list
-        widget: function() {
+        widget: function () {
             var data = this.data(pluginName);
             if (!data)
                 return null;
 
             return data.elements;
         },
-        clearCache: function() {
-            return this.each(function() {
+        clearCache: function () {
+            return this.each(function () {
                 var data = $(this).data(pluginName);
                 if (!data)
                     return;
@@ -671,27 +671,27 @@
          * @param isAdd BOOLEAN if true, data will be add to the end of the list instead of replacing the current list
          * @returns object 
          */
-        buildFromJSON: function(json, showNoResult, isAdd) {
+        buildFromJSON: function (json, showNoResult, isAdd) {
             if (showNoResult === undefined)
                 showNoResult = true;
 
             if (isAdd === undefined)
                 isAdd = false;
 
-            return this.each(function() {
+            return this.each(function () {
                 fn._buildFromJSON($(this), json, showNoResult, isAdd);
             });
         },
         /**
          * Intentionally release the drag status to prevent some bugs
          */
-        releaseDrag: function() {
+        releaseDrag: function () {
             dragging = false;
         },
         /*
          *  PRIVATE
          */
-        _buildFromJSON: function(obj, json, showNoResult, isAdd, selected, offset) {
+        _buildFromJSON: function (obj, json, showNoResult, isAdd, selected, offset) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -748,10 +748,10 @@
             data.elements.selectAll = tmp.selectAll;
             obj.data(pluginName, data);
             fn._postProcessing(obj, showNoResult);
-            
+
             return json;
         },
-        _registerEvent: function(self) {
+        _registerEvent: function (self) {
             var data = self.data(pluginName);
             var settings = data.settings;
             var elements = data.elements;
@@ -769,7 +769,7 @@
             var timer;
 
             if (arrow)
-                arrow.on('mousedown.' + pluginName, function() {
+                arrow.on('mousedown.' + pluginName, function () {
                     if (!ul.is(':hidden')) {
                         fn._close(self);
                         return false;
@@ -777,7 +777,7 @@
                 });
 
             //searching
-            input.on('keydown.' + pluginName, function(e) {
+            input.on('keydown.' + pluginName, function (e) {
                 if (!settings.search || wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
@@ -810,7 +810,7 @@
                     fn._close(self);
                 }
             })
-                    .on('keyup.' + pluginName, function(e) {
+                    .on('keyup.' + pluginName, function (e) {
                         if (!fn._isAlphabetKey(e.keyCode) && e.keyCode !== 9)
                             return;
 
@@ -819,52 +819,62 @@
                         var hasResult = false;
                         var remote = settings.remote;
 
-                        ul.children('li.' + pluginName + '_noresult').remove();
-                        prediction.val(val);
+                        //add delay to prevent lag
+                        var delay = ul.children().length * 2;
+                        delay = 5000;
+                        if (delay > 3000)
+                            delay = 3000;
 
-                        //if menu-style, show removeAll button, doesn't matter if items are selected or not
-                        if (settings.menuStyle.enable) {
-                            if (val)
-                                removeAll.show();
-                            else
-                                removeAll.hide();
-                        }
+                        if (remote.source || remote.fnQuery)
+                            delay = remote.delay;
 
-                        if (settings.autocompleteStyle.enable) {
-                            //val is the last word
-                            val = fn._getLastWord(val, settings.autocompleteStyle.separator);
-                            //do nothing if too few character
-                            if (val.length < settings.autocompleteStyle.minLength) {
-                                fn._close(self);
-                                //stop here
-                                return;
+                        //clear the previous timer
+                        window.clearTimeout(timer);
+                        //set a timer to reduce server charge
+                        timer = setTimeout(function () {
+                            ul.children('li.' + pluginName + '_noresult').remove();
+                            prediction.val(val);
+
+
+                            //if menu-style, show removeAll button, doesn't matter if items are selected or not
+                            if (settings.menuStyle.enable) {
+                                if (val)
+                                    removeAll.show();
+                                else
+                                    removeAll.hide();
                             }
-                        }
 
-                        //if remote, replace the current list with new data
-                        if (remote.source || remote.fnQuery) {
-                            var cache = $this.data('remote');
+                            if (settings.autocompleteStyle.enable) {
+                                //val is the last word
+                                val = fn._getLastWord(val, settings.autocompleteStyle.separator);
+                                //do nothing if too few character
+                                if (val.length < settings.autocompleteStyle.minLength) {
+                                    fn._close(self);
+                                    //stop here
+                                    return;
+                                }
+                            }
 
-                            //if text length < minLength do nothing
-                            if (val.length < remote.minLength)
-                                return;
+                            //if remote, replace the current list with new data
+                            if (remote.source || remote.fnQuery) {
+                                var cache = $this.data('remote');
 
-                            //before emptying the list, we must remember the selected values
-                            var selected = fn._getValueAndText(self);
-                            
-                            //force empty the last request
-                            $this.data('lastRequest', null);
+                                //if text length < minLength do nothing
+                                if (val.length < remote.minLength)
+                                    return;
 
-                            //if cache not exist, fetch from remote source
-                            if (!cache || cache[val] === undefined) {
-                                //we dont know if there are results, open the list anyway
-                                if (settings.autocompleteStyle.enable)
-                                    fn._open(self, false);
+                                //before emptying the list, we must remember the selected values
+                                var selected = fn._getValueAndText(self);
 
-                                //clear the previous timer
-                                window.clearTimeout(timer);
-                                //set a timer to reduce server charge
-                                timer = window.setTimeout(function() {
+                                //force empty the last request
+                                $this.data('lastRequest', null);
+
+                                //if cache not exist, fetch from remote source
+                                if (!cache || cache[val] === undefined) {
+                                    //we dont know if there are results, open the list anyway
+                                    if (settings.autocompleteStyle.enable)
+                                        fn._open(self, false);
+
                                     //predict the next word
                                     if (remote.fnPredict && !settings.autocompleteStyle.enable)
                                         remote.fnPredict(val, prediction, fn._predict);
@@ -873,28 +883,29 @@
                                     //predict from local source
                                     if (!remote.fnPredict && !settings.autocompleteStyle.enable)
                                         fn._setPredictionFromLocalSource(self);
-                                }, remote.delay);
-                                return; //break the code here
-                            }
-                            else {  //load from cache
-                                var json = cache[val];
-                                if (json && json.length) {
-                                    fn._buildFromJSON(self, json, true, false, selected);
-                                    hasResult = true;
+                                    
+                                    return; //break the code here
+                                }
+                                else {  //load from cache
+                                    var json = cache[val];
+                                    if (json && json.length) {
+                                        fn._buildFromJSON(self, json, true, false, selected);
+                                        hasResult = true;
+                                    }
                                 }
                             }
-                        }
-                        else {  //using local source
-                            hasResult = fn._filterListItem(self);
-                        }
+                            else {  //using local source
+                                hasResult = fn._filterListItem(self);
+                            }
 
-                        if (hasResult && settings.autocompleteStyle.enable)
-                            fn._open(self, false);
+                            if (hasResult && settings.autocompleteStyle.enable)
+                                fn._open(self, false);
 
-                        fn._setClosestMatch(self, hasResult);
+                            fn._setClosestMatch(self, hasResult);
+                        }, delay);
                     })
                     //stop propagoation to the wrapper
-                    .on('focusin.' + pluginName, function(e) {
+                    .on('focusin.' + pluginName, function (e) {
                         if (wrapper.hasClass(pluginName + '_disabled'))
                             return false;
 
@@ -902,15 +913,15 @@
                     });
 
             if (isMobile)
-                input.on('focusout.' + pluginName, function(e) {
+                input.on('focusout.' + pluginName, function (e) {
                     e.stopPropagation();
                 });
 
             //show popup
             if (popup) {
-                dropdown.on('mouseover.' + pluginName, function() {
+                dropdown.on('mouseover.' + pluginName, function () {
                     window.clearTimeout(popup.data('timeout'));
-                    var timeout = window.setTimeout(function() {
+                    var timeout = window.setTimeout(function () {
                         //if have at least one element
                         if (fn._count(self) && !wrapper.hasClass(pluginName + '_disabled')) {
                             //if using absolute position, we need to move the popup to outside
@@ -923,10 +934,10 @@
                     popup.data('timeout', timeout);
                 });
                 //if list is not opened, hide popup if mouse leave
-                dropdown.add(popup).on('mouseout.' + pluginName, function() {
+                dropdown.add(popup).on('mouseout.' + pluginName, function () {
                     if (ul.is(':hidden')) {
                         window.clearTimeout(popup.data('timeout'));
-                        var timeout = window.setTimeout(function() {
+                        var timeout = window.setTimeout(function () {
                             popup.hide();
                             //move back to the list
                             if (settings.absolutePosition && ul.is(':hidden'))
@@ -936,11 +947,11 @@
                     }
                 });
 
-                popup.on('mouseover.' + pluginName, function() {
+                popup.on('mouseover.' + pluginName, function () {
                     window.clearTimeout(popup.data('timeout'));
                 })
                         //on popup item click, deselect that item
-                        .on('mousedown.' + pluginName, 'div', function() {
+                        .on('mousedown.' + pluginName, 'div', function () {
                             var $this = $(this);
 
                             if ($this.hasClass('stack') || $this.hasClass('locked'))
@@ -955,7 +966,7 @@
                                     $this.children('div.stack').remove();
                                     var val = $this.text();
 
-                                    ul.children('li.selected').each(function() {
+                                    ul.children('li.selected').each(function () {
                                         var $t = $(this);
                                         var input = $t.children('input.' + pluginName + '_listItem_input');
                                         var v = settings.showValue ? input.val() : $t.text();
@@ -976,24 +987,24 @@
                             return false;
                         });
 
-                widget.on('click', '.trigger-close', function() {
+                widget.on('click', '.trigger-close', function () {
                     if (settings.widget.onValidate && settings.widget.onValidate(self) === false)
                         return false;
 
                     fn._close(self);
                 })
-                        .on('change', ':input', function() {
+                        .on('change', ':input', function () {
                             if (settings.widget.onInputChange)
                                 settings.widget.onInputChange(self);
                         });
             }
 
             //on checkbox click prevent default behaviour
-            ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function(e) {
+            ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function (e) {
                 e.preventDefault();
             })
                     //on item mouse down
-                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem', function(e) {
+                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem', function (e) {
                         var $this = $(this);
 
                         //if locked or blocked or menu-style
@@ -1046,7 +1057,7 @@
                             return false;
 
                         var valBefore = [];
-                        elements.listItem.checkbox.filter(':checked').each(function() {
+                        elements.listItem.checkbox.filter(':checked').each(function () {
                             valBefore.push(this.value);
                         });
 
@@ -1130,11 +1141,11 @@
                         }
                     })
                     //on close match click
-                    .on('click.' + pluginName, 'li.hasCloseMatch', function() {
+                    .on('click.' + pluginName, 'li.hasCloseMatch', function () {
                         var str = $(this).find('span.closeMatch').text();
                         input.val(str).trigger('keyup');
                     })
-                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem', function() {
+                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem', function () {
                         if (!dragging)
                             return;
                         var $this = $(this);
@@ -1151,7 +1162,7 @@
                         if (!found)
                             $(this).trigger('mousedown');
                     })
-                    .on('click.' + pluginName, 'a', function(e) {
+                    .on('click.' + pluginName, 'a', function (e) {
                         if (wrapper.hasClass(pluginName + '_disabled'))
                             return false;
 
@@ -1187,8 +1198,8 @@
                             container.animate({
                                 scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
                             },
-                            menuStyle.scrollSpyAnimationDuration, function() {
-                                window.setTimeout(function() {
+                            menuStyle.scrollSpyAnimationDuration, function () {
+                                window.setTimeout(function () {
                                     //deselect all then select the clicked one
                                     var li = $this.closest('li.' + pluginName + '_listItem');
                                     li.closest('ul').children('li.selected').removeClass('selected');
@@ -1199,16 +1210,16 @@
                             return false;
                         }
                     })
-                    .on('mousedown.' + pluginName, 'a', function(e) {
+                    .on('mousedown.' + pluginName, 'a', function (e) {
                         e.stopPropagation();
                         return false;
                     })
-                    .on('scroll.' + pluginName, function() {
+                    .on('scroll.' + pluginName, function () {
                         var $this = $(this);
 
                         //reduce server load
                         window.clearTimeout(timer);
-                        timer = window.setTimeout(function() {
+                        timer = window.setTimeout(function () {
                             if (!settings.remote.loadMoreOnScroll)
                                 return;
 
@@ -1224,7 +1235,7 @@
                                 fn._fetchData(self, val, offset);
                         }, 500);
                     })
-                    .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function() {
+                    .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function () {
                         var $this = $(this);
                         //the current group li
                         var group = $this.parent();
@@ -1237,7 +1248,7 @@
 
                         return false;
                     })
-                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function() {
+                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function () {
                         if (!settings.autoExpand)
                             return;
 
@@ -1248,13 +1259,13 @@
                         //collapse other li
                         if (settings.autoCollapse) {
                             var group = $this.siblings('li.' + pluginName + '_listItem_group_empty');
-                            group.each(function() {
+                            group.each(function () {
                                 fn._collapse($(this), settings);
                             });
                         }
                     });
 
-            wrapper.on('focusin.' + pluginName, function() {
+            wrapper.on('focusin.' + pluginName, function () {
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
@@ -1264,22 +1275,22 @@
                 //as long as the wrapper has focus, focus on the input
                 //IE hack
                 if (!isMobile && !settings.accessibility)
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         input.focus();
                     });
             })
                     //blur not triggered in FF
-                    .on('focusout.' + pluginName, function(e) {
+                    .on('focusout.' + pluginName, function (e) {
                         if (!settings.labelStyle && $(e.target).is($(this)) || isMobile)
                             return;
                         //need to add delay for activeElement to be set
-                        window.setTimeout(function() {
+                        window.setTimeout(function () {
                             //close list if the active element isn't any child of the wrapper
                             if (!$(document.activeElement).closest(wrapper).length)
                                 fn._close(self);
                         }, 10);
                     })
-                    .on('keydown.' + pluginName, function(e) {
+                    .on('keydown.' + pluginName, function (e) {
                         var key = e.keyCode;
                         //if menustyle or character key, do nothing
                         if (settings.menuStyle.enable || fn._isAlphabetKey(key))
@@ -1349,15 +1360,15 @@
                         else if (key === 16)
                             shift_on = true;
                     })
-                    .on('keyup.' + pluginName, function(e) {
+                    .on('keyup.' + pluginName, function (e) {
                         if (e.keyCode === 16)
                             shift_on = false;
                     })
-                    .on('mouseup.' + pluginName, function(e) {
+                    .on('mouseup.' + pluginName, function (e) {
                         dragging = false;
                         e.stopPropagation();
                     })
-                    .on('mousedown.' + pluginName, function(e) {
+                    .on('mousedown.' + pluginName, function (e) {
                         e.stopPropagation();
 
                         if (wrapper.hasClass('mobile-style'))
@@ -1369,7 +1380,7 @@
                         }
                     });
 
-            removeAll.on('mousedown.' + pluginName, function() {
+            removeAll.on('mousedown.' + pluginName, function () {
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
@@ -1389,44 +1400,44 @@
             //show/hide list on hover
             if (settings.openOnHover) {
                 var timeout;
-                wrapper.on('mouseenter.' + pluginName, function() {
+                wrapper.on('mouseenter.' + pluginName, function () {
                     window.clearTimeout(timeout);
                     fn._open(self);
                 })
-                        .on('mouseleave.' + pluginName, function() {
-                            timeout = window.setTimeout(function() {
+                        .on('mouseleave.' + pluginName, function () {
+                            timeout = window.setTimeout(function () {
                                 fn._close(self);
                             }, 500);
                         });
             }
 
             if (close)
-                close.on('click.' + pluginName, function() {
+                close.on('click.' + pluginName, function () {
                     fn._close(self);
                     return false;
                 });
 
         },
-        _getWordsList: function(str, charList) {
+        _getWordsList: function (str, charList) {
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[' + charList + ']+');
 
             return str.split(regex);
         },
-        _getLastWord: function(str, charList) {
+        _getLastWord: function (str, charList) {
             var str_arr = fn._getWordsList(str, charList);
             var val = str_arr[str_arr.length - 1] || '';
 
             return val;
         },
-        _replaceLastWord: function(str, replacement, charList) {
+        _replaceLastWord: function (str, replacement, charList) {
             charList = charList.replace('/', '\\/');
             var regex = new RegExp('[^' + charList + ']+$');
             str = str.replace(regex, replacement);
 
             return str;
         },
-        _filterListItem: function(obj) {
+        _filterListItem: function (obj) {
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
@@ -1454,7 +1465,7 @@
                 if (settings.accentInsensitive)
                     search = fn._removeAccent(search);
 
-                listItem.not(elements.selectAll).each(function() {
+                listItem.not(elements.selectAll).each(function () {
                     var $this = $(this);
                     var text = $this.text().toLowerCase();
 
@@ -1486,7 +1497,7 @@
 
             return hasResult;
         },
-        _setClosestMatch: function(obj, hasResult) {
+        _setClosestMatch: function (obj, hasResult) {
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
@@ -1517,7 +1528,7 @@
                 elements.list.append(dom);
             }
         },
-        _movePopupBackToList: function(elements) {
+        _movePopupBackToList: function (elements) {
             if (!elements.popup)
                 return;
 
@@ -1528,7 +1539,7 @@
                     .prependTo(elements.wrapper)
                     .removeClass(pluginName + '_absolute');
         },
-        _movePopupAway: function(elements) {
+        _movePopupAway: function (elements) {
             if (!elements.popup)
                 return;
 
@@ -1541,7 +1552,7 @@
                     });
         },
         //fetch date from remote source
-        _fetchData: function(obj, val, offset, selected) {
+        _fetchData: function (obj, val, offset, selected) {
             var data = obj.data(pluginName);
             var settings = data.settings;
             var remote = settings.remote;
@@ -1566,7 +1577,7 @@
                 }
 
                 //the built-in fnQuery
-                $.get(remote.source, getData, function(json) {
+                $.get(remote.source, getData, function (json) {
                     //convert to array if empty
                     if (!json)
                         json = [];
@@ -1584,7 +1595,7 @@
                         cache[val] = json;
                         input.data('remote', cache);
                     }
-                    
+
                     //last request, create if not exist
                     var lastRequest = input.data('lastRequest') || {};
                     //update last request
@@ -1596,7 +1607,7 @@
                 });
             }
         },
-        _postProcessing: function(obj, showNoResult) {
+        _postProcessing: function (obj, showNoResult) {
             var data = obj.data(pluginName);
             var elements = data.elements;
             var wrapper = elements.wrapper;
@@ -1683,14 +1694,14 @@
                 if (settings.firstItemSelectAll)
                     original = original.slice(1);
             }
-            
+
             //update original
             if (elements.listItem.li && elements.listItem.li.length)
-                elements.listItem.li.each(function(k) {
+                elements.listItem.li.each(function (k) {
                     $(this).data(original.eq(k).data());
                 });
         },
-        _selectAll: function(obj, state) {
+        _selectAll: function (obj, state) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1698,7 +1709,7 @@
             data.elements.listItem.li.not('li.locked').children('input.' + pluginName + '_listItem_input').prop('checked', state);
             this._update(obj);
         },
-        _update: function(obj, isInitialisation, showFullItems) {
+        _update: function (obj, isInitialisation, showFullItems) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1714,7 +1725,7 @@
             settings.popupMaxItem = showFullItems ? 1000 : settings.popupMaxItem;
 
             //list the selected values
-            li.each(function() {
+            li.each(function () {
                 var $this = $(this);
                 if ($this.hasClass(pluginName + '_checkall'))
                     return;
@@ -1788,7 +1799,7 @@
 
             //if unique value, do the loop for a second time to gray out whatever has the same value
             if (settings.uniqueValue) {
-                li.not('li.selected').each(function() {
+                li.not('li.selected').each(function () {
                     var $this = $(this);
                     var v = settings.showValue ? $this.children('input.' + pluginName + '_listItem_input').val() : $this.text();
 
@@ -1826,7 +1837,7 @@
                     for (var i = 0; i < tmp_val.length; i++) {
                         var v = tmp_val[i];
                         //count the number of time this text has appeared in the original list
-                        var c = val.filter(function(x) {
+                        var c = val.filter(function (x) {
                             return x === v;
                         }).length;
 
@@ -1886,7 +1897,7 @@
             fn._updateChainedList(obj, settings);
         },
         //search if an event exist
-        _eventExist: function(obj, evt_type) {
+        _eventExist: function (obj, evt_type) {
             var evt = $._data(obj.get(0), 'events');
             //find if event exist first
             if (evt && evt[evt_type] !== undefined) {
@@ -1898,7 +1909,7 @@
 
             return false;
         },
-        _open: function(obj, triggerSearch) {
+        _open: function (obj, triggerSearch) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -1952,7 +1963,7 @@
                     //bind an event to the document to detect lost of focus
                     var doc = $(document);
                     if (!fn._eventExist(doc, 'mousedown')) {
-                        doc.on('mousedown.' + pluginName, function() {
+                        doc.on('mousedown.' + pluginName, function () {
                             $('ul.' + pluginName + ', select.' + pluginName).jAutochecklist('close');
                         });
                     }
@@ -1960,7 +1971,7 @@
                     //update position when window resize, scroll
                     var win = $(window);
                     if (!fn._eventExist(win, 'resize') || !fn._eventExist(win, 'scroll')) {
-                        win.on('resize.' + pluginName + ', scroll.' + pluginName, function() {
+                        win.on('resize.' + pluginName + ', scroll.' + pluginName, function () {
                             fn._refreshPosition(obj);
                         });
                     }
@@ -2018,7 +2029,7 @@
             //close all other checklist
             $('ul.' + pluginName + ', select.' + pluginName).not(obj).jAutochecklist('close');
         },
-        _close: function(obj) {
+        _close: function (obj) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -2091,14 +2102,14 @@
 
             dragging = false;
         },
-        _count: function(obj) {
+        _count: function (obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return 0;
 
             return data.elements.listItem.checkbox.filter(':checked').length;
         },
-        _get: function(obj) {
+        _get: function (obj) {
             var data = obj.data(pluginName);
             if (!data)
                 return obj.val ? obj.val() : null;
@@ -2106,7 +2117,7 @@
                 return data.settings.multiple ? [] : null;
 
             var val = [];
-            data.elements.listItem.checkbox.filter(':checked').each(function() {
+            data.elements.listItem.checkbox.filter(':checked').each(function () {
                 val.push(this.value);
             });
 
@@ -2115,26 +2126,26 @@
 
             return val;
         },
-        _getAll: function(obj) {
+        _getAll: function (obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return [];
             var val = [];
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function () {
                 val.push(this.value);
             });
 
             return val;
         },
-        _getText: function(obj) {
+        _getText: function (obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.li)
                 return [];
 
             var settings = data.settings;
             var val = [];
-            data.elements.listItem.li.filter('li.selected').each(function() {
+            data.elements.listItem.li.filter('li.selected').each(function () {
                 var $this = $(this);
                 var txt;
                 if ($this.find('span.logo').length)
@@ -2153,13 +2164,13 @@
 
             return val;
         },
-        _getAllText: function(obj) {
+        _getAllText: function (obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return [];
 
             var val = [];
-            data.elements.listItem.li.each(function() {
+            data.elements.listItem.li.each(function () {
                 var $this = $(this);
                 var txt;
                 if ($this.find('span.logo').length)
@@ -2171,14 +2182,14 @@
 
             return val;
         },
-        _getValueAndText: function(obj) {
+        _getValueAndText: function (obj) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.li)
                 return [];
 
             var settings = data.settings;
             var val = [];
-            data.elements.listItem.li.filter('li.selected').each(function() {
+            data.elements.listItem.li.filter('li.selected').each(function () {
                 var $this = $(this);
                 var o = {};
                 var txt;
@@ -2197,14 +2208,14 @@
 
             return val;
         },
-        _set: function(obj, vals, clearAll) {
+        _set: function (obj, vals, clearAll) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return;
             if (clearAll)
                 fn._selectAll(obj, false);
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function () {
                 //value found
                 if (vals.indexOf(this.value) !== -1)
                     this.checked = true;
@@ -2212,12 +2223,12 @@
 
             fn._update(obj);
         },
-        _unset: function(obj, vals) {
+        _unset: function (obj, vals) {
             var data = obj.data(pluginName);
             if (!data || !data.elements.listItem.checkbox)
                 return;
 
-            data.elements.listItem.checkbox.each(function() {
+            data.elements.listItem.checkbox.each(function () {
                 //value found
                 if (vals.indexOf(this.value) !== -1)
                     this.checked = false;
@@ -2225,11 +2236,11 @@
 
             fn._update(obj);
         },
-        _getLevel: function(li) {
+        _getLevel: function (li) {
             var match = li.attr('class').match(/level(\d+)/);
             return match ? parseInt(match[1]) : null;
         },
-        _getChildren: function(li, selectorChild, level, ignoreLocked) {
+        _getChildren: function (li, selectorChild, level, ignoreLocked) {
             if (level === undefined)
                 level = fn._getLevel(li);
 
@@ -2248,7 +2259,7 @@
 
             return next ? [next].concat(fn._getChildren(next, selectorChild, level, ignoreLocked)) : [];
         },
-        _getDirectChildren: function(li, selectorChild, selectorGroup, ignoreLocked) {
+        _getDirectChildren: function (li, selectorChild, selectorGroup, ignoreLocked) {
             var level_group = fn._getLevel(li);
             var children = fn._getChildren(li, selectorChild, level_group, ignoreLocked);
             var directChildren = [];
@@ -2266,7 +2277,7 @@
 
             return directChildren;
         },
-        _getParents: function(li, selectorChild, selectorGroup) {
+        _getParents: function (li, selectorChild, selectorGroup) {
             var isGroup = li.hasClass(selectorGroup);
             var isChild = li.hasClass(selectorChild);
 
@@ -2286,7 +2297,7 @@
 
             return parent ? [parent].concat(fn._getParents(parent, selectorChild, selectorGroup)) : [];
         },
-        _updateParent: function(li, settings) {
+        _updateParent: function (li, settings) {
             var groupType = fn._getGroupType(li, settings);
 
             //children exclusive, so we don't handle this parent
@@ -2330,7 +2341,7 @@
                 checkbox.prop('checked', true);
 
         },
-        _getGroupType: function(li, settings) {
+        _getGroupType: function (li, settings) {
             var groupType = settings.groupType;
             //detect the type of the group if overriden
             if (li.hasClass('groupType0')) //all
@@ -2348,11 +2359,11 @@
 
             return groupType;
         },
-        _buildFromUl: function(obj, settings) {
+        _buildFromUl: function (obj, settings) {
             var json = [];
             var locked_origin = null;
 
-            obj.children().each(function(k) {
+            obj.children().each(function (k) {
                 var t = $(this);
                 var className = this.className || '';
                 var locked = t.data('locked');
@@ -2394,12 +2405,12 @@
 
             return json;
         },
-        _buildFromSelect: function(obj, settings) {
+        _buildFromSelect: function (obj, settings) {
             var json = [];
             var isFirstOption = true;
             var i = 0;
 
-            obj.children().each(function() {
+            obj.children().each(function () {
                 var t = $(this);
 
                 //if is a group
@@ -2427,7 +2438,7 @@
                     });
 
                     //foreach option in group
-                    t.children().each(function() {
+                    t.children().each(function () {
                         var c = $(this);
                         json.push({
                             className: (this.className || '') + ' ' + settings.selectorChild,
@@ -2476,7 +2487,7 @@
 
             return json;
         },
-        _buildItemFromJSON: function(json, settings, name, preSelected, offset) {
+        _buildItemFromJSON: function (json, settings, name, preSelected, offset) {
             //strip white spaces
             if (name)
                 name = name.replace(/^\s+|\s+$/g, '');
@@ -2542,7 +2553,7 @@
                 var isChild = e.isChild || false;
                 var index = e.index === undefined ? (offset ? i + offset : i) : (e.index === null ? '' : e.index);
                 var selected = e.selected;
-				var json = e.json && typeof e.json === 'object' ? JSON.stringify(e.json) : e.json;
+                var json = e.json && typeof e.json === 'object' ? JSON.stringify(e.json) : e.json;
 
                 if (selectArr[val] !== undefined)
                     selected = true;
@@ -2629,7 +2640,7 @@
 
             return li;
         },
-        _sortListItems: function(json) {
+        _sortListItems: function (json) {
             var indexed = {};
             var lastGroupIndex = {};
             var i;
@@ -2666,7 +2677,7 @@
 
             return json;
         },
-        _createObjectRelationship: function(obj) {
+        _createObjectRelationship: function (obj) {
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
                     var e = obj[i];
@@ -2683,7 +2694,7 @@
 
             return obj;
         },
-        _destroyObjectRelationship: function(arr) {
+        _destroyObjectRelationship: function (arr) {
             var a = [], tmp;
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i].children) {
@@ -2698,10 +2709,10 @@
 
             return a;
         },
-        _sortRecursive: function(json) {
+        _sortRecursive: function (json) {
             //to array
             if (json instanceof Object)
-                json = $.map(json, function(v) {
+                json = $.map(json, function (v) {
                     return v;
                 });
 
@@ -2718,7 +2729,7 @@
                 json.splice(i, 1);
             }
 
-            json.sort(function(a, b) {
+            json.sort(function (a, b) {
                 var aV = (a.html === '' || a.html === undefined || a.html === null) ? '' : a.html.toLowerCase();
                 var bV = (b.html === '' || b.html === undefined || b.html === null) ? '' : b.html.toLowerCase();
                 aV = fn._removeAccent(aV);
@@ -2742,7 +2753,7 @@
 
             return json;
         },
-        _insertList: function(ul, li, settings, isAdd) {
+        _insertList: function (ul, li, settings, isAdd) {
             //empty object
             var selectAll, checkbox;
 
@@ -2775,7 +2786,7 @@
             };
 
         },
-        _setPredictionFromLocalSource: function(self) {
+        _setPredictionFromLocalSource: function (self) {
             var data = self.data(pluginName);
             var settings = data.settings;
             //if RTL, do not handle prediction
@@ -2793,7 +2804,7 @@
             else {
                 var text = [];
                 //we already know that each li contain our value, search for the next word after the value
-                li.filter(':visible').each(function() {
+                li.filter(':visible').each(function () {
                     text.push($(this).text());
                 });
 
@@ -2801,13 +2812,13 @@
             }
         },
         //predict the next word
-        _predict: function(val, input, suggest, accentInsensitive) {
+        _predict: function (val, input, suggest, accentInsensitive) {
             var result;
             var val_lower = val.toLowerCase();
             var valIns = fn._removeAccent(val_lower);
 
             //sort the text tab using the levenhstein algorithm
-            suggest = suggest.sort(function(a, b) {
+            suggest = suggest.sort(function (a, b) {
                 return fn._levenshtein(a, val_lower) - fn._levenshtein(b, val_lower);
             });
 
@@ -2842,13 +2853,13 @@
             }
         },
         //collapse all groups
-        _collapseGroup: function(obj) {
+        _collapseGroup: function (obj) {
             var data = obj.data(pluginName);
             var elements = data.elements;
             var settings = data.settings;
             var li = elements.listItem.li;
 
-            li.filter(function() {
+            li.filter(function () {
                 var $this = $(this);
                 if ($this.hasClass(settings.selectorChild))
                     return true;
@@ -2860,7 +2871,7 @@
 
             elements.list.find('div.expanded').removeClass('expanded');
         },
-        _collapse: function(li, settings) {
+        _collapse: function (li, settings) {
             //if is not a group
             if (!li.hasClass(settings.selectorGroup))
                 return;
@@ -2872,7 +2883,7 @@
             for (var i = 0; i < children.length; i++)
                 children[i].hide();
         },
-        _expand: function(li, settings) {
+        _expand: function (li, settings) {
             //if is not a group
             if (!li.hasClass(settings.selectorGroup))
                 return;
@@ -2888,7 +2899,7 @@
             }
         },
         //group item in the popup together. Return true if success, false if the item doesn't exist
-        _getUniqueArray: function(arr) {
+        _getUniqueArray: function (arr) {
             var u = {}, a = [], val;
             for (var i = 0; i < arr.length; i++) {
                 val = arr[i];
@@ -2901,7 +2912,7 @@
 
             return a;
         },
-        _registerMenuStyle: function(obj) {
+        _registerMenuStyle: function (obj) {
             var data = obj.data(pluginName);
             var settings = data.settings;
             var container = settings.menuStyle.fixedPositionContainer;
@@ -2914,14 +2925,14 @@
 
                 obj.data('originalPosition', data.elements.wrapper.offset());
 
-                $(container).on('scroll.' + pluginName, function() {
+                $(container).on('scroll.' + pluginName, function () {
                     fn._handleFixedMenu(obj);
                 });
             }
 
             //handle scrollspy
             var anchor = [];
-            data.elements.listItem.li.each(function() {
+            data.elements.listItem.li.each(function () {
                 var target = $(this).find('a').attr('href');
                 //if target contain a #
                 if (!/^#/.test(target))
@@ -2943,12 +2954,12 @@
                 if (scrollSpyContainer === 'window')
                     scrollSpyContainer = window;
 
-                $(scrollSpyContainer).on('scroll.' + pluginName, function() {
+                $(scrollSpyContainer).on('scroll.' + pluginName, function () {
                     fn._handleScrollSpy(obj);
                 });
             }
         },
-        _handleFixedMenu: function(obj) {
+        _handleFixedMenu: function (obj) {
             var data = obj.data(pluginName);
             var settings = data.settings;
             var menuStyle = settings.menuStyle;
@@ -2999,7 +3010,7 @@
                 }
             }
         },
-        _handleScrollSpy: function(obj) {
+        _handleScrollSpy: function (obj) {
             var data = obj.data(pluginName);
             var settings = data.settings;
             var menuStyle = settings.menuStyle;
@@ -3050,10 +3061,10 @@
                 }
             }
         },
-        _escapeRegexpString: function(regex) {
+        _escapeRegexpString: function (regex) {
             return regex.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         },
-        _removeAccent: function(str) {
+        _removeAccent: function (str) {
             var defaultDiacriticsRemovalMap = [
                 {
                     base: 'A',
@@ -3399,7 +3410,7 @@
 
             return str;
         },
-        _updateOriginal: function(obj) {
+        _updateOriginal: function (obj) {
             var data = obj.data(pluginName);
             var original;
 
@@ -3409,7 +3420,7 @@
                 //no need to handle firstItemSelectAll
                 //update original
                 if (data.elements.listItem.li && data.elements.listItem.li.length)
-                    data.elements.listItem.li.each(function(k) {
+                    data.elements.listItem.li.each(function (k) {
                         if ($(this).children('input.jAutochecklist_listItem_input').prop('checked'))
                             original.eq(k).attr('data-selected', '1');
                         else
@@ -3422,7 +3433,7 @@
                     original = original.slice(1);
 
                 if (data.elements.listItem.checkbox && data.elements.listItem.checkbox.length)
-                    data.elements.listItem.checkbox.each(function(k) {
+                    data.elements.listItem.checkbox.each(function (k) {
                         //we use .attr to force add the attribute to the DOM
                         if (this.checked)
                             original.eq(k).attr('selected', 'selected');
@@ -3431,7 +3442,7 @@
                     });
             }
         },
-        _isIE: function() {
+        _isIE: function () {
             if (/Trident.*rv[ :]*11\./i.test(navigator.userAgent))
                 return 11;
             else if (/MSIE/i.test(navigator.userAgent))
@@ -3439,11 +3450,11 @@
 
             return false;
         },
-        _isAlphabetKey: function(keyCode) {
+        _isAlphabetKey: function (keyCode) {
             return $.inArray(keyCode, [9, 13, 16, 27, 35, 36, 37, 38, 39, 40]) === -1;
         },
         //A updates B, B updates C, C updates D...
-        _updateChainedList: function(obj, settings) {
+        _updateChainedList: function (obj, settings) {
             //if no chaining selector
             if (!settings.chainable)
                 return;
@@ -3453,7 +3464,7 @@
             var foundThis = false;
 
             //parse through the lists
-            $(settings.chainable).each(function() {
+            $(settings.chainable).each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 //if it's not jautochecklist
@@ -3480,7 +3491,7 @@
          * Calculate the levenshtein to get the nearest word prediction
          * http://stackoverflow.com/questions/11919065/sort-an-array-by-the-levenshtein-distance-with-best-performance-in-javascript
          */
-        _levenshtein: function(s, t) {
+        _levenshtein: function (s, t) {
             var i, j;
             var d = []; //2d matrix
 
@@ -3539,7 +3550,7 @@
             // Step 7
             return d[n][m];
         },
-        _getClosestMatchToken: function(li, val, accentInsensitive) {
+        _getClosestMatchToken: function (li, val, accentInsensitive) {
             //if no value or list is empty
             if (!val || !li.length)
                 return null;
@@ -3547,7 +3558,7 @@
             var closest = null;
             var diff = null;
 
-            li.each(function() {
+            li.each(function () {
                 var text = $(this).text().toLowerCase();
                 if (accentInsensitive)
                     text = fn._removeAccent(text);
@@ -3577,7 +3588,7 @@
 
             return closest;
         },
-        _isSelected: function(dom, isMultiple, isFirstOption) {
+        _isSelected: function (dom, isMultiple, isFirstOption) {
             var selected = dom.selected && dom.getAttribute('selected') !== null;   //require that the attribute is defined
 
             //is simple select and is IE <= 8, check if the first option is selected through attribute
@@ -3586,7 +3597,7 @@
 
             return selected;
         },
-        _refreshPosition: function(obj) {
+        _refreshPosition: function (obj) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -3603,7 +3614,7 @@
         }
     };
 
-    $.fn.jAutochecklist = function(method) {
+    $.fn.jAutochecklist = function (method) {
         //main
         if (fn[method]) {
             if (method.substr(0, 1) === '_')
@@ -3618,7 +3629,7 @@
 
     //modify the default behavior of the select list
     var old_val = $.fn.val;
-    $.fn.val = function(value) {
+    $.fn.val = function (value) {
         var data = this.data(pluginName);
         //if the list has applied the plugin
         if (data) {
