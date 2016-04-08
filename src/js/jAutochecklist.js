@@ -699,7 +699,7 @@
             //convert to array if empty
             if (!json)
                 json = [];
-
+            
             //if json is not an object, such as string, try to convert
             if (typeof json !== 'object')
                 json = JSON && JSON.parse(json) || $.parseJSON(json);
@@ -821,7 +821,6 @@
 
                         //add delay to prevent lag
                         var delay = ul.children().length * 2;
-                        delay = 5000;
                         if (delay > 3000)
                             delay = 3000;
 
@@ -1227,12 +1226,15 @@
                             if ($this.innerHeight() + $this.scrollTop() + 50 < $this.get(0).scrollHeight)
                                 return;
 
-                            var offset = $this.children('li').length;
                             var val = input.val();
                             var lastRequest = input.data('lastRequest');
+
                             //fetch only if last request is not empty
-                            if (settings.remote.forceRefresh || !lastRequest || !lastRequest[val] || !lastRequest[val].empty)
+                            if (settings.remote.forceRefresh || !lastRequest || !lastRequest[val] || !lastRequest[val].empty){
+                                var offset = $this.children('li').not('li.auto-added').length;
+                                //note: do not add selected value otherwise it will create bug
                                 fn._fetchData(self, val, offset);
+                            }
                         }, 500);
                     })
                     .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function () {
@@ -1863,8 +1865,14 @@
                 if (more)
                     html += '<div class="{0}_more">'.format(pluginName) + settings.textMoreItem.format(more) + '</div>';
 
-                if (elements.popup)
+                if (elements.popup){
                     elements.popup.html(html);
+                    //show only if there is item inside
+                    if (html)
+                        elements.popup.show();
+                    else
+                        elements.popup.hide();
+                }
             }
 
             //update result
@@ -1995,8 +2003,8 @@
                 //display widget
                 settings.animation ? elements.widget.fadeIn() : elements.widget.show();
 
-                //display popup
-                if (elements.popup)
+                //display popup if there is any selected item
+                if (elements.popup && fn._count(obj))
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();
 
                 //set focus on input
@@ -2539,7 +2547,8 @@
                     list.unshift({
                         val: k,
                         html: txt,
-                        selected: true
+                        selected: true,
+                        className: 'auto-added'
                     });
 
                 }
