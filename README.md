@@ -21,11 +21,10 @@ Support remote data fetching and UI for mobile devices (smartphone / tablet)
 * IE8+
 
 ## Download and Setup
-View the Wiki [How to install and setup the plugin](https://github.com/flyingangel/jAutochecklist/wiki)
+* [Download](https://github.com/flyingangel/jAutochecklist/releases)
+* View the Wiki [How to install and setup the plugin](https://github.com/flyingangel/jAutochecklist/wiki)
 
 ## Support
-
-* **Support requests** and **general discussions** about the plugin can be posted to the official [Support Forum](https://groups.google.com/forum/#!forum/jautochecklist).
 
 * **Bugs** and **Feature requests** can be reported using the [issues tracker](https://github.com/flyingangel/jAutochecklist/issues). 
 

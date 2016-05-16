@@ -17,15 +17,37 @@
             <li data-logo="azdazd_ azd_ a_zd_azd_ azd_">Item qegserg serg segs</li>
         </ul>-->
 
-                <ul id="list">
-                    <li>1</li>
+<!--                <ul id="list">
+                    <li data-selected="1">1</li>
                     <li>2</li>
                     <li>3</li>
                     <li>4</li>
-                </ul>
+                </ul>-->
+
+<select id="list">
+    <optgroup label="test">
+        <option>opt1</option>
+        <option>opt2</option>
+        <option>opt3</option>
+    </optgroup>
+    <optgroup label="test2">
+        <option>opt1</option>
+        <option>opt2</option>
+        <option>opt3</option>
+    </optgroup>
+</select>
+
+<!--<ul id="list">
+    <li data-value="1" class="group">test</li>
+    <li data-value="1" class="child">test</li>
+    <li data-value="1" class="child">test</li>
+</ul>-->
 
         <script>
             $('#list').jAutochecklist({
+                collapseGroup: true,
+                autoCollapse: true,
+//                autoExpand: true
             });
         </script>
 

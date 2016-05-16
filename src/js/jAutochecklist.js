@@ -830,7 +830,7 @@
                         //clear the previous timer
                         window.clearTimeout(timer);
                         //set a timer to reduce server charge
-                        timer = setTimeout(function () {
+                        timer = window.setTimeout(function () {
                             ul.children('li.' + pluginName + '_noresult').remove();
                             prediction.val(val);
 
@@ -1244,6 +1244,19 @@
 
                         //already expanded
                         if ($this.hasClass('expanded'))
+                            fn._collapse(group, settings);
+                        else
+                            fn._expand(group, settings);
+
+                        return false;
+                    })
+                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function () {
+                        var $this = $(this);
+                        //the current group li
+                        var group = $this.is('li') ? $this : $this.parent();
+
+                        //already expanded
+                        if ($this.children('div.' + pluginName + '_expandable').hasClass('expanded'))
                             fn._collapse(group, settings);
                         else
                             fn._expand(group, settings);
@@ -1865,14 +1878,8 @@
                 if (more)
                     html += '<div class="{0}_more">'.format(pluginName) + settings.textMoreItem.format(more) + '</div>';
 
-                if (elements.popup){
+                if (elements.popup)
                     elements.popup.html(html);
-                    //show only if there is item inside
-                    if (html)
-                        elements.popup.show();
-                    else
-                        elements.popup.hide();
-                }
             }
 
             //update result
@@ -2063,7 +2070,8 @@
                 //if return false, do not close the list
                 var val = fn._get(obj);
                 var valBefore = obj.data('value');
-                if (settings.onClose(val, valBefore, val < valBefore || valBefore < val) === false)
+                var changed = !(val === valBefore || val.constructor === Array && JSON.stringify(val.sort()) === JSON.stringify(valBefore.sort()));
+                if (settings.onClose(val, valBefore, changed))
                     return;
             }
 
@@ -2562,7 +2570,7 @@
                 var isChild = e.isChild || false;
                 var index = e.index === undefined ? (offset ? i + offset : i) : (e.index === null ? '' : e.index);
                 var selected = e.selected;
-                var json = e.json && typeof e.json === 'object' ? JSON.stringify(e.json) : e.json;
+                var jsons = e.json && typeof e.json === 'object' ? JSON.stringify(e.json) : e.json;
 
                 if (selectArr[val] !== undefined)
                     selected = true;
@@ -2605,7 +2613,7 @@
 
                 style = style.length ? 'style="' + style.join(';') + '"' : '';
 
-                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? "data-jsons='" + json + "'" : '');
+                li += '<li class="{0}" {1} data-index="{2}" {3} tabindex="-1">'.format(className, style, index, e.json ? "data-jsons='" + jsons + "'" : '');
 
                 var logo = e.logo;
                 if (settings.valueAsLogo)
