@@ -2070,7 +2070,15 @@
                 //if return false, do not close the list
                 var val = fn._get(obj);
                 var valBefore = obj.data('value');
-                var changed = !(val === valBefore || val.constructor === Array && JSON.stringify(val.sort()) === JSON.stringify(valBefore.sort()));
+                var val_tmp = val;
+                var valBefore_tmp = valBefore;
+                //sort if is array
+                if (val_tmp && val_tmp.constructor === Array)
+                    val_tmp = val_tmp.sort();
+                if (valBefore_tmp && valBefore_tmp.constructor === Array)
+                    valBefore_tmp = valBefore_tmp.sort();
+                //compare
+                var changed = !(val === valBefore || JSON.stringify(val_tmp) === JSON.stringify(valBefore_tmp));
                 if (settings.onClose(val, valBefore, changed))
                     return;
             }
