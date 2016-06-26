@@ -559,11 +559,17 @@
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
-.menu-style .jAutochecklist_input {
-    border-radius: 10px
+.menu-style .jAutochecklist_input, .menu-style .jAutochecklist_prediction {
+    border-radius: 10px;
+    padding: 0 10px;
 }
 .menu-style .jAutochecklist_widget {
     border: 0;
+}
+.menu-style .jAutochecklist_listItem span.logo {
+    height: 24px;
+    margin: 5px 0;
+    line-height: 17px;
 }
 /*MOBILE STYLE*/
 .mobile-style {

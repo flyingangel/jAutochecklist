@@ -33,8 +33,8 @@ Support remote data fetching and UI for mobile devices (smartphone / tablet)
 ## License
 Released under the [MIT license](http://www.opensource.org/licenses/MIT).
 
-## Author & Maintainer
-Thanh Trung NGUYEN.
+## Author
+Thanh Trung NGUYEN
 
 ## Donations
 jAutochecklist is free! But you can donate to support the project :)
