@@ -394,7 +394,8 @@
     clear:both
 }
 .jAutochecklist_listItem .float-left {
-    float: left
+    float: left;
+    margin-right: 3px;
 }
 .jAutochecklist_listItem .overflow {
     overflow: auto;
@@ -487,6 +488,7 @@
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
     padding: 5px 3px;
+    background: whitesmoke;
 }
 .jAutochecklist_wrapper.inline-style .jAutochecklist_widget, .jAutochecklist_wrapper.menu-style .jAutochecklist_widget {
     display: block;
@@ -501,6 +503,9 @@
 }
 .jAutochecklist_widget .clear {
     clear: both;
+}
+.jAutochecklist_widget label {
+    margin-bottom: 0;
 }
 .jAutochecklist_nosearch .jAutochecklist_dropdown input {
     width: 0 !important;

@@ -37,18 +37,20 @@
     </optgroup>
 </select>
 
-<ul id="list2" class="menu-style">
-    <li data-info="test"><a>ae</a></li>
-    <li data-logo="az"><a>ae</a></li>
-</ul>
+<div id="widget">
+    <label><input type="checkbox">Some text</label>
+    <button type="button" class="trigger-close">OK</button>
+</div>
 
         <script>
             $('#list').jAutochecklist({
                 collapseGroup: true,
                 autoCollapse: true,
 //                autoExpand: true
+                widget: {
+                    source: '#widget'
+                }
             });
-            $('#list2').jAutochecklist();
         </script>
 
     </body>

@@ -986,18 +986,22 @@
                             }
                             return false;
                         });
-
-                widget.on('click', '.trigger-close', function () {
+            }
+            
+            widget.on('click', '.trigger-close', function () {
                     if (settings.widget.onValidate && settings.widget.onValidate(self) === false)
                         return false;
 
                     fn._close(self);
                 })
-                        .on('change', ':input', function () {
-                            if (settings.widget.onInputChange)
-                                settings.widget.onInputChange(self);
-                        });
-            }
+                .on('change', ':input', function () {
+                    if (settings.widget.onInputChange)
+                        settings.widget.onInputChange(self);
+                })
+                .on('mousedown', function(){
+                    //stop propagation
+                    return false;
+                });
 
             //on checkbox click prevent default behaviour
             ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function (e) {
@@ -1297,14 +1301,15 @@
             })
                     //blur not triggered in FF
                     .on('focusout.' + pluginName, function (e) {
-                        if (!settings.labelStyle && $(e.target).is($(this)) || isMobile)
+                        if (isMobile || !settings.labelStyle && $(e.target).is($(this)))
                             return;
+                        
                         //need to add delay for activeElement to be set
                         window.setTimeout(function () {
                             //close list if the active element isn't any child of the wrapper
                             if (!$(document.activeElement).closest(wrapper).length)
                                 fn._close(self);
-                        }, 10);
+                        }, 20);
                     })
                     .on('keydown.' + pluginName, function (e) {
                         var key = e.keyCode;
