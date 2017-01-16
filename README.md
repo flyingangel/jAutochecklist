@@ -11,7 +11,7 @@ Support remote data fetching and UI for mobile devices (smartphone / tablet)
 * Mobile, tablet support
 
 ## Demo
-[Demo](http://iflyingangel.com/project/jAutochecklist/demo)
+[Demo](http://iflyingangel.com/jautochecklist/demo)
 
 ## Requirements
 * [jQuery](https://jquery.com) v1.7.2+
