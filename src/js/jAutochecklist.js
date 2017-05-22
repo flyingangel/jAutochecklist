@@ -429,7 +429,7 @@
                 fn._postProcessing($this, false);
 
                 if (settings.onInit)
-                    settings.onInit();
+                    settings.onInit.call($this);
             });
         },
         destroy: function () {
@@ -500,16 +500,10 @@
             return fn._getValueAndText(this);
         },
         getSelectedObject: function () {
-            var data = this.data(pluginName);
-            if (!data || !data.elements.listItem.li.length)
-                return data.settings.multiple ? [] : null;
-
-            var el = data.elements.listItem.li.filter('li.selected');
-
-            if (!data.settings.multiple)
-                return el[0] === undefined ? null : el[0];
-
-            return el;
+            return fn._getObject(this, true);
+        },
+        getObject: function () {
+            return fn._getObject(this, false);
         },
         //set the values
         set: function (vals, clearAll) {
@@ -877,7 +871,7 @@
 
                                     //predict the next word
                                     if (remote.fnPredict && !settings.autocompleteStyle.enable)
-                                        remote.fnPredict(val, prediction, fn._predict);
+                                        remote.fnPredict.call(self, val, prediction, fn._predict);
                                     //user defined func
                                     fn._fetchData(self, val, 0, selected);
                                     //predict from local source
@@ -989,14 +983,14 @@
             }
             
             widget.on('click', '.trigger-close', function () {
-                    if (settings.widget.onValidate && settings.widget.onValidate(self) === false)
+                    if (settings.widget.onValidate && settings.widget.onValidate.call(self) === false)
                         return false;
 
                     fn._close(self);
                 })
                 .on('change', ':input', function () {
                     if (settings.widget.onInputChange)
-                        settings.widget.onInputChange(self);
+                        settings.widget.onInputChange.call(self);
                 })
                 .on('mousedown', function(){
                     //stop propagation
@@ -1073,7 +1067,7 @@
                             //call user defined function click
                             if (settings.onItemClick) {
                                 //if return false, prevent the selection
-                                if (settings.onItemClick(null, $this, valBefore, fn._getAll(self), checked) === false) {
+                                if (settings.onItemClick.call(self, null, $this, valBefore, fn._getAll(self), checked) === false) {
                                     dragging = false;
                                     return false;
                                 }
@@ -1117,7 +1111,7 @@
                             //call user defined function click
                             if (settings.onItemClick) {
                                 //if return false, revert to previous selection
-                                if (settings.onItemClick && settings.onItemClick(input.prop('value'), $this, valBefore, fn._get(self), checked) === false) {
+                                if (settings.onItemClick && settings.onItemClick.call(self, input.prop('value'), $this, valBefore, fn._get(self), checked) === false) {
                                     for (i = 0; i < checkboxes.length; i++) {
                                         if (checkboxes[i])
                                             checkboxes[i].prop('checked', !checked);
@@ -1406,7 +1400,7 @@
                     return false;
 
                 if (settings.onRemoveAll) {
-                    if (settings.onRemoveAll($(this), fn._get(self)) === false)
+                    if (settings.onRemoveAll.call(self, $(this), fn._get(self)) === false)
                         return false;
                 }
 
@@ -1583,7 +1577,7 @@
             input.addClass('loading');
 
             if (remote.fnQuery)
-                remote.fnQuery(obj, val, offset, fn._buildFromJSON);
+                remote.fnQuery.call(obj, obj, val, offset, fn._buildFromJSON);
             else {
                 var getData = {
                     text: val,
@@ -1951,7 +1945,7 @@
 
             if (settings.onOpen) {
                 //if return false, do not open the list
-                if (settings.onOpen(val) === false)
+                if (settings.onOpen.call(obj, val) === false)
                     return;
             }
 
@@ -2085,7 +2079,7 @@
                     valBefore_tmp = valBefore_tmp.sort();
                 //compare
                 var changed = !(val === valBefore || JSON.stringify(val_tmp) === JSON.stringify(valBefore_tmp));
-                if (settings.onClose(val, valBefore, changed))
+                if (settings.onClose.call(obj, val, valBefore, changed))
                     return;
             }
 
@@ -2237,6 +2231,21 @@
             });
 
             return val;
+        },
+        _getObject: function(obj, filterOnSelected) {
+            var data = obj.data(pluginName);
+            if (!data || !data.elements.listItem.li.length)
+                return data.settings.multiple ? [] : null;
+
+            var el = data.elements.listItem.li;
+
+            if(filterOnSelected)
+                el = el.filter('li.selected');
+
+            if (!data.settings.multiple)
+                return el[0] === undefined ? null : el[0];
+
+            return el;
         },
         _set: function (obj, vals, clearAll) {
             var data = obj.data(pluginName);
@@ -3067,7 +3076,7 @@
                     var source = a.source;
 
                     if (menuStyle.onScrollSpyActivate) {
-                        if (menuStyle.onScrollSpyActivate(source) === false)
+                        if (menuStyle.onScrollSpyActivate.call(obj, source) === false)
                             return;
                     }
 
