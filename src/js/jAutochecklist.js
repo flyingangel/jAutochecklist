@@ -2079,7 +2079,7 @@
                     valBefore_tmp = valBefore_tmp.sort();
                 //compare
                 var changed = !(val === valBefore || JSON.stringify(val_tmp) === JSON.stringify(valBefore_tmp));
-                if (settings.onClose.call(obj, val, valBefore, changed))
+                if (settings.onClose.call(obj, val, valBefore, changed) === false)
                     return;
             }
 
