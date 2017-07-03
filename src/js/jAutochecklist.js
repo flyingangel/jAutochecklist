@@ -1586,7 +1586,7 @@
 
                 //additional data to send
                 if (remote.data) {
-                    var d = typeof remote.data === 'function' ? remote.data() : remote.data;
+                    var d = typeof remote.data === 'function' ? remote.data.call(obj) : remote.data;
                     if (typeof d === 'object')
                         $.extend(true, getData, d);
                 }
@@ -2699,13 +2699,13 @@
 
                 indexed[i] = e;
             }
-
+            
             //create relationship
             fn._createObjectRelationship(indexed);
 
             for (i in indexed) {
                 //delete if is a child
-                if (indexed[i].parentIndex)
+                if (indexed[i].parentIndex !== undefined)
                     delete indexed[i];
             }
 
@@ -2722,7 +2722,7 @@
                 if (obj.hasOwnProperty(i)) {
                     var e = obj[i];
                     //if is not a child
-                    if (!e.parentIndex)
+                    if (e.parentIndex === undefined)
                         continue;
 
                     if (!obj[e.parentIndex].children)
