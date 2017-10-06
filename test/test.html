@@ -24,7 +24,7 @@
                     <li>4</li>
                 </ul>-->
 
-<select id="list">
+<select id="list" name="test">
     <optgroup label="test">
         <option>opt1</option>
         <option>opt2</option>
@@ -36,6 +36,10 @@
         <option>opt3</option>
     </optgroup>
 </select>
+
+<ul id="list2" data-name="test">
+    <li>opt1</li>
+</ul>
 
 <div id="widget">
     <label><input type="checkbox">Some text</label>
@@ -51,6 +55,7 @@
                     source: '#widget'
                 }
             });
+            $('#list2').jAutochecklist();
         </script>
 
     </body>

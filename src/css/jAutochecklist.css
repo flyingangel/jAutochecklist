@@ -803,3 +803,13 @@
 .autocomplete-style.mobile-style .jAutochecklist_dropdown input {
     width: 85%;
 }
+/*WIDGET*/
+.jAutochecklist_widget button.trigger-close {
+    background: white;
+    border: 1px #ccc solid;
+    border-radius: 3px;
+}
+.jAutochecklist_widget button.trigger-close:hover {
+    border: 1px #aaa solid;
+    cursor: pointer;
+}

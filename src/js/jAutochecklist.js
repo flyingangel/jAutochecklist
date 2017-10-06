@@ -116,6 +116,7 @@
                 onRemoveAll: null, //func(button, values)
                 //button    = the removeAll button object
                 //values    = list of values before removing all
+                onSmartChange: null, // Trigger like onClose and onRemoveAll
 
                 //fetch data from remote source
                 remote: {
@@ -379,6 +380,10 @@
                     json = fn._buildFromUl($this, settings);
                     name = $this.data('name');
                 }
+                
+                //detect whether another list of the same name exist; warn to prevent bug
+                if ($('select[name="'+name+'"], ul[data-name="'+name+'"], input[name="'+name+'"], input[name="'+name+'\[\]"]').not($this).length)
+                    console.warn('WARNING another list with the same attribute name="'+name+'" exist on the same page');
 
                 //default to the plugin name and a random number
                 if (!name)
@@ -683,9 +688,58 @@
         releaseDrag: function () {
             dragging = false;
         },
+        trigger: function(eventName){
+            var data = this.data(pluginName);
+            if (!data)
+                return;
+
+            var settings = data.settings;
+            var funcName = '_trigger' + eventName.substr(0,1).toUpperCase() + eventName.substr(1);
+
+            if (settings[eventName])
+                return fn[funcName](this);
+            else
+                console.warn('Event ' + eventName + " doesn't exist");
+        },
         /*
          *  PRIVATE
          */
+        _triggerOnClose: function(obj) {
+            return fn._eventOnClose(obj);
+        },
+        _triggerOnSmartChange: function(obj) {
+            return fn._eventSmartChange(obj);
+        },
+        _eventOnClose: function(obj) {
+            var data = obj.data(pluginName);
+            var settings = data.settings;
+            var val = fn._get(obj);
+            var valBefore = obj.data('value');
+            var changed = fn._valueChanged(val, valBefore);
+            return settings.onClose.call(obj, val, valBefore, changed);
+        },
+        _eventSmartChange: function(obj) {
+            var data = obj.data(pluginName);
+            var settings = data.settings;
+            var val = fn._get(obj);
+            var valBefore = obj.data('value');
+            var changed = fn._valueChanged(val, valBefore);
+            return settings.onSmartChange.call(obj, val, valBefore, changed);
+        },
+        //compare array values, order insensible
+        _valueChanged: function(val1, val2) {
+            var val_tmp = val1;
+            var val2_tmp = val2;
+            //sort if is array
+            if (val_tmp && val_tmp.constructor === Array)
+                val_tmp = val_tmp.sort();
+            if (val2_tmp && val2_tmp.constructor === Array)
+                val2_tmp = val2_tmp.sort();
+            
+            var changed = !(val1 === val2 || JSON.stringify(val_tmp) === JSON.stringify(val2_tmp));
+            
+            return changed;
+        },
         _buildFromJSON: function (obj, json, showNoResult, isAdd, selected, offset) {
             var data = obj.data(pluginName);
             if (!data)
@@ -1399,10 +1453,14 @@
                 if (wrapper.hasClass(pluginName + '_disabled'))
                     return false;
 
-                if (settings.onRemoveAll) {
-                    if (settings.onRemoveAll.call(self, $(this), fn._get(self)) === false)
-                        return false;
-                }
+                var vals = fn._get(self);
+                if (settings.onRemoveAll && settings.onRemoveAll.call(self, $(this), vals) === false)
+                    return false;
+
+                var emptyVal = settings.multiple ? [] : null;
+                var changed = fn._valueChanged(emptyVal, vals);
+                if (settings.onSmartChange && settings.onSmartChange.call(self, emptyVal, vals, changed) === false)
+                    return false;
 
                 input.val(null).trigger('keyup');
                 //deselect if is not menu-style
@@ -2066,22 +2124,11 @@
             if (settings.inline || settings.menuStyle.enable)
                 return;
 
-            if (settings.onClose) {
-                //if return false, do not close the list
-                var val = fn._get(obj);
-                var valBefore = obj.data('value');
-                var val_tmp = val;
-                var valBefore_tmp = valBefore;
-                //sort if is array
-                if (val_tmp && val_tmp.constructor === Array)
-                    val_tmp = val_tmp.sort();
-                if (valBefore_tmp && valBefore_tmp.constructor === Array)
-                    valBefore_tmp = valBefore_tmp.sort();
-                //compare
-                var changed = !(val === valBefore || JSON.stringify(val_tmp) === JSON.stringify(valBefore_tmp));
-                if (settings.onClose.call(obj, val, valBefore, changed) === false)
-                    return;
-            }
+            //if return false, do not close the list
+            if (settings.onClose && fn._eventOnClose(obj) === false)
+                return;
+            if (settings.onSmartChange && fn._eventSmartChange(obj) === false)
+                return;
 
             if (elements.popup)
                 elements.popup.hide();
@@ -2234,16 +2281,14 @@
         },
         _getObject: function(obj, filterOnSelected) {
             var data = obj.data(pluginName);
+            //return empty jquery object
             if (!data || !data.elements.listItem.li.length)
-                return data.settings.multiple ? [] : null;
+                return $();
 
             var el = data.elements.listItem.li;
 
-            if(filterOnSelected)
+            if (filterOnSelected)
                 el = el.filter('li.selected');
-
-            if (!data.settings.multiple)
-                return el[0] === undefined ? null : el[0];
 
             return el;
         },
