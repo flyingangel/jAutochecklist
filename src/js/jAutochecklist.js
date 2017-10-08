@@ -38,6 +38,17 @@
     $(window).on('mouseup.' + pluginName, function () {
         dragging = false;
     });
+    
+    var classes = {
+        wrapper: pluginName + '_wrapper',
+        widget: pluginName + '_widget',
+        disabled: pluginName + '_disabled',
+        rtl: pluginName + '_rtl',
+        multiple: pluginName + '_multiple',
+        single: pluginName + '_single',
+        nosearch: pluginName + '_nosearch',
+        remote: pluginName + '_remote'
+    };
 
     var fn = {
         init: function (options) {
@@ -90,6 +101,7 @@
                 autoCollapse: false, //use in conjunction with collapseGroup to auto collapse/expand items
                 autoExpand: false, //use in conjunction with collapseGroup to auto collapse/expand items
                 collapseGroup: false, //ability to collapse
+                expandOnSearch: false,  //when a group is found on search, expand it
                 selectorGroup: 'group', //the class selector of a group
                 selectorChild: 'child', //the class selector of a child
                 groupType: 0, //global setting of the type of a group
@@ -163,12 +175,14 @@
                 }
             },
             options);
-
+            
             return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
                 var id = this.id;
                 var className = this.className;
+                
+                var start = performance.now();
 
                 //if isn't a list or a select
                 var isSelect = $this.is('select');
@@ -192,7 +206,7 @@
                     //json = $.parseJSON(json); //it's already an object
                     settings = $.extend(true, settings, json);
                 }
-
+                
                 if (isSelect)
                     settings.multiple = this.multiple;
                 else {
@@ -248,7 +262,7 @@
 
                 //create a div wrapper
                 var wrapper = $('<div>').attr({
-                    'class': pluginName + '_wrapper',
+                    'class': classes.wrapper,
                     tabindex: tabindex
                 })
                         .width(settings.width === null ? $this.width() : settings.width)
@@ -267,22 +281,22 @@
                     else if (settings.widget.source instanceof jQuery)
                         wg_html = settings.widget.source;
                     else if (typeof settings.widget.source === 'function')
-                        wg_html = settings.widget.source();
+                        wg_html = settings.widget.source.call($this);
 
                     if (wg_html) {
-                        var wg = $('<div>').html(wg_html).addClass(pluginName + '_widget');
+                        var wg = $('<div>').html(wg_html).addClass(classes.widget);
                         wrapper.append(wg).addClass('has-widget');
                     }
                 }
 
                 if (id)
-                    wrapper.attr('id', pluginName + '_wrapper_' + id);
+                    wrapper.attr('id', classes.wrapper + '_' + id);
                 if (className)
                     wrapper.addClass(className);
                 if (this.disabled || $this.data('disabled'))
-                    wrapper.addClass(pluginName + '_disabled');
+                    wrapper.addClass(classes.disabled);
                 if (settings.rtl)
-                    wrapper.addClass(pluginName + '_rtl');
+                    wrapper.addClass(classes.rtl);
                 if (settings.inline)
                     wrapper.addClass('inline-style');
                 if (settings.menuStyle.enable)
@@ -299,16 +313,16 @@
                         wrapper.addClass('small-style');
                 }
                 if (settings.multiple)
-                    wrapper.addClass(pluginName + '_multiple');
+                    wrapper.addClass(classes.multiple);
                 else
-                    wrapper.addClass(pluginName + '_single');
+                    wrapper.addClass(classes.single);
 
                 if (settings.theme)
                     wrapper.addClass(settings.theme);
                 if (!settings.search)
-                    wrapper.addClass(pluginName + '_nosearch');
+                    wrapper.addClass(classes.nosearch);
                 if (settings.remote.source || settings.remote.fnQuery)
-                    wrapper.addClass(pluginName + '_remote');
+                    wrapper.addClass(classes.remote);
                 if (settings.absolutePosition)
                     wrapper.addClass('absolutePosition');
 
@@ -316,18 +330,18 @@
                 $this.addClass(pluginName);
 
                 //the popup should have 100px more than the wrapper width by default
-                var popup = wrapper.find('div.' + pluginName + '_popup').width(settings.width + settings.popupSizeDelta).css({
+                var popup = wrapper.find('.' + pluginName + '_popup').width(settings.width + settings.popupSizeDelta).css({
                     marginLeft: -settings.popupSizeDelta / 2
                 });
-                var dropdown = wrapper.find('div.' + pluginName + '_dropdown');
-                var result = wrapper.find('div.' + pluginName + '_result');
-                var input = wrapper.find('input.' + pluginName + '_input');
-                var prediction = wrapper.find('input.' + pluginName + '_prediction');
-                var arrow = wrapper.find('div.' + pluginName + '_arrow');
-                var ul = wrapper.find('ul.' + pluginName + '_list');
-                var removeAll = wrapper.find('div.' + pluginName + '_remove_all');
-                var close = isMobile ? wrapper.find('div.' + pluginName + '_close') : null;
-                var widget = wrapper.find('div.' + pluginName + '_widget');
+                var dropdown = wrapper.find('.' + pluginName + '_dropdown');
+                var result = wrapper.find('.' + pluginName + '_result');
+                var input = wrapper.find('.' + pluginName + '_input');
+                var prediction = wrapper.find('.' + pluginName + '_prediction');
+                var arrow = wrapper.find('.' + pluginName + '_arrow');
+                var ul = wrapper.find('.' + pluginName + '_list');
+                var removeAll = wrapper.find('.' + pluginName + '_remove_all');
+                var close = isMobile ? wrapper.find('.' + pluginName + '_close') : null;
+                var widget = wrapper.find('.' + classes.widget);
 
                 //manual size of the list
                 if (settings.listWidth) {
@@ -341,7 +355,7 @@
                         maxHeight: settings.listMaxHeight + 'px'
                     });
                 if (settings.menuStyle.enable && (!settings.menuStyle.search || !settings.search))
-                    wrapper.find('div.' + pluginName + '_dropdown_wrapper').remove();
+                    wrapper.find('.' + pluginName + '_dropdown_wrapper').remove();
                 if (!settings.arrow) {
                     arrow.remove();
                     arrow = null;
@@ -380,9 +394,9 @@
                     json = fn._buildFromUl($this, settings);
                     name = $this.data('name');
                 }
-                
+
                 //detect whether another list of the same name exist; warn to prevent bug
-                if ($('select[name="'+name+'"], ul[data-name="'+name+'"], input[name="'+name+'"], input[name="'+name+'\[\]"]').not($this).length)
+                if (name && $('select[name="'+name+'"], ul[data-name="'+name+'"], input[name="'+name+'"], input[name="'+name+'\[\]"]').not($this).length)
                     console.warn('WARNING another list with the same attribute name="'+name+'" exist on the same page');
 
                 //default to the plugin name and a random number
@@ -432,7 +446,7 @@
 
                 fn._registerEvent($this);
                 fn._postProcessing($this, false);
-
+ 
                 if (settings.onInit)
                     settings.onInit.call($this);
             });
@@ -549,7 +563,7 @@
 
                 //undefined 2nd parameter => disable the whole list
                 if (vals === undefined)
-                    data.elements.wrapper.addClass(pluginName + '_disabled');
+                    data.elements.wrapper.addClass(classes.disabled);
                 //disable element
                 else if (vals) {
                     //convert to array if not array
@@ -575,7 +589,7 @@
 
                 //undefined 2nd parameter => enable the whole list
                 if (vals === undefined)
-                    data.elements.wrapper.removeClass(pluginName + '_disabled');
+                    data.elements.wrapper.removeClass(classes.disabled);
                 //enable element
                 else if (vals) {
                     //convert to array if not array
@@ -633,7 +647,7 @@
                     var li = ul.children();
                     data.elements.listItem = {
                         li: li,
-                        checkbox: li.children('input.' + pluginName + '_listItem_input')
+                        checkbox: li.children('.' + pluginName + '_listItem_input')
                     };
                     data.elements.selectAll = selectAll;
 
@@ -827,7 +841,7 @@
 
             //searching
             input.on('keydown.' + pluginName, function (e) {
-                if (!settings.search || wrapper.hasClass(pluginName + '_disabled'))
+                if (!settings.search || wrapper.hasClass(classes.disabled))
                     return false;
 
                 var key = e.keyCode;
@@ -854,7 +868,7 @@
                     if (!isMobile && settings.absolutePosition) {
                         var ev = $.Event('keydown');
                         key = 27;
-                        $('div.' + pluginName + '_dummy').trigger(ev);
+                        $('.' + pluginName + '_dummy').trigger(ev);
                     }
                     fn._close(self);
                 }
@@ -880,7 +894,7 @@
                         window.clearTimeout(timer);
                         //set a timer to reduce server charge
                         timer = window.setTimeout(function () {
-                            ul.children('li.' + pluginName + '_noresult').remove();
+                            ul.children('.' + pluginName + '_noresult').remove();
                             prediction.val(val);
 
 
@@ -954,7 +968,7 @@
                     })
                     //stop propagoation to the wrapper
                     .on('focusin.' + pluginName, function (e) {
-                        if (wrapper.hasClass(pluginName + '_disabled'))
+                        if (wrapper.hasClass(classes.disabled))
                             return false;
 
                         e.stopPropagation();
@@ -971,7 +985,7 @@
                     window.clearTimeout(popup.data('timeout'));
                     var timeout = window.setTimeout(function () {
                         //if have at least one element
-                        if (fn._count(self) && !wrapper.hasClass(pluginName + '_disabled')) {
+                        if (fn._count(self) && !wrapper.hasClass(classes.disabled)) {
                             //if using absolute position, we need to move the popup to outside
                             if (settings.absolutePosition && ul.is(':hidden'))
                                 fn._movePopupAway(elements);
@@ -1016,7 +1030,7 @@
 
                                     ul.children('li.selected').each(function () {
                                         var $t = $(this);
-                                        var input = $t.children('input.' + pluginName + '_listItem_input');
+                                        var input = $t.children('.' + pluginName + '_listItem_input');
                                         var v = settings.showValue ? input.val() : $t.text();
                                         //found the bound item, deselect the checkbox
                                         if (val === v) {
@@ -1027,7 +1041,7 @@
                                 }
                                 else {
                                     var id = this.className.replace(pluginName + '_popup_item_', '');
-                                    ul.find('input.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
+                                    ul.find('.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
                                 }
 
                                 fn._update(self);
@@ -1052,15 +1066,15 @@
                 });
 
             //on checkbox click prevent default behaviour
-            ul.on('click.' + pluginName, 'input.' + pluginName + '_listItem_input', function (e) {
+            ul.on('click.' + pluginName, '.' + pluginName + '_listItem_input', function (e) {
                 e.preventDefault();
             })
                     //on item mouse down
-                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem', function (e) {
+                    .on('mousedown.' + pluginName, '.' + pluginName + '_listItem', function (e) {
                         var $this = $(this);
 
                         //if locked or blocked or menu-style
-                        if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(pluginName + '_disabled') || $this.hasClass('isError'))
+                        if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(classes.disabled) || $this.hasClass('isError'))
                             return false;
 
                         //on select text, disable click
@@ -1079,7 +1093,7 @@
                         e.stopPropagation();
 
                         //handle menu style
-                        var input = $this.children('input.' + pluginName + '_listItem_input');
+                        var input = $this.children('.' + pluginName + '_listItem_input');
                         if (settings.autocompleteStyle.enable) {
                             var val = input.val();
                             var str = elements.input.val();
@@ -1150,7 +1164,7 @@
 
                                 var children = fn._getChildren($this, settings.selectorChild, undefined, true);
                                 for (i = 0; i < children.length; i++)
-                                    checkboxes.push(children[i].children('input.' + pluginName + '_listItem_input'));
+                                    checkboxes.push(children[i].children('.' + pluginName + '_listItem_input'));
                             }
 
                             checkboxes.push(input);
@@ -1197,7 +1211,7 @@
                         var str = $(this).find('span.closeMatch').text();
                         input.val(str).trigger('keyup');
                     })
-                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem', function () {
+                    .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem', function () {
                         if (!dragging)
                             return;
                         var $this = $(this);
@@ -1215,7 +1229,7 @@
                             $(this).trigger('mousedown');
                     })
                     .on('click.' + pluginName, 'a', function (e) {
-                        if (wrapper.hasClass(pluginName + '_disabled'))
+                        if (wrapper.hasClass(classes.disabled))
                             return false;
 
                         e.stopPropagation();
@@ -1253,7 +1267,7 @@
                             menuStyle.scrollSpyAnimationDuration, function () {
                                 window.setTimeout(function () {
                                     //deselect all then select the clicked one
-                                    var li = $this.closest('li.' + pluginName + '_listItem');
+                                    var li = $this.closest('.' + pluginName + '_listItem');
                                     li.closest('ul').children('li.selected').removeClass('selected');
                                     li.addClass('selected');
                                 });
@@ -1290,7 +1304,7 @@
                             }
                         }, 500);
                     })
-                    .on('mousedown.' + pluginName, 'div.' + pluginName + '_expandable', function () {
+                    .on('mousedown.' + pluginName, '.' + pluginName + '_expandable', function () {
                         var $this = $(this);
                         //the current group li
                         var group = $this.parent();
@@ -1303,30 +1317,30 @@
 
                         return false;
                     })
-                    .on('mousedown.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function () {
+                    .on('mousedown.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
                         var $this = $(this);
                         //the current group li
                         var group = $this.is('li') ? $this : $this.parent();
 
                         //already expanded
-                        if ($this.children('div.' + pluginName + '_expandable').hasClass('expanded'))
+                        if ($this.children('.' + pluginName + '_expandable').hasClass('expanded'))
                             fn._collapse(group, settings);
                         else
                             fn._expand(group, settings);
 
                         return false;
                     })
-                    .on('mouseenter.' + pluginName, 'li.' + pluginName + '_listItem_group_empty', function () {
+                    .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
                         if (!settings.autoExpand)
                             return;
 
                         var $this = $(this);
-                        if (!$this.find('div.' + pluginName + '_expandable').hasClass('expanded'))
+                        if (!$this.find('.' + pluginName + '_expandable').hasClass('expanded'))
                             fn._expand($this, settings);
 
                         //collapse other li
                         if (settings.autoCollapse) {
-                            var group = $this.siblings('li.' + pluginName + '_listItem_group_empty');
+                            var group = $this.siblings('.' + pluginName + '_listItem_group_empty');
                             group.each(function () {
                                 fn._collapse($(this), settings);
                             });
@@ -1334,7 +1348,7 @@
                     });
 
             wrapper.on('focusin.' + pluginName, function () {
-                if (wrapper.hasClass(pluginName + '_disabled'))
+                if (wrapper.hasClass(classes.disabled))
                     return false;
 
                 if (!settings.labelStyle && ul.is(':hidden') && !settings.autocompleteStyle.enable)
@@ -1450,7 +1464,7 @@
                     });
 
             removeAll.on('mousedown.' + pluginName, function () {
-                if (wrapper.hasClass(pluginName + '_disabled'))
+                if (wrapper.hasClass(classes.disabled))
                     return false;
 
                 var vals = fn._get(self);
@@ -1538,6 +1552,7 @@
                 if (settings.accentInsensitive)
                     search = fn._removeAccent(search);
 
+                var matchLi = [];
                 listItem.not(elements.selectAll).each(function () {
                     var $this = $(this);
                     var text = $this.text().toLowerCase();
@@ -1554,6 +1569,7 @@
                     if (found) {
                         $this.show();
                         hasResult = true;
+                        matchLi.push($this);
                         //if this is a child, also show the parent if collapseGroup mode is on
                         var parents = fn._getParents($this, settings.selectorChild, settings.selectorGroup);
                         for (var i = 0; i < parents.length; i++)
@@ -1562,6 +1578,13 @@
                     else
                         $this.hide();
                 });
+                
+                //auto expand if match is a group with no value or when config is activate
+                for (var i=0; i<matchLi.length; i++){
+                    var li = matchLi[i];
+                    if (li.hasClass(pluginName + '_listItem_group_empty') || settings.expandOnSearch)
+                        fn._expand(li, settings);
+                }
             }
 
             //word predict only if not autocomplete style
@@ -1688,18 +1711,19 @@
             var settings = data.settings;
 
             //prevent tab stop
-            ul.find('a,button,:input,object').attr('tabIndex', -1);
-
+            ul.find('a,button,input,textarea,select,object').attr('tabIndex', -1);
+            
             //dynamic positioning, do not handle mobile support
             if (!isMobile) {
                 var pos = wrapper.offset();
                 var wrapperH = wrapper.height();
-                var x = pos.left - $(window).scrollLeft();
-                var y = pos.top - $(window).scrollTop() + wrapperH;
+                var $window = $(window);
+                var x = pos.left - $window.scrollLeft();
+                var y = pos.top - $window.scrollTop() + wrapperH;
                 var w = ul.width() + 2;   //with border
                 var h = ul.height() + 2;   //with border
-                var wW = $(window).width();
-                var wH = $(window).height();
+                var wW = $window.width();
+                var wH = $window.height();
 
                 //dynamic-x
                 if (x + w > wW) {
@@ -1779,7 +1803,7 @@
             if (!data)
                 return;
             //all item without the locked one
-            data.elements.listItem.li.not('li.locked').children('input.' + pluginName + '_listItem_input').prop('checked', state);
+            data.elements.listItem.li.not('.locked').children('.' + pluginName + '_listItem_input').prop('checked', state);
             this._update(obj);
         },
         _update: function (obj, isInitialisation, showFullItems) {
@@ -1807,7 +1831,7 @@
                 if ($this.hasClass(settings.selectorGroup))
                     fn._updateParent($this, settings);
 
-                var input = $this.children('input.' + pluginName + '_listItem_input');
+                var input = $this.children('.' + pluginName + '_listItem_input');
                 if (!input.length)
                     return;
 
@@ -1874,7 +1898,7 @@
             if (settings.uniqueValue) {
                 li.not('li.selected').each(function () {
                     var $this = $(this);
-                    var v = settings.showValue ? $this.children('input.' + pluginName + '_listItem_input').val() : $this.text();
+                    var v = settings.showValue ? $this.children('.' + pluginName + '_listItem_input').val() : $this.text();
 
                     if (settings.popupLogoAsValue)
                         v = $this.find('img.logo').attr('src');
@@ -1991,7 +2015,7 @@
             var wrapper = elements.wrapper;
             var settings = data.settings;
 
-            if (wrapper.hasClass(pluginName + '_disabled'))
+            if (wrapper.hasClass(classes.disabled))
                 return;
 
             var list = elements.list;
@@ -2022,7 +2046,7 @@
                 if (settings.absolutePosition) {
                     var offset = wrapper.offset();
                     //create dummy element to fill up space
-                    $('<div></div>').attr('class', pluginName + '_dummy ' + pluginName + '_wrapper')
+                    $('<div></div>').attr('class', pluginName + '_dummy ' + classes.wrapper)
                             .width(wrapper.width())
                             .height(wrapper.height())
                             .insertAfter(obj);
@@ -2139,8 +2163,8 @@
                 elements.input.val(null);
             }
             elements.prediction.hide().val(null);
-            elements.list.hide().children('li.' + pluginName + '_noresult').remove();
-            elements.listItem.li.show().filter('li.over').removeClass('over');
+            elements.list.hide().children('.' + pluginName + '_noresult').remove();
+            elements.listItem.li.show().filter('.over').removeClass('over');
             elements.widget.hide();
             wrapper.removeClass(pluginName + '_active');
             if (settings.collapseGroup)
@@ -2264,7 +2288,7 @@
                 var $this = $(this);
                 var o = {};
                 var txt;
-                var v = $this.children('input.jAutochecklist_listItem_input').val();
+                var v = $this.children('.' + pluginName + '_listItem_input').val();
                 if ($this.find('span.logo').length)
                     txt = $this.clone().find('span.logo').remove().end().text();
                 else
@@ -2390,13 +2414,13 @@
 
             var children = fn._getChildren(li, settings.selectorChild);
             var select, i;
-            var checkbox = li.children('input.' + pluginName + '_listItem_input');
+            var checkbox = li.children('.' + pluginName + '_listItem_input');
 
             if (groupType === 0 || groupType === 3) {
                 //by default selected, find at least one item not selected
                 select = true;
                 for (i = 0; i < children.length; i++) {
-                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === false) {
+                    if (children[i].children('.' + pluginName + '_listItem_input').prop('checked') === false) {
                         select = false;
                         break;
                     }
@@ -2406,7 +2430,7 @@
                 //by default not selected, find at least one selected
                 select = false;
                 for (i = 0; i < children.length; i++) {
-                    if (children[i].children('input.' + pluginName + '_listItem_input').prop('checked') === true) {
+                    if (children[i].children('.' + pluginName + '_listItem_input').prop('checked') === true) {
                         select = true;
                         break;
                     }
@@ -2493,7 +2517,7 @@
             var json = [];
             var isFirstOption = true;
             var i = 0;
-
+            
             obj.children().each(function () {
                 var t = $(this);
 
@@ -2857,7 +2881,7 @@
                 if (settings.firstItemSelectAll)
                     selectAll = ul.children(':first').addClass(pluginName + '_checkall');
 
-                checkbox = li.children('input.' + pluginName + '_listItem_input');
+                checkbox = li.children('.' + pluginName + '_listItem_input');
 
                 //show or hide checkbox
                 if (settings.checkbox)
@@ -2962,7 +2986,7 @@
                 return;
 
             var children = fn._getChildren(li, settings.selectorChild);
-            var arrow = li.children('div.' + pluginName + '_expandable');
+            var arrow = li.children('.' + pluginName + '_expandable');
             arrow.removeClass('expanded');
 
             for (var i = 0; i < children.length; i++)
@@ -2974,7 +2998,7 @@
                 return;
 
             var children = fn._getDirectChildren(li, settings.selectorChild, settings.selectorGroup);
-            var arrow = li.children('div.' + pluginName + '_expandable');
+            var arrow = li.children('.' + pluginName + '_expandable');
             arrow.addClass('expanded');
 
             for (var i = 0; i < children.length; i++) {
@@ -3506,7 +3530,7 @@
                 //update original
                 if (data.elements.listItem.li && data.elements.listItem.li.length)
                     data.elements.listItem.li.each(function (k) {
-                        if ($(this).children('input.jAutochecklist_listItem_input').prop('checked'))
+                        if ($(this).children('.' + pluginName + '_listItem_input').prop('checked'))
                             original.eq(k).attr('data-selected', '1');
                         else
                             original.eq(k).removeAttr('data-selected');
