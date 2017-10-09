@@ -1340,7 +1340,8 @@
 
                         //collapse other li
                         if (settings.autoCollapse) {
-                            var group = $this.siblings('.' + pluginName + '_listItem_group_empty');
+                            var level = fn._getLevel($this);
+                            var group = $this.siblings('.' + pluginName + '_listItem_group_empty.level' + level);
                             group.each(function () {
                                 fn._collapse($(this), settings);
                             });
