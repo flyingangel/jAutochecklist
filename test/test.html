@@ -6,7 +6,6 @@
         <link href="../src/css/jAutochecklist.css" rel="stylesheet" />
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
         <script src="../src/js/jAutochecklist.js"></script>
-
     </head>
     <body style="padding-top: 50px; padding-left: 50px">
 
@@ -24,33 +23,58 @@
                     <li>4</li>
                 </ul>-->
 
-<select id="list">
+<select id="list" name="test">
     <optgroup label="test">
         <option>opt1</option>
         <option>opt2</option>
         <option>opt3</option>
     </optgroup>
-    <optgroup label="test2">
+    <optgroup label="toto">
         <option>opt1</option>
         <option>opt2</option>
         <option>opt3</option>
     </optgroup>
 </select>
 
+<ul id="list2" data-name="test">
+    <li>opt1</li>
+</ul>
+
 <div id="widget">
     <label><input type="checkbox">Some text</label>
     <button type="button" class="trigger-close">OK</button>
 </div>
+<br>
 
         <script>
-            $('#list').jAutochecklist({
-                collapseGroup: true,
-                autoCollapse: true,
-//                autoExpand: true
-                widget: {
-                    source: '#widget'
-                }
-            });
+            var select = '';
+            
+            for (var i=0; i<1; i++)
+            {
+                var opt = '';
+                for (var j=0; j<10000; j++)
+                    opt += '<option>x</option>';
+                
+                select += '<select class="js-list">'+opt+'</select><br>';
+            }
+            
+            $('body').append(select);
+            
+//            $('#list').jAutochecklist({
+//                collapseGroup: true,
+//                autoCollapse: true,
+////                autoExpand: true
+//                widget: {
+//                    source: '#widget'
+//                }
+//            });
+//            $('#list2').jAutochecklist();
+            
+            var start = performance.now();
+            $('.js-list').jAutochecklist();
+            var end = performance.now();
+            
+            console.log((end - start) / 1000);
         </script>
 
     </body>

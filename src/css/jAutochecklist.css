@@ -276,6 +276,9 @@
 .jAutochecklist_list .over {
     border: 1px black dashed
 }
+.jAutochecklist_list .over + .over {
+    border-top: 0;
+}
 .jAutochecklist_list .selected {
     color:white;
     text-shadow: 1px 1px #888;
@@ -489,6 +492,8 @@
     border-bottom-right-radius: 2px;
     padding: 5px 3px;
     background: whitesmoke;
+    position: relative;
+    z-index: 99;
 }
 .jAutochecklist_wrapper.inline-style .jAutochecklist_widget, .jAutochecklist_wrapper.menu-style .jAutochecklist_widget {
     display: block;
@@ -802,4 +807,14 @@
 }
 .autocomplete-style.mobile-style .jAutochecklist_dropdown input {
     width: 85%;
+}
+/*WIDGET*/
+.jAutochecklist_widget button.trigger-close {
+    background: white;
+    border: 1px #ccc solid;
+    border-radius: 3px;
+}
+.jAutochecklist_widget button.trigger-close:hover {
+    border: 1px #aaa solid;
+    cursor: pointer;
 }
