@@ -1,5 +1,5 @@
 /* jQuery plugin : jAutochecklist
- @Version: 1.3.3
+ @Version: 1.3.3.alpha
  @Desctrition: Create a list of checkbox with autocomplete
  @Website: https://github.com/flyingangel/jAutochecklist
  @Licence: MIT
@@ -81,6 +81,7 @@
                 theme: null, //use a theme
                 uniqueValue: false, //item with the same text cannot be selected more than one
                 updateOriginal: false, //whether to update original everytime the list change
+                valueAsHTML: false, //use value as HTML (the real source instead of just text)
                 valueAsLogo: false, //use value as logo
                 width: 200, //width of the wrapper
                 //popup
@@ -458,7 +459,7 @@
                     settings.onInit.call($this);
             });
         },
-        destroy: function () {
+        destroy: function (keepOriginal) {
             return this.each(function () {
                 var $this = $(this);
                 var data = $this.data(pluginName);
@@ -468,7 +469,8 @@
                 $(document).add(window).off('.' + pluginName);
                 data.elements.wrapper.remove();
 
-                fn._updateOriginal($this);
+                if (!keepOriginal)
+                    fn._updateOriginal($this);
 
                 $this.removeData(pluginName).show();
                 //reset the name
@@ -644,7 +646,7 @@
 
                 //if totalrefresh, completely refresh by destroying then rebuilding the list
                 if (totalRefresh)
-                    $this.jAutochecklist('destroy').jAutochecklist(data.settings);
+                    $this.jAutochecklist('destroy', true).jAutochecklist(data.settings);
                 else {
                     var ul = data.elements.list;
                     var selectAll;
@@ -1481,15 +1483,16 @@
                 if (settings.onRemoveAll && settings.onRemoveAll.call(self, $(this), vals) === false)
                     return false;
 
-                var emptyVal = settings.multiple ? [] : null;
-                var changed = fn._valueChanged(emptyVal, vals);
-                if (settings.onSmartChange && settings.onSmartChange.call(self, emptyVal, vals, changed) === false)
-                    return false;
-
                 input.val(null).trigger('keyup');
+
                 //deselect if is not menu-style
                 if (!settings.menuStyle.enable)
                     fn._selectAll(self, false);
+
+                var emptyVal = settings.multiple ? [] : null;
+                var changed = fn._valueChanged(emptyVal, vals);
+                if (settings.onSmartChange)
+                    settings.onSmartChange.call(self, emptyVal, vals, changed);
 
                 return false;
             });
@@ -1728,21 +1731,22 @@
                 var pos = wrapper.offset();
                 var wrapperH = wrapper.height();
                 var $window = $(window);
-                var x = pos.left - $window.scrollLeft();
+//                var x = pos.left - $window.scrollLeft();
                 var y = pos.top - $window.scrollTop() + wrapperH;
-                var w = ul.width() + 2;   //with border
+//                var w = ul.width() + 2;   //with border
                 var h = ul.height() + 2;   //with border
-                var wW = $window.width();
+//                var wW = $window.width();
                 var wH = $window.height();
 
                 //dynamic-x
-                if (x + w > wW) {
-                    var left = -(wW - x) + 2;   //with border
-                    if (x - left >= 0 && left >= 0)
-                        ul.css({
-                            left: left
-                        });
-                }
+                //note, disable because bug at initialization
+//                if (x + w > wW) {
+//                    var left = -(wW - x) + 2;   //with border
+//                    if (x - left >= 0 && left >= 0)
+//                        ul.css({
+//                            left: left
+//                        });
+//                }
 
                 //dynamic-y only when option is activated
                 if (settings.dynamicPosition && y + h > wH) {
@@ -1852,10 +1856,15 @@
 
                     if (settings.showValue && v !== '')
                         text = v;
-                    else if ($this.find('span.logo').length)
-                        text = $this.clone().find('span.logo').remove().end().text();
-                    else
-                        text = $this.text();
+                    else {
+                        var source;
+                        if ($this.find('span.logo').length)
+                            source = $this.clone().find('span.logo').remove().end();
+                        else
+                            source = $this;
+
+                        text = settings.valueAsHTML ? source.html() : source.text();
+                    }
 
                     //if logo, text is the src
                     if (settings.popupLogoAsValue)

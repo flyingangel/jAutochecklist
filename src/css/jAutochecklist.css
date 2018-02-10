@@ -1,4 +1,4 @@
-/*jAutochecklist CSS v1.3.1*/
+/*jAutochecklist CSS v1.3.3*/
 @import url(theme.css);
 
 .jAutochecklist_wrapper {
@@ -266,6 +266,7 @@
     background: -ms-linear-gradient(left,  rgba(255,255,255,1) 0%,rgba(247,247,247,1) 100%); /* IE10+ */
     background: linear-gradient(to right,  rgba(255,255,255,1) 0%,rgba(247,247,247,1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=1 ); /* IE6-9 */
+    clear: both;
 }
 .jAutochecklist_listItem:hover {
     text-shadow: 1px 1px #fff;
@@ -604,7 +605,7 @@
 .mobile-style .jAutochecklist_result {
     display: none;
 }
-.mobile-style.jAutochecklist_nosearch .jAutochecklist_result {                                                              
+.mobile-style.jAutochecklist_nosearch .jAutochecklist_result {
     display: block;
     line-height: 50px;
 }
@@ -676,7 +677,7 @@
     display: none;
 }
 .mobile-style .jAutochecklist_list::-webkit-scrollbar {
-    display: none; 
+    display: none;
 }
 .mobile-style.has-widget .jAutochecklist_list {
     height: calc(100% - 95px);
@@ -745,7 +746,7 @@
 /*RIGHT-TO-LEFT*/
 .jAutochecklist_rtl,
 .jAutochecklist_rtl .jAutochecklist_listItem,
-.jAutochecklist_rtl .jAutochecklist_dropdown input 
+.jAutochecklist_rtl .jAutochecklist_dropdown input
 {
     text-align: right;
     direction: rtl;
