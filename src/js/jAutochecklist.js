@@ -65,7 +65,6 @@
                 chainableSource: null, //a function defining the data of the next chainable list
                 checkbox: false, //show or hide checkbox
                 defaultFallbackValue: '', //default value for fallback
-                dynamicPosition: false, //support dynamic position for list at the bottom of page
                 fallback: false, //fallback support for values
                 firstItemSelectAll: false, //enable checkall on first item
                 inline: false, //display the list inline style
@@ -477,6 +476,11 @@
                 this.setAttribute('name', $this.data('name'));
             });
         },
+        select: function (listItem, state, triggerEvent) {
+            return this.each(function () {
+                fn._select($(this), listItem, state, triggerEvent);
+            });
+        },
         selectAll: function () {
             return this.each(function () {
                 fn._selectAll($(this), true);
@@ -858,7 +862,7 @@
                     e.preventDefault();
 
                 //directional key
-                if (!fn._isAlphabetKey(key) && key !== 9)
+                if (fn._isDirectionalKey(key) && key !== 9)
                     return;
 
                 var v = prediction.val();
@@ -883,7 +887,7 @@
                 }
             })
                     .on('keyup.' + pluginName, function (e) {
-                        if (!fn._isAlphabetKey(e.keyCode) && e.keyCode !== 9)
+                        if (fn._isDirectionalKey(e.keyCode) && e.keyCode !== 9)
                             return;
 
                         var $this = $(this);
@@ -999,7 +1003,9 @@
                             if (settings.absolutePosition && ul.is(':hidden'))
                                 fn._movePopupAway(elements);
 
-                            settings.animation ? popup.fadeIn() : popup.show();
+                            //display only if the list is under the popup
+                            if (ul.position().top > -10)
+                                settings.animation ? popup.fadeIn() : popup.show();
                         }
                     }, 200);
                     popup.data('timeout', timeout);
@@ -1388,15 +1394,19 @@
                     .on('keydown.' + pluginName, function (e) {
                         var key = e.keyCode;
                         //if menustyle or character key, do nothing
-                        if (settings.menuStyle.enable || fn._isAlphabetKey(key))
+                        if (settings.menuStyle.enable || (!fn._isDirectionalKey(key) && key !== 46))
                             return;
-
+                        
                         var li = ul.children('li:visible');
                         var current = li.filter('li.over');
                         var next, index;
 
                         //up/down
                         if (key === 40 || key === 38) {
+                            //if no current "over" get the first selected item
+                            if (!current.length)
+                                current = li.filter('li.selected').first();
+                                    
                             //find the next over item
                             if (current.length) {
                                 //down
@@ -1428,6 +1438,10 @@
 
                                 if (settings.accessibility)
                                     next.focus();
+                                
+                                //autoselect if is single list
+                                if (!settings.multiple)
+                                    fn._select(self, next, true, true);
                             }
 
                             return false;
@@ -1444,16 +1458,30 @@
                                 input.val(txt).trigger('keyup');
                             }
                             else {
-                                current.trigger('mousedown').trigger('mouseup');
+                                //trigger select only if list multiple
+                                if (settings.multiple)
+                                    current.trigger('mousedown').trigger('mouseup');
+                                //otherwise if list simple check and close the list
+                                else {
+                                    fn._select(self, current, true, true);
+                                    fn._close(self);
+                                }
+                                
                                 input.val(null);
                                 prediction.val(null);
                             }
 
                             return false;
                         }
+                        //delete
+                        else if (key === 46)
+                            fn._select(self, current, false, true);
                         //shift
                         else if (key === 16)
                             shift_on = true;
+                        //if TAB switch to other list then deactivate shift
+                        else if (key === 9)
+                            shift_on = false;
                     })
                     .on('keyup.' + pluginName, function (e) {
                         if (e.keyCode === 16)
@@ -1482,13 +1510,13 @@
                 var vals = fn._get(self);
                 if (settings.onRemoveAll && settings.onRemoveAll.call(self, $(this), vals) === false)
                     return false;
-
+                
                 input.val(null).trigger('keyup');
 
                 //deselect if is not menu-style
                 if (!settings.menuStyle.enable)
                     fn._selectAll(self, false);
-
+                
                 var emptyVal = settings.multiple ? [] : null;
                 var changed = fn._valueChanged(emptyVal, vals);
                 if (settings.onSmartChange)
@@ -1726,38 +1754,6 @@
             //prevent tab stop
             ul.find('a,button,input,textarea,select,object').attr('tabIndex', -1);
 
-            //dynamic positioning, do not handle mobile support
-            if (!isMobile) {
-                var pos = wrapper.offset();
-                var wrapperH = wrapper.height();
-                var $window = $(window);
-//                var x = pos.left - $window.scrollLeft();
-                var y = pos.top - $window.scrollTop() + wrapperH;
-//                var w = ul.width() + 2;   //with border
-                var h = ul.height() + 2;   //with border
-//                var wW = $window.width();
-                var wH = $window.height();
-
-                //dynamic-x
-                //note, disable because bug at initialization
-//                if (x + w > wW) {
-//                    var left = -(wW - x) + 2;   //with border
-//                    if (x - left >= 0 && left >= 0)
-//                        ul.css({
-//                            left: left
-//                        });
-//                }
-
-                //dynamic-y only when option is activated
-                if (settings.dynamicPosition && y + h > wH) {
-                    var top = -h - wrapperH + 1;
-                    if (top)
-                        ul.css({
-                            top: top
-                        });
-                }
-            }
-
             //if inline, wrapper height should be the same as list height
             if (settings.inline)
                 wrapper.css({
@@ -1812,6 +1808,32 @@
                     $(this).data(original.eq(k).data());
                 });
         },
+        _select: function(obj, li, state, triggerEvent) {
+            var data = obj.data(pluginName);
+            if (!data)
+                return;
+            
+            var settings = data.settings;
+            
+            var input = li.find('.' + pluginName + '_listItem_input');
+
+            if (settings.onItemClick && triggerEvent) {
+                var valBefore = [];
+                data.elements.listItem.checkbox.filter(':checked').each(function () {
+                    valBefore.push(this.value);
+                });
+                var val = input.val();
+                //if return false, do not update
+                if (settings.onItemClick && settings.onItemClick.call(obj, val, li, valBefore, val, state) === false)
+                    return false;
+            }
+
+            //set li item checked
+            input.prop('checked', state);
+            this._update(obj);
+            
+            return true;
+        },
         _selectAll: function (obj, state) {
             var data = obj.data(pluginName);
             if (!data)
@@ -1862,7 +1884,7 @@
                             source = $this.clone().find('span.logo').remove().end();
                         else
                             source = $this;
-
+                        
                         text = settings.valueAsHTML ? source.html() : source.text();
                     }
 
@@ -2086,9 +2108,39 @@
                 list.show();
             }
             else {
+                var offset = wrapper.offset();
+                var $window = $(window);
+                var fullHeight = wrapper.innerHeight() + list.innerHeight() + elements.widget.innerHeight();
+                var shouldPopupHidden = false;
+
+                //if full list height is higher then screen height, put the list above
+                //but being above should stay inside the screen
+                //we should also take the widgets into account too
+                if (offset.top + fullHeight > $window.scrollTop() + $window.height()
+                        && offset.top - fullHeight > 0)
+                {
+                    list.css({
+                        top: -fullHeight - 1
+                    });
+                    elements.widget.css({
+                        top: -fullHeight
+                    });
+                    
+                    if (elements.popup)
+                        elements.popup.hide();
+                    
+                    shouldPopupHidden = true;
+                }
+                else
+                {
+                    //minus border
+                    list.css({
+                        top: -1
+                    });
+                }
+                
                 //before showing the list, convert to absolute position if enable
                 if (settings.absolutePosition) {
-                    var offset = wrapper.offset();
                     //create dummy element to fill up space
                     $('<div></div>').attr('class', pluginName + '_dummy ' + classes.wrapper)
                             .width(wrapper.width())
@@ -2137,7 +2189,7 @@
                 settings.animation ? elements.widget.fadeIn() : elements.widget.show();
 
                 //display popup if there is any selected item
-                if (elements.popup && fn._count(obj))
+                if (elements.popup && fn._count(obj) && !shouldPopupHidden)
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();
 
                 //set focus on input
@@ -3603,8 +3655,8 @@
 
             return false;
         },
-        _isAlphabetKey: function (keyCode) {
-            return $.inArray(keyCode, [9, 13, 16, 27, 35, 36, 37, 38, 39, 40]) === -1;
+        _isDirectionalKey: function (keyCode) {
+            return $.inArray(keyCode, [9, 13, 16, 27, 35, 36, 37, 38, 39, 40]) !== -1;
         },
         //A updates B, B updates C, C updates D...
         _updateChainedList: function (obj, settings) {

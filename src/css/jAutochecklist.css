@@ -213,6 +213,7 @@
 .jAutochecklist_list {
     position: relative;
     top:-1px;
+    left: 0;
     clear:both;
     list-style: none;
     padding: 0;
@@ -495,6 +496,7 @@
     background: whitesmoke;
     position: relative;
     z-index: 99;
+    left: 0;
 }
 .jAutochecklist_wrapper.inline-style .jAutochecklist_widget, .jAutochecklist_wrapper.menu-style .jAutochecklist_widget {
     display: block;
