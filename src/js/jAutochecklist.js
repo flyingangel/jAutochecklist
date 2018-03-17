@@ -1,10 +1,10 @@
 /* jQuery plugin : jAutochecklist
- @Version: 1.3.3.alpha
+ @Version: 1.4
  @Desctrition: Create a list of checkbox with autocomplete
  @Website: https://github.com/flyingangel/jAutochecklist
  @Licence: MIT
 
- Copyright (C) 2013-2017 Thanh Trung NGUYEN
+ Copyright (C) 2013-2018 Thanh Trung NGUYEN
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -1396,7 +1396,7 @@
                         //if menustyle or character key, do nothing
                         if (settings.menuStyle.enable || (!fn._isDirectionalKey(key) && key !== 46))
                             return;
-                        
+
                         var li = ul.children('li:visible');
                         var current = li.filter('li.over');
                         var next, index;
@@ -1406,7 +1406,7 @@
                             //if no current "over" get the first selected item
                             if (!current.length)
                                 current = li.filter('li.selected').first();
-                                    
+
                             //find the next over item
                             if (current.length) {
                                 //down
@@ -1438,7 +1438,7 @@
 
                                 if (settings.accessibility)
                                     next.focus();
-                                
+
                                 //autoselect if is single list
                                 if (!settings.multiple)
                                     fn._select(self, next, true, true);
@@ -1466,7 +1466,7 @@
                                     fn._select(self, current, true, true);
                                     fn._close(self);
                                 }
-                                
+
                                 input.val(null);
                                 prediction.val(null);
                             }
@@ -1510,13 +1510,13 @@
                 var vals = fn._get(self);
                 if (settings.onRemoveAll && settings.onRemoveAll.call(self, $(this), vals) === false)
                     return false;
-                
+
                 input.val(null).trigger('keyup');
 
                 //deselect if is not menu-style
                 if (!settings.menuStyle.enable)
                     fn._selectAll(self, false);
-                
+
                 var emptyVal = settings.multiple ? [] : null;
                 var changed = fn._valueChanged(emptyVal, vals);
                 if (settings.onSmartChange)
@@ -1812,9 +1812,9 @@
             var data = obj.data(pluginName);
             if (!data)
                 return;
-            
+
             var settings = data.settings;
-            
+
             var input = li.find('.' + pluginName + '_listItem_input');
 
             if (settings.onItemClick && triggerEvent) {
@@ -1831,7 +1831,7 @@
             //set li item checked
             input.prop('checked', state);
             this._update(obj);
-            
+
             return true;
         },
         _selectAll: function (obj, state) {
@@ -1884,7 +1884,7 @@
                             source = $this.clone().find('span.logo').remove().end();
                         else
                             source = $this;
-                        
+
                         text = settings.valueAsHTML ? source.html() : source.text();
                     }
 
@@ -2125,10 +2125,10 @@
                     elements.widget.css({
                         top: -fullHeight
                     });
-                    
+
                     if (elements.popup)
                         elements.popup.hide();
-                    
+
                     shouldPopupHidden = true;
                 }
                 else
@@ -2138,7 +2138,7 @@
                         top: -1
                     });
                 }
-                
+
                 //before showing the list, convert to absolute position if enable
                 if (settings.absolutePosition) {
                     //create dummy element to fill up space

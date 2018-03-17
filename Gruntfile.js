@@ -6,7 +6,8 @@ module.exports = function (grunt) {
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
-                banner: '/*! <%= pkg.name %> v<%= pkg.version %> */\n'
+                banner: '/*! <%= pkg.name %> v<%= pkg.version %> */\n',
+                reporterOutput: ""
             },
             all: [
                 'src/js/*.js'
@@ -24,7 +25,7 @@ module.exports = function (grunt) {
 
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> v<%= pkg.version %> */\n'
+                banner: '/* <%= pkg.name %> v<%= pkg.version %> ' + new Date().toDateString() + ' */\n'
             },
             my_target: {
                 files: {
@@ -34,7 +35,7 @@ module.exports = function (grunt) {
         },
         cssmin: {
             options: {
-                banner: '/*! <%= pkg.name %> v<%= pkg.version %> */'
+                banner: '/* <%= pkg.name %> v<%= pkg.version %> ' + new Date().toDateString() + ' */'
             },
             minify: {
                 expand: true,
