@@ -1477,8 +1477,11 @@
                         else if (key === 46)
                             fn._select(self, current, false, true);
                         //shift
-                        else if (key === 16)
-                            shift_on = true;
+                        else if (key === 16) {
+                            //activate only in list multiple
+                            if (settings.multiple)
+                                shift_on = true;
+                        }
                         //if TAB switch to other list then deactivate shift
                         else if (key === 9)
                             shift_on = false;
