@@ -68,6 +68,7 @@
                 fallback: false, //fallback support for values
                 firstItemSelectAll: false, //enable checkall on first item
                 inline: false, //display the list inline style
+                keyboardAutoSelect: true, //should keyboard trigger click
                 labelStyle: false, //label style
                 listWidth: null, //width of the list
                 listMaxHeight: null, //max height of the list
@@ -1440,7 +1441,7 @@
                                     next.focus();
 
                                 //autoselect if is single list
-                                if (!settings.multiple)
+                                if (!settings.multiple && settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery))
                                     fn._select(self, next, true, true);
                             }
 
@@ -1458,14 +1459,13 @@
                                 input.val(txt).trigger('keyup');
                             }
                             else {
-                                //trigger select only if list multiple
-                                if (settings.multiple)
+                                var autoSelect = settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery);
+                                //trigger select only if list multiple or when autoselect is disabled
+                                if (settings.multiple || !autoSelect)
                                     current.trigger('mousedown').trigger('mouseup');
-                                //otherwise if list simple check and close the list
-                                else {
-                                    fn._select(self, current, true, true);
+                                //single select and no autoselect flag
+                                else
                                     fn._close(self);
-                                }
 
                                 input.val(null);
                                 prediction.val(null);
@@ -2347,7 +2347,12 @@
                 else
                     txt = $this.text();
 
+                //ignore empty value item
+                if (!settings.multiple && $this.hasClass(pluginName + '_listItem_group_empty'))
+                    return;
+                
                 val.push(txt);
+                
                 //break the loop if is single select
                 if (!settings.multiple)
                     return false;
@@ -2785,7 +2790,10 @@
                 }
                 else if (isGroup || isChild)
                     className += ' level' + level;
-
+                //level 0
+                else if (settings.collapseGroup)
+                    px += 11;
+                
                 //if is a group
                 var style = e.style ? [e.style] : [];
                 if (isGroup) {   //group

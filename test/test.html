@@ -26,8 +26,8 @@
         <select id="list" name="test">
             <optgroup label="test">
                 <option>opt1</option>
-                <option>opt2</option>
-                <option>opt3</option>
+<!--                <option>opt2</option>
+                <option>opt3</option>-->
             </optgroup>
             <optgroup label="toto">
                 <option>opt4</option>
@@ -73,8 +73,7 @@
             $('body').append(select);
 
             $('#list').jAutochecklist({
-                collapseGroup: true,
-                expandSelected: true,
+                groupType:0,
 //                autoCollapse: true,
 //                autoExpand: true
                 widget: {
@@ -82,6 +81,7 @@
                 }
             });
             $('#list2').jAutochecklist({
+                multiple:false,
                 collapseGroup: true,
                 expandSelected: 2,
 //                autoCollapse: true,
