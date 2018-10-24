@@ -397,6 +397,7 @@
                     name = this.name || $this.data('name') || '';
                     //remove name to prevent bug
                     this.removeAttribute('name');
+                    $this.attr('data-name', name);
                 }
                 else {
                     json = fn._buildFromUl($this, settings);
@@ -2120,7 +2121,7 @@
                 //but being above should stay inside the screen
                 //we should also take the widgets into account too
                 if (offset.top + fullHeight > $window.scrollTop() + $window.height()
-                        && offset.top - fullHeight > 0)
+                        && offset.top - fullHeight > 0 && (-fullHeight - 1 > 0))
                 {
                     list.css({
                         top: -fullHeight - 1
