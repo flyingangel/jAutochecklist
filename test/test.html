@@ -1,102 +1,104 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="../src/css/jAutochecklist.css" rel="stylesheet" />
-        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="../src/js/jAutochecklist.js"></script>
-    </head>
-    <body style="padding-top: 50px; padding-left: 50px">
 
-        <!--        <ul id="list"  class="" title="toto">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../node_modules/jquery/tmp/jquery.js"></script>
+    <link href="../src/css/jAutochecklist.css" rel="stylesheet" />
+    <script src="../src/js/jAutochecklist.js"></script>
+</head>
+
+<body style="padding-top: 50px; padding-left: 50px">
+
+    <!--        <ul id="list"  class="" title="toto">
                     <li data-logo="test" data-info="aussitôt par e-mail et le supprimer de votre messagerie. ">
                         Item qegserg se
                     </li>
                     <li data-logo="azdazd_ azd_ a_zd_azd_ azd_">Item qegserg serg segs</li>
                 </ul>-->
 
-        <!--                <ul id="list">
+    <!--                <ul id="list">
                             <li data-selected="1">1</li>
                             <li>2</li>
                             <li>3</li>
                             <li>4</li>
                         </ul>-->
 
-        <select id="list" name="test">
-            <optgroup label="test">
-                <option>opt1</option>
-<!--                <option>opt2</option>
+    <select id="list" name="test">
+        <optgroup label="test">
+            <option>opt1</option>
+            <!--                <option>opt2</option>
                 <option>opt3</option>-->
-            </optgroup>
-            <optgroup label="toto">
-                <option>opt4</option>
-                <option>opt5</option>
-                <option selected>opt3</option>
-            </optgroup>
-        </select>
+        </optgroup>
+        <optgroup label="toto">
+            <option>opt4</option>
+            <option>opt5</option>
+            <option selected>opt3</option>
+        </optgroup>
+    </select>
 
-        <ul id="list2" data-name="test">
-            <li>opt1</li>
-            <li class="group">A group</li>
-            <li class="child">A child</li>
-            <li class="child">Same level</li>
-            <li class="group level2">Sub group</li>
-            <li class="child level2" data-selected="1">Sub child</li>
-            <li class="group level3" data-selected="1" data-value="2" data-groupType="3">Sub child</li>
-            <li class="child level3">XX</li>
-            <li class="child level3">XX</li>
-            <li class="child level2">Test</li>
-            <li class="group">A group</li>
-            <li class="child">A child</li>
-            <li>opt2</li>
-        </ul>
+    <ul id="list2" data-name="test">
+        <li>opt1</li>
+        <li class="group">A group</li>
+        <li class="child">A child</li>
+        <li class="child">Same level</li>
+        <li class="group level2">Sub group</li>
+        <li class="child level2" data-selected="1">Sub child</li>
+        <li class="group level3" data-selected="1" data-value="2" data-groupType="3">Sub child</li>
+        <li class="child level3">XX</li>
+        <li class="child level3">XX</li>
+        <li class="child level2">Test</li>
+        <li class="group">A group</li>
+        <li class="child">A child</li>
+        <li>opt2</li>
+    </ul>
 
-        <div id="widget">
-            <label><input type="checkbox">Some text</label>
-            <button type="button" class="trigger-close">OK</button>
-        </div>
-        <br>
+    <div id="widget">
+        <label><input type="checkbox">Some text</label>
+        <button type="button" class="trigger-close">OK</button>
+    </div>
+    <br>
 
-        <script>
-            var select = '';
+    <script>
+        var select = '';
 
-            for (var i = 0; i < 1; i++)
-            {
-                var opt = '';
-                for (var j = 0; j < 10000; j++)
-                    opt += '<option>x</option>';
+        for (var i = 0; i < 1; i++) {
+            var opt = '';
+            for (var j = 0; j < 10000; j++)
+                opt += '<option>x</option>';
 
-                select += '<select class="js-list">' + opt + '</select><br>';
+            select += '<select class="js-list">' + opt + '</select><br>';
+        }
+
+        $('body').append(select);
+
+        $('#list').jAutochecklist({
+            groupType: 0,
+            //                autoCollapse: true,
+            //                autoExpand: true
+            // widget: {
+            //     source: '#widget'
+            // }
+        });
+        $('#list2').jAutochecklist({
+            multiple: false,
+            collapseGroup: true,
+            expandSelected: 2,
+            //                autoCollapse: true,
+            //                autoExpand: true
+            widget: {
+                source: '#widget'
             }
+        });
 
-            $('body').append(select);
+        var start = performance.now();
+        //            $('.js-list').jAutochecklist();
+        var end = performance.now();
 
-            $('#list').jAutochecklist({
-                groupType:0,
-//                autoCollapse: true,
-//                autoExpand: true
-                // widget: {
-                //     source: '#widget'
-                // }
-            });
-            $('#list2').jAutochecklist({
-                multiple:false,
-                collapseGroup: true,
-                expandSelected: 2,
-//                autoCollapse: true,
-//                autoExpand: true
-                widget: {
-                    source: '#widget'
-                }
-            });
+        console.log((end - start) / 1000);
+    </script>
 
-            var start = performance.now();
-//            $('.js-list').jAutochecklist();
-            var end = performance.now();
+</body>
 
-            console.log((end - start) / 1000);
-        </script>
-
-    </body>
 </html>

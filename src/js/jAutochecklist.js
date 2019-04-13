@@ -152,10 +152,10 @@
                     //input = the underlying input object
                     //callback  = callback function used to build suggestion
                     fnQuery: null      //func(obj, text, offset, callback)   custom function that handle query
-                            //obj       = the current jQuery list object
-                            //text      = the typing search text
-                            //offset    = the offset position of the result
-                            //callback  = callback function used to build the list
+                    //obj       = the current jQuery list object
+                    //text      = the typing search text
+                    //offset    = the offset position of the result
+                    //callback  = callback function used to build the list
                 },
                 menuStyle: {
                     enable: false, //enable menu style
@@ -167,7 +167,7 @@
                     scrollSpyAnimationDuration: 500,
                     scrollSpyOffsetTop: 20,
                     onScrollSpyActivate: null   //func(element) event when scroll spy triggered
-                            //element = triggered list item element
+                    //element = triggered list item element
                 },
                 autocompleteStyle: {
                     enable: false, //enable autocomplete style
@@ -181,7 +181,7 @@
                     onValidate: null    //validate, close the list
                 }
             },
-                    options);
+                options);
 
             return this.each(function () {
                 var $this = $(this);
@@ -270,14 +270,14 @@
                     'class': classes.wrapper,
                     tabindex: tabindex
                 })
-                        .width(settings.width === null ? $this.width() : settings.width)
-                        .append(
-                                ('<div class="{0}_popup"></div>'
-                                        + '<div class="{0}_dropdown_wrapper">'
-                                        + '<div class="{0}_arrow"><div></div></div>'
-                                        + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" tabindex="-1" /><input class="{0}_input" placeholder="{1}" tabindex="-1" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
-                                        + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch, settings.textClose)
-                                );
+                    .width(settings.width === null ? $this.width() : settings.width)
+                    .append(
+                        ('<div class="{0}_popup"></div>'
+                            + '<div class="{0}_dropdown_wrapper">'
+                            + '<div class="{0}_arrow"><div></div></div>'
+                            + '<div class="{0}_dropdown"><div class="{0}_result"></div><input class="{0}_prediction" tabindex="-1" /><input class="{0}_input" placeholder="{1}" tabindex="-1" /><div class="{0}_remove_all"></div><div class="{0}_close">{2}</div></div></div>'
+                            + '<ul class="{0}_list"></ul>').format(pluginName, settings.textSearch, settings.textClose)
+                    );
 
                 if (settings.widget.source) {
                     var wg_html;
@@ -888,106 +888,106 @@
                     fn._close(self);
                 }
             })
-                    .on('keyup.' + pluginName, function (e) {
-                        if (fn._isDirectionalKey(e.keyCode) && e.keyCode !== 9)
-                            return;
+                .on('keyup.' + pluginName, function (e) {
+                    if (fn._isDirectionalKey(e.keyCode) && e.keyCode !== 9)
+                        return;
 
-                        var $this = $(this);
-                        var val = this.value;
-                        var hasResult = false;
-                        var remote = settings.remote;
+                    var $this = $(this);
+                    var val = this.value;
+                    var hasResult = false;
+                    var remote = settings.remote;
 
-                        //add delay to prevent lag
-                        var delay = ul.children().length * 2;
-                        if (delay > 3000)
-                            delay = 3000;
+                    //add delay to prevent lag
+                    var delay = ul.children().length * 2;
+                    if (delay > 3000)
+                        delay = 3000;
 
-                        if (remote.source || remote.fnQuery)
-                            delay = remote.delay;
+                    if (remote.source || remote.fnQuery)
+                        delay = remote.delay;
 
-                        //clear the previous timer
-                        window.clearTimeout(timer);
-                        //set a timer to reduce server charge
-                        timer = window.setTimeout(function () {
-                            ul.children('.' + pluginName + '_noresult').remove();
-                            prediction.val(val);
+                    //clear the previous timer
+                    window.clearTimeout(timer);
+                    //set a timer to reduce server charge
+                    timer = window.setTimeout(function () {
+                        ul.children('.' + pluginName + '_noresult').remove();
+                        prediction.val(val);
 
 
-                            //if menu-style, show removeAll button, doesn't matter if items are selected or not
-                            if (settings.menuStyle.enable) {
-                                if (val)
-                                    removeAll.show();
-                                else
-                                    removeAll.hide();
+                        //if menu-style, show removeAll button, doesn't matter if items are selected or not
+                        if (settings.menuStyle.enable) {
+                            if (val)
+                                removeAll.show();
+                            else
+                                removeAll.hide();
+                        }
+
+                        if (settings.autocompleteStyle.enable) {
+                            //val is the last word
+                            val = fn._getLastWord(val, settings.autocompleteStyle.separator);
+                            //do nothing if too few character
+                            if (val.length < settings.autocompleteStyle.minLength) {
+                                fn._close(self);
+                                //stop here
+                                return;
                             }
+                        }
 
-                            if (settings.autocompleteStyle.enable) {
-                                //val is the last word
-                                val = fn._getLastWord(val, settings.autocompleteStyle.separator);
-                                //do nothing if too few character
-                                if (val.length < settings.autocompleteStyle.minLength) {
-                                    fn._close(self);
-                                    //stop here
-                                    return;
+                        //if remote, replace the current list with new data
+                        if (remote.source || remote.fnQuery) {
+                            var cache = $this.data('remote');
+
+                            //if text length < minLength do nothing
+                            if (val.length < remote.minLength)
+                                return;
+
+                            //before emptying the list, we must remember the selected values
+                            var selected = fn._getValueAndText(self);
+
+                            //force empty the last request
+                            $this.data('lastRequest', null);
+
+                            //if cache not exist, fetch from remote source
+                            if (!cache || cache[val] === undefined) {
+                                //we dont know if there are results, open the list anyway
+                                if (settings.autocompleteStyle.enable)
+                                    fn._open(self, false);
+
+                                //predict the next word
+                                if (remote.fnPredict && !settings.autocompleteStyle.enable)
+                                    remote.fnPredict.call(self, val, prediction, fn._predict);
+                                //user defined func
+                                fn._fetchData(self, val, 0, selected);
+                                //predict from local source
+                                if (!remote.fnPredict && !settings.autocompleteStyle.enable)
+                                    fn._setPredictionFromLocalSource(self);
+
+                                return; //break the code here
+                            }
+                            else {  //load from cache
+                                var json = cache[val];
+                                if (json && json.length) {
+                                    fn._buildFromJSON(self, json, true, false, selected);
+                                    hasResult = true;
                                 }
                             }
+                        }
+                        else {  //using local source
+                            hasResult = fn._filterListItem(self);
+                        }
 
-                            //if remote, replace the current list with new data
-                            if (remote.source || remote.fnQuery) {
-                                var cache = $this.data('remote');
+                        if (hasResult && settings.autocompleteStyle.enable)
+                            fn._open(self, false);
 
-                                //if text length < minLength do nothing
-                                if (val.length < remote.minLength)
-                                    return;
+                        fn._setClosestMatch(self, hasResult);
+                    }, delay);
+                })
+                //stop propagoation to the wrapper
+                .on('focusin.' + pluginName, function (e) {
+                    if (wrapper.hasClass(classes.disabled))
+                        return false;
 
-                                //before emptying the list, we must remember the selected values
-                                var selected = fn._getValueAndText(self);
-
-                                //force empty the last request
-                                $this.data('lastRequest', null);
-
-                                //if cache not exist, fetch from remote source
-                                if (!cache || cache[val] === undefined) {
-                                    //we dont know if there are results, open the list anyway
-                                    if (settings.autocompleteStyle.enable)
-                                        fn._open(self, false);
-
-                                    //predict the next word
-                                    if (remote.fnPredict && !settings.autocompleteStyle.enable)
-                                        remote.fnPredict.call(self, val, prediction, fn._predict);
-                                    //user defined func
-                                    fn._fetchData(self, val, 0, selected);
-                                    //predict from local source
-                                    if (!remote.fnPredict && !settings.autocompleteStyle.enable)
-                                        fn._setPredictionFromLocalSource(self);
-
-                                    return; //break the code here
-                                }
-                                else {  //load from cache
-                                    var json = cache[val];
-                                    if (json && json.length) {
-                                        fn._buildFromJSON(self, json, true, false, selected);
-                                        hasResult = true;
-                                    }
-                                }
-                            }
-                            else {  //using local source
-                                hasResult = fn._filterListItem(self);
-                            }
-
-                            if (hasResult && settings.autocompleteStyle.enable)
-                                fn._open(self, false);
-
-                            fn._setClosestMatch(self, hasResult);
-                        }, delay);
-                    })
-                    //stop propagoation to the wrapper
-                    .on('focusin.' + pluginName, function (e) {
-                        if (wrapper.hasClass(classes.disabled))
-                            return false;
-
-                        e.stopPropagation();
-                    });
+                    e.stopPropagation();
+                });
 
             if (isMobile)
                 input.on('focusout.' + pluginName, function (e) {
@@ -1029,42 +1029,42 @@
                 popup.on('mouseover.' + pluginName, function () {
                     window.clearTimeout(popup.data('timeout'));
                 })
-                        //on popup item click, deselect that item
-                        .on('mousedown.' + pluginName, 'div', function () {
-                            var $this = $(this);
+                    //on popup item click, deselect that item
+                    .on('mousedown.' + pluginName, 'div', function () {
+                        var $this = $(this);
 
-                            if ($this.hasClass('stack') || $this.hasClass('locked'))
-                                return;
+                        if ($this.hasClass('stack') || $this.hasClass('locked'))
+                            return;
 
-                            //if this is a "more" button
-                            if ($this.hasClass(pluginName + '_more'))
-                                fn._update(self, false, true);
-                            else {
-                                if (settings.popupGroupValue) {
-                                    //find anything that has the same value and deselect it
-                                    $this.children('div.stack').remove();
-                                    var val = $this.text();
+                        //if this is a "more" button
+                        if ($this.hasClass(pluginName + '_more'))
+                            fn._update(self, false, true);
+                        else {
+                            if (settings.popupGroupValue) {
+                                //find anything that has the same value and deselect it
+                                $this.children('div.stack').remove();
+                                var val = $this.text();
 
-                                    ul.children('li.selected').each(function () {
-                                        var $t = $(this);
-                                        var input = $t.children('.' + pluginName + '_listItem_input');
-                                        var v = settings.showValue ? input.val() : $t.text();
-                                        //found the bound item, deselect the checkbox
-                                        if (val === v) {
-                                            input.prop('checked', false);
-                                            $t.removeClass('selected');
-                                        }
-                                    });
-                                }
-                                else {
-                                    var id = this.className.replace(pluginName + '_popup_item_', '');
-                                    ul.find('.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
-                                }
-
-                                fn._update(self);
+                                ul.children('li.selected').each(function () {
+                                    var $t = $(this);
+                                    var input = $t.children('.' + pluginName + '_listItem_input');
+                                    var v = settings.showValue ? input.val() : $t.text();
+                                    //found the bound item, deselect the checkbox
+                                    if (val === v) {
+                                        input.prop('checked', false);
+                                        $t.removeClass('selected');
+                                    }
+                                });
                             }
-                            return false;
-                        });
+                            else {
+                                var id = this.className.replace(pluginName + '_popup_item_', '');
+                                ul.find('.' + pluginName + '_input' + id).parent('li').trigger('mousedown').trigger('mouseup');
+                            }
+
+                            fn._update(self);
+                        }
+                        return false;
+                    });
             }
 
             widget.on('click', '.trigger-close', function () {
@@ -1073,297 +1073,297 @@
 
                 fn._close(self);
             })
-                    .on('change', ':input', function () {
-                        if (settings.widget.onInputChange)
-                            settings.widget.onInputChange.call(self);
-                    })
-                    .on('mousedown', function () {
-                        //stop propagation
-                        return false;
-                    });
+                .on('change', ':input', function () {
+                    if (settings.widget.onInputChange)
+                        settings.widget.onInputChange.call(self);
+                })
+                .on('mousedown', function () {
+                    //stop propagation
+                    return false;
+                });
 
             //on checkbox click prevent default behaviour
             ul.on('click.' + pluginName, '.' + pluginName + '_listItem_input', function (e) {
                 e.preventDefault();
             })
-                    //on item mouse down
-                    .on('mousedown.' + pluginName, '.' + pluginName + '_listItem', function (e) {
-                        var $this = $(this);
+                //on item mouse down
+                .on('mousedown.' + pluginName, '.' + pluginName + '_listItem', function (e) {
+                    var $this = $(this);
 
-                        //if locked or blocked or menu-style
-                        if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(classes.disabled) || $this.hasClass('isError'))
-                            return false;
+                    //if locked or blocked or menu-style
+                    if ($this.hasClass('locked') || $this.hasClass('blocked') || $this.hasClass('maxBlocked') || settings.menuStyle.enable || wrapper.hasClass(classes.disabled) || $this.hasClass('isError'))
+                        return false;
 
-                        //on select text, disable click
-                        var text;
-                        if (window.getSelection)
-                            text = window.getSelection().toString();
-                        else if (document.getSelection)
-                            text = document.getSelection();
-                        else if (document.selection)
-                            text = document.selection.createRange().text;
+                    //on select text, disable click
+                    var text;
+                    if (window.getSelection)
+                        text = window.getSelection().toString();
+                    else if (document.getSelection)
+                        text = document.getSelection();
+                    else if (document.selection)
+                        text = document.selection.createRange().text;
 
-                        if (text)
-                            return false;
+                    if (text)
+                        return false;
 
-                        //disable propagation for live event
-                        e.stopPropagation();
+                    //disable propagation for live event
+                    e.stopPropagation();
 
-                        //handle menu style
-                        var input = $this.children('.' + pluginName + '_listItem_input');
-                        if (settings.autocompleteStyle.enable) {
-                            var val = input.val();
-                            var str = elements.input.val();
-                            //replace last found word
-                            str = fn._replaceLastWord(str, val, settings.autocompleteStyle.separator);
-                            elements.input.val(str);
-                            elements.prediction.val(str);
-                            fn._close(self);
-                            return false;
+                    //handle menu style
+                    var input = $this.children('.' + pluginName + '_listItem_input');
+                    if (settings.autocompleteStyle.enable) {
+                        var val = input.val();
+                        var str = elements.input.val();
+                        //replace last found word
+                        str = fn._replaceLastWord(str, val, settings.autocompleteStyle.separator);
+                        elements.input.val(str);
+                        elements.prediction.val(str);
+                        fn._close(self);
+                        return false;
+                    }
+
+                    var checked = $this.hasClass('selected');
+
+                    //do nothing if single list and prevent deselect
+                    if (checked && !settings.multiple && !settings.allowDeselectSingleList)
+                        return false;
+
+                    //reset the drag memory
+                    if (!dragging)
+                        drag_memory = [];
+
+                    //add to the drag memory to notify that this element has been processed
+                    drag_memory.push($this);
+
+                    //if is dragging and the checkbox has same state, exit
+                    if (dragging && dragging_state === checked)
+                        return false;
+
+                    var valBefore = [];
+                    elements.listItem.checkbox.filter(':checked').each(function () {
+                        valBefore.push(this.value);
+                    });
+
+                    //reverse the checkbox status if the event is not from the checkbox
+                    checked = !checked;
+
+                    //checkall
+                    if ($this.hasClass(pluginName + '_checkall')) {
+                        //call user defined function click
+                        if (settings.onItemClick) {
+                            //if return false, prevent the selection
+                            if (settings.onItemClick.call(self, null, $this, valBefore, fn._getAll(self), checked) === false) {
+                                dragging = false;
+                                return false;
+                            }
                         }
 
-                        var checked = $this.hasClass('selected');
-
-                        //do nothing if single list and prevent deselect
-                        if (checked && !settings.multiple && !settings.allowDeselectSingleList)
+                        //do not select all if maxSelected enable
+                        if (checked && settings.maxSelected)
                             return false;
 
-                        //reset the drag memory
-                        if (!dragging)
-                            drag_memory = [];
-
-                        //add to the drag memory to notify that this element has been processed
-                        drag_memory.push($this);
-
-                        //if is dragging and the checkbox has same state, exit
-                        if (dragging && dragging_state === checked)
+                        fn._selectAll(self, checked);
+                    }
+                    else {  //simple checkbox
+                        //if is label do nothing if type radio
+                        if (!settings.multiple && $this.hasClass(settings.selectorGroup))
                             return false;
 
-                        var valBefore = [];
-                        elements.listItem.checkbox.filter(':checked').each(function () {
-                            valBefore.push(this.value);
-                        });
+                        var groupType = fn._getGroupType($this, settings);
+                        var checkboxes = [];
+                        var i;
 
-                        //reverse the checkbox status if the event is not from the checkbox
-                        checked = !checked;
-
-                        //checkall
-                        if ($this.hasClass(pluginName + '_checkall')) {
-                            //call user defined function click
-                            if (settings.onItemClick) {
-                                //if return false, prevent the selection
-                                if (settings.onItemClick.call(self, null, $this, valBefore, fn._getAll(self), checked) === false) {
-                                    dragging = false;
-                                    return false;
-                                }
-                            }
-
-                            //do not select all if maxSelected enable
+                        //if a group is checked and is not exclusive, get the list of children
+                        if ($this.hasClass(settings.selectorGroup) && groupType !== 2 && groupType !== 3 && groupType !== 4) {
+                            //do not select childrens if maxSelected enable
                             if (checked && settings.maxSelected)
                                 return false;
 
-                            fn._selectAll(self, checked);
+                            var children = fn._getChildren($this, settings.selectorChild, undefined, true);
+                            for (i = 0; i < children.length; i++)
+                                checkboxes.push(children[i].children('.' + pluginName + '_listItem_input'));
                         }
-                        else {  //simple checkbox
-                            //if is label do nothing if type radio
-                            if (!settings.multiple && $this.hasClass(settings.selectorGroup))
-                                return false;
 
-                            var groupType = fn._getGroupType($this, settings);
-                            var checkboxes = [];
-                            var i;
+                        checkboxes.push(input);
+                        for (i = 0; i < checkboxes.length; i++) {
+                            //if is already checked, remove this item from the list
+                            if (checkboxes[i].prop('checked') === checked)
+                                checkboxes[i] = null;
+                            else
+                                checkboxes[i].prop('checked', checked);
+                        }
 
-                            //if a group is checked and is not exclusive, get the list of children
-                            if ($this.hasClass(settings.selectorGroup) && groupType !== 2 && groupType !== 3 && groupType !== 4) {
-                                //do not select childrens if maxSelected enable
-                                if (checked && settings.maxSelected)
-                                    return false;
-
-                                var children = fn._getChildren($this, settings.selectorChild, undefined, true);
-                                for (i = 0; i < children.length; i++)
-                                    checkboxes.push(children[i].children('.' + pluginName + '_listItem_input'));
-                            }
-
-                            checkboxes.push(input);
-                            for (i = 0; i < checkboxes.length; i++) {
-                                //if is already checked, remove this item from the list
-                                if (checkboxes[i].prop('checked') === checked)
-                                    checkboxes[i] = null;
-                                else
-                                    checkboxes[i].prop('checked', checked);
-                            }
-
-                            //call user defined function click
-                            if (settings.onItemClick) {
-                                //if return false, revert to previous selection
-                                if (settings.onItemClick && settings.onItemClick.call(self, input.prop('value'), $this, valBefore, fn._get(self), checked) === false) {
-                                    for (i = 0; i < checkboxes.length; i++) {
-                                        if (checkboxes[i])
-                                            checkboxes[i].prop('checked', !checked);
-                                    }
-
-                                    dragging = false;
-                                    return false;
+                        //call user defined function click
+                        if (settings.onItemClick) {
+                            //if return false, revert to previous selection
+                            if (settings.onItemClick && settings.onItemClick.call(self, input.prop('value'), $this, valBefore, fn._get(self), checked) === false) {
+                                for (i = 0; i < checkboxes.length; i++) {
+                                    if (checkboxes[i])
+                                        checkboxes[i].prop('checked', !checked);
                                 }
-                            }
 
-                            fn._update(self);
-                        }
-
-                        //start dragging handling, only the first clicked li can reach here
-                        if (!dragging && settings.multiple) {
-                            dragging = true;
-                            //the state of checkbox at the moment of dragging (the first checked)
-                            dragging_state = checked;
-                        }
-
-                        //if is radio, close the list on click
-                        if (!settings.multiple && !settings.autocompleteStyle.enable) {
-                            fn._close(self);
-                            return false;
-                        }
-                    })
-                    //on close match click
-                    .on('click.' + pluginName, 'li.hasCloseMatch', function () {
-                        var str = $(this).find('span.closeMatch').text();
-                        input.val(str).trigger('keyup');
-                    })
-                    .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem', function () {
-                        if (!dragging)
-                            return;
-                        var $this = $(this);
-                        var found = false;
-
-                        //do not click the item twice
-                        for (var i = 0; i < drag_memory.length; i++) {
-                            if ($this.is(drag_memory[i])) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                            $(this).trigger('mousedown');
-                    })
-                    .on('click.' + pluginName, 'a', function (e) {
-                        if (wrapper.hasClass(classes.disabled))
-                            return false;
-
-                        e.stopPropagation();
-
-                        var $this = $(this);
-                        var href = $this.attr('href');
-                        var menuStyle = settings.menuStyle;
-
-                        //if contain an anchor, scroll to that item
-                        if (href !== '#' && /^#/.test(href)) {
-                            var container = menuStyle.scrollSpyContainer;
-                            if (container === 'window')
-                                container = 'body';
-
-                            var target = $(href);
-                            if (!target.length)
+                                dragging = false;
                                 return false;
-
-                            var pos = $(href).offset().top;
-
-                            if (container !== 'body')
-                                pos += $(container).scrollTop();
-
-                            container = $(container);
-
-                            var offsetTop = container.offset().top;
-                            var marginTop = parseInt(container.css('marginTop'));
-
-                            if (container.is('body') && fn._isIE())
-                                container = $('html');
-
-                            container.animate({
-                                scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
-                            },
-                                    menuStyle.scrollSpyAnimationDuration, function () {
-                                        window.setTimeout(function () {
-                                            //deselect all then select the clicked one
-                                            var li = $this.closest('.' + pluginName + '_listItem');
-                                            li.closest('ul').children('li.selected').removeClass('selected');
-                                            li.addClass('selected');
-                                        });
-                                    });
-
-                            return false;
-                        }
-                    })
-                    .on('mousedown.' + pluginName, 'a', function (e) {
-                        e.stopPropagation();
-                        return false;
-                    })
-                    .on('scroll.' + pluginName, function () {
-                        var $this = $(this);
-
-                        //reduce server load
-                        window.clearTimeout(timer);
-                        timer = window.setTimeout(function () {
-                            if (!settings.remote.loadMoreOnScroll)
-                                return;
-
-                            //load more only if the list reach its bottom
-                            if ($this.innerHeight() + $this.scrollTop() + 50 < $this.get(0).scrollHeight)
-                                return;
-
-                            var val = input.val();
-                            var lastRequest = input.data('lastRequest');
-
-                            //fetch only if last request is not empty
-                            if (settings.remote.forceRefresh || !lastRequest || !lastRequest[val] || !lastRequest[val].empty) {
-                                var offset = $this.children('li').not('li.auto-added').length;
-                                //note: do not add selected value otherwise it will create bug
-                                fn._fetchData(self, val, offset);
                             }
-                        }, 500);
-                    })
-                    .on('mousedown.' + pluginName, '.' + pluginName + '_expandable', function () {
-                        var $this = $(this);
-                        //the current group li
-                        var group = $this.parent();
+                        }
 
-                        //already expanded
-                        if ($this.hasClass('expanded'))
-                            fn._collapse(group, settings);
-                        else
-                            fn._expand(group, settings);
+                        fn._update(self);
+                    }
+
+                    //start dragging handling, only the first clicked li can reach here
+                    if (!dragging && settings.multiple) {
+                        dragging = true;
+                        //the state of checkbox at the moment of dragging (the first checked)
+                        dragging_state = checked;
+                    }
+
+                    //if is radio, close the list on click
+                    if (!settings.multiple && !settings.autocompleteStyle.enable) {
+                        fn._close(self);
+                        return false;
+                    }
+                })
+                //on close match click
+                .on('click.' + pluginName, 'li.hasCloseMatch', function () {
+                    var str = $(this).find('span.closeMatch').text();
+                    input.val(str).trigger('keyup');
+                })
+                .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem', function () {
+                    if (!dragging)
+                        return;
+                    var $this = $(this);
+                    var found = false;
+
+                    //do not click the item twice
+                    for (var i = 0; i < drag_memory.length; i++) {
+                        if ($this.is(drag_memory[i])) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        $(this).trigger('mousedown');
+                })
+                .on('click.' + pluginName, 'a', function (e) {
+                    if (wrapper.hasClass(classes.disabled))
+                        return false;
+
+                    e.stopPropagation();
+
+                    var $this = $(this);
+                    var href = $this.attr('href');
+                    var menuStyle = settings.menuStyle;
+
+                    //if contain an anchor, scroll to that item
+                    if (href !== '#' && /^#/.test(href)) {
+                        var container = menuStyle.scrollSpyContainer;
+                        if (container === 'window')
+                            container = 'body';
+
+                        var target = $(href);
+                        if (!target.length)
+                            return false;
+
+                        var pos = $(href).offset().top;
+
+                        if (container !== 'body')
+                            pos += $(container).scrollTop();
+
+                        container = $(container);
+
+                        var offsetTop = container.offset().top;
+                        var marginTop = parseInt(container.css('marginTop'));
+
+                        if (container.is('body') && fn._isIE())
+                            container = $('html');
+
+                        container.animate({
+                            scrollTop: pos - offsetTop + marginTop - menuStyle.scrollSpyOffsetTop
+                        },
+                            menuStyle.scrollSpyAnimationDuration, function () {
+                                window.setTimeout(function () {
+                                    //deselect all then select the clicked one
+                                    var li = $this.closest('.' + pluginName + '_listItem');
+                                    li.closest('ul').children('li.selected').removeClass('selected');
+                                    li.addClass('selected');
+                                });
+                            });
 
                         return false;
-                    })
-                    .on('mousedown.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
-                        var $this = $(this);
-                        //the current group li
-                        var group = $this.is('li') ? $this : $this.parent();
+                    }
+                })
+                .on('mousedown.' + pluginName, 'a', function (e) {
+                    e.stopPropagation();
+                    return false;
+                })
+                .on('scroll.' + pluginName, function () {
+                    var $this = $(this);
 
-                        //already expanded
-                        if ($this.children('.' + pluginName + '_expandable').hasClass('expanded'))
-                            fn._collapse(group, settings);
-                        else
-                            fn._expand(group, settings);
-
-                        return false;
-                    })
-                    .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
-                        if (!settings.autoExpand)
+                    //reduce server load
+                    window.clearTimeout(timer);
+                    timer = window.setTimeout(function () {
+                        if (!settings.remote.loadMoreOnScroll)
                             return;
 
-                        var $this = $(this);
-                        if (!$this.find('.' + pluginName + '_expandable').hasClass('expanded'))
-                            fn._expand($this, settings);
+                        //load more only if the list reach its bottom
+                        if ($this.innerHeight() + $this.scrollTop() + 50 < $this.get(0).scrollHeight)
+                            return;
 
-                        //collapse other li
-                        if (settings.autoCollapse) {
-                            var level = fn._getLevel($this);
-                            var group = $this.siblings('.' + pluginName + '_listItem_group_empty.level' + level);
-                            group.each(function () {
-                                fn._collapse($(this), settings);
-                            });
+                        var val = input.val();
+                        var lastRequest = input.data('lastRequest');
+
+                        //fetch only if last request is not empty
+                        if (settings.remote.forceRefresh || !lastRequest || !lastRequest[val] || !lastRequest[val].empty) {
+                            var offset = $this.children('li').not('li.auto-added').length;
+                            //note: do not add selected value otherwise it will create bug
+                            fn._fetchData(self, val, offset);
                         }
-                    });
+                    }, 500);
+                })
+                .on('mousedown.' + pluginName, '.' + pluginName + '_expandable', function () {
+                    var $this = $(this);
+                    //the current group li
+                    var group = $this.parent();
+
+                    //already expanded
+                    if ($this.hasClass('expanded'))
+                        fn._collapse(group, settings);
+                    else
+                        fn._expand(group, settings);
+
+                    return false;
+                })
+                .on('mousedown.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
+                    var $this = $(this);
+                    //the current group li
+                    var group = $this.is('li') ? $this : $this.parent();
+
+                    //already expanded
+                    if ($this.children('.' + pluginName + '_expandable').hasClass('expanded'))
+                        fn._collapse(group, settings);
+                    else
+                        fn._expand(group, settings);
+
+                    return false;
+                })
+                .on('mouseenter.' + pluginName, '.' + pluginName + '_listItem_group_empty', function () {
+                    if (!settings.autoExpand)
+                        return;
+
+                    var $this = $(this);
+                    if (!$this.find('.' + pluginName + '_expandable').hasClass('expanded'))
+                        fn._expand($this, settings);
+
+                    //collapse other li
+                    if (settings.autoCollapse) {
+                        var level = fn._getLevel($this);
+                        var group = $this.siblings('.' + pluginName + '_listItem_group_empty.level' + level);
+                        group.each(function () {
+                            fn._collapse($(this), settings);
+                        });
+                    }
+                });
 
             wrapper.on('focusin.' + pluginName, function () {
                 if (wrapper.hasClass(classes.disabled))
@@ -1377,135 +1377,135 @@
                 if (!isMobile && !settings.accessibility)
                     window.setTimeout(function () {
                         //if current item is not a form input, default focus to the search
-                        if (!$(document.activeElement).is('input,button'))
+                        if (!$(document.activeElement).is('input,button,select,textarea'))
                             input.focus();
                     });
             })
-                    //blur not triggered in FF
-                    .on('focusout.' + pluginName, function (e) {
-                        if (isMobile || !settings.labelStyle && $(e.target).is($(this)))
-                            return;
+                //blur not triggered in FF
+                .on('focusout.' + pluginName, function (e) {
+                    if (isMobile || !settings.labelStyle && $(e.target).is($(this)))
+                        return;
 
-                        //need to add delay for activeElement to be set
-                        window.setTimeout(function () {
-                            //close list if the active element isn't any child of the wrapper
-                            if (!$(document.activeElement).closest(wrapper).length)
-                                fn._close(self);
-                        }, 20);
-                    })
-                    .on('keydown.' + pluginName, function (e) {
-                        var key = e.keyCode;
-                        //if menustyle or character key, do nothing
-                        if (settings.menuStyle.enable || (!fn._isDirectionalKey(key) && key !== 46))
-                            return;
+                    //need to add delay for activeElement to be set
+                    window.setTimeout(function () {
+                        //close list if the active element isn't any child of the wrapper
+                        if (!$(document.activeElement).closest(wrapper).length)
+                            fn._close(self);
+                    }, 20);
+                })
+                .on('keydown.' + pluginName, function (e) {
+                    var key = e.keyCode;
+                    //if menustyle or character key, do nothing
+                    if (settings.menuStyle.enable || (!fn._isDirectionalKey(key) && key !== 46))
+                        return;
 
-                        var li = ul.children('li:visible');
-                        var current = li.filter('li.over');
-                        var next, index;
+                    var li = ul.children('li:visible');
+                    var current = li.filter('li.over');
+                    var next, index;
 
-                        //up/down
-                        if (key === 40 || key === 38) {
-                            //if no current "over" get the first selected item
-                            if (!current.length)
-                                current = li.filter('li.selected').first();
+                    //up/down
+                    if (key === 40 || key === 38) {
+                        //if no current "over" get the first selected item
+                        if (!current.length)
+                            current = li.filter('li.selected').first();
 
-                            //find the next over item
-                            if (current.length) {
-                                //down
-                                if (key === 40) {
-                                    index = li.index(current.last());
-                                    next = li.eq(index + 1);
-                                }
-                                //up
-                                else {
-                                    index = li.index(current.first());
-                                    next = (index - 1 < 0) ? $() : li.eq(index - 1);
-                                }
+                        //find the next over item
+                        if (current.length) {
+                            //down
+                            if (key === 40) {
+                                index = li.index(current.last());
+                                next = li.eq(index + 1);
                             }
-                            else
-                                next = li.first();
-
-                            //if has the next element
-                            if (next && next.length) {
-                                //if shift is on, do not remove the current item
-                                if (!shift_on)
-                                    ul.children('li.over').removeClass('over');
-                                next.addClass('over');
-
-                                //scroll handling
-                                if (key === 40 && next.position().top + next.height() > ul.height())
-                                    ul.scrollTop(ul.scrollTop() + 50);
-                                else if (key === 38 && next.position().top < 0)
-                                    ul.scrollTop(ul.scrollTop() - 50);
-
-                                if (settings.accessibility)
-                                    next.focus();
-
-                                //autoselect if is single list
-                                if (!settings.multiple && settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery))
-                                    fn._select(self, next, true, true);
-                            }
-
-                            return false;
-                        }
-                        //enter: do not submit form and select item
-                        else if (key === 13) {
-                            //if no selection, (de)select the first visible item
-                            if (!current.length)
-                                current = li.filter(':visible').first();
-
-                            //if the first item is hasCloseMatch, then trigger a search on it
-                            if (current.hasClass('hasCloseMatch')) {
-                                var txt = current.find('span.closeMatch').text();
-                                input.val(txt).trigger('keyup');
-                            }
+                            //up
                             else {
-                                var autoSelect = settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery);
-                                //trigger select only if list multiple or when autoselect is disabled
-                                if (settings.multiple || !autoSelect)
-                                    current.trigger('mousedown').trigger('mouseup');
-                                //single select and no autoselect flag
-                                else
-                                    fn._close(self);
-
-                                input.val(null);
-                                prediction.val(null);
+                                index = li.index(current.first());
+                                next = (index - 1 < 0) ? $() : li.eq(index - 1);
                             }
-
-                            return false;
                         }
-                        //delete
-                        else if (key === 46)
-                            fn._select(self, current, false, true);
-                        //shift
-                        else if (key === 16) {
-                            //activate only in list multiple
-                            if (settings.multiple)
-                                shift_on = true;
-                        }
-                        //if TAB switch to other list then deactivate shift
-                        else if (key === 9)
-                            shift_on = false;
-                    })
-                    .on('keyup.' + pluginName, function (e) {
-                        if (e.keyCode === 16)
-                            shift_on = false;
-                    })
-                    .on('mouseup.' + pluginName, function (e) {
-                        dragging = false;
-                        e.stopPropagation();
-                    })
-                    .on('mousedown.' + pluginName, function (e) {
-                        e.stopPropagation();
+                        else
+                            next = li.first();
 
-                        if (wrapper.hasClass('mobile-style'))
-                            return;
+                        //if has the next element
+                        if (next && next.length) {
+                            //if shift is on, do not remove the current item
+                            if (!shift_on)
+                                ul.children('li.over').removeClass('over');
+                            next.addClass('over');
 
-                        if (settings.labelStyle) {
-                            if (ul.is(':hidden'))
-                                fn._open(self);
+                            //scroll handling
+                            if (key === 40 && next.position().top + next.height() > ul.height())
+                                ul.scrollTop(ul.scrollTop() + 50);
+                            else if (key === 38 && next.position().top < 0)
+                                ul.scrollTop(ul.scrollTop() - 50);
+
+                            if (settings.accessibility)
+                                next.focus();
+
+                            //autoselect if is single list
+                            if (!settings.multiple && settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery))
+                                fn._select(self, next, true, true);
                         }
-                    });
+
+                        return false;
+                    }
+                    //enter: do not submit form and select item
+                    else if (key === 13) {
+                        //if no selection, (de)select the first visible item
+                        if (!current.length)
+                            current = li.filter(':visible').first();
+
+                        //if the first item is hasCloseMatch, then trigger a search on it
+                        if (current.hasClass('hasCloseMatch')) {
+                            var txt = current.find('span.closeMatch').text();
+                            input.val(txt).trigger('keyup');
+                        }
+                        else {
+                            var autoSelect = settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery);
+                            //trigger select only if list multiple or when autoselect is disabled
+                            if (settings.multiple || !autoSelect)
+                                current.trigger('mousedown').trigger('mouseup');
+                            //single select and no autoselect flag
+                            else
+                                fn._close(self);
+
+                            input.val(null);
+                            prediction.val(null);
+                        }
+
+                        return false;
+                    }
+                    //delete
+                    else if (key === 46)
+                        fn._select(self, current, false, true);
+                    //shift
+                    else if (key === 16) {
+                        //activate only in list multiple
+                        if (settings.multiple)
+                            shift_on = true;
+                    }
+                    //if TAB switch to other list then deactivate shift
+                    else if (key === 9)
+                        shift_on = false;
+                })
+                .on('keyup.' + pluginName, function (e) {
+                    if (e.keyCode === 16)
+                        shift_on = false;
+                })
+                .on('mouseup.' + pluginName, function (e) {
+                    dragging = false;
+                    e.stopPropagation();
+                })
+                .on('mousedown.' + pluginName, function (e) {
+                    e.stopPropagation();
+
+                    if (wrapper.hasClass('mobile-style'))
+                        return;
+
+                    if (settings.labelStyle) {
+                        if (ul.is(':hidden'))
+                            fn._open(self);
+                    }
+                });
 
             removeAll.on('mousedown.' + pluginName, function () {
                 if (wrapper.hasClass(classes.disabled))
@@ -1536,11 +1536,11 @@
                     window.clearTimeout(timeout);
                     fn._open(self);
                 })
-                        .on('mouseleave.' + pluginName, function () {
-                            timeout = window.setTimeout(function () {
-                                fn._close(self);
-                            }, 500);
-                        });
+                    .on('mouseleave.' + pluginName, function () {
+                        timeout = window.setTimeout(function () {
+                            fn._close(self);
+                        }, 500);
+                    });
             }
 
             if (close)
@@ -1677,8 +1677,8 @@
                 top: 'auto',
                 left: 'auto'
             })
-                    .prependTo(elements.wrapper)
-                    .removeClass(pluginName + '_absolute');
+                .prependTo(elements.wrapper)
+                .removeClass(pluginName + '_absolute');
         },
         _movePopupAway: function (elements) {
             if (!elements.popup)
@@ -1686,11 +1686,11 @@
 
             var offset = elements.wrapper.offset();
             elements.popup.addClass(pluginName + '_absolute')
-                    .appendTo('body')
-                    .css({
-                        top: offset.top - elements.popup.height() - 25,
-                        left: offset.left
-                    });
+                .appendTo('body')
+                .css({
+                    top: offset.top - elements.popup.height() - 25,
+                    left: offset.left
+                });
         },
         //fetch date from remote source
         _fetchData: function (obj, val, offset, selected) {
@@ -1812,7 +1812,7 @@
                     $(this).data(original.eq(k).data());
                 });
         },
-        _select: function(obj, li, state, triggerEvent) {
+        _select: function (obj, li, state, triggerEvent) {
             var data = obj.data(pluginName);
             if (!data)
                 return;
@@ -2009,8 +2009,7 @@
             }
 
             //update result
-            if (!settings.menuStyle.enable)
-            {
+            if (!settings.menuStyle.enable) {
                 var text;
                 if (val.length) {
                     text = settings.textAllSelected && settings.multiple && selectAll && count > 1 && !settings.remote.source && !settings.remote.fnQuery ? settings.textAllSelected : val.join(', ');
@@ -2121,8 +2120,7 @@
                 //but being above should stay inside the screen
                 //we should also take the widgets into account too
                 if (offset.top + fullHeight > $window.scrollTop() + $window.height()
-                        && offset.top - fullHeight > 0 && (-fullHeight - 1 > 0))
-                {
+                    && offset.top - fullHeight > 0 && (-fullHeight - 1 > 0)) {
                     list.css({
                         top: -fullHeight - 1
                     });
@@ -2135,8 +2133,7 @@
 
                     shouldPopupHidden = true;
                 }
-                else
-                {
+                else {
                     //minus border
                     list.css({
                         top: -1
@@ -2147,9 +2144,9 @@
                 if (settings.absolutePosition) {
                     //create dummy element to fill up space
                     $('<div></div>').attr('class', pluginName + '_dummy ' + classes.wrapper)
-                            .width(wrapper.width())
-                            .height(wrapper.height())
-                            .insertAfter(obj);
+                        .width(wrapper.width())
+                        .height(wrapper.height())
+                        .insertAfter(obj);
 
                     //move the list so the absolute position can become effective
                     wrapper.addClass(pluginName + '_absolute').appendTo('body').css({
@@ -2351,9 +2348,9 @@
                 //ignore empty value item
                 if (!settings.multiple && $this.hasClass(pluginName + '_listItem_group_empty'))
                     return;
-                
+
                 val.push(txt);
-                
+
                 //break the loop if is single select
                 if (!settings.multiple)
                     return false;
@@ -2794,7 +2791,7 @@
                 //level 0
                 else if (settings.collapseGroup)
                     px += 11;
-                
+
                 //if is a group
                 var style = e.style ? [e.style] : [];
                 if (isGroup) {   //group
@@ -2935,7 +2932,7 @@
 
             //keep items which is order locked in a different array
             var fixed = [], i;
-            for (i = json.length; i--; ) {
+            for (i = json.length; i--;) {
                 if (!json[i].orderLocked)
                     continue;
 
@@ -3203,10 +3200,10 @@
                         position: 'fixed',
                         top: top - container_scroll
                     })
-                            .animate({
-                                top: menuStyle.fixedPositionOffsetTop + container_pos
-                            },
-                                    'fast');
+                        .animate({
+                            top: menuStyle.fixedPositionOffsetTop + container_pos
+                        },
+                            'fast');
 
                     placeholder = $('<div>').attr('class', pluginName + '_menustyle_placeholder').css({
                         width: wrapper.outerWidth(),
