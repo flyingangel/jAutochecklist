@@ -2150,7 +2150,7 @@
 
                     //move the list so the absolute position can become effective
                     wrapper.addClass(pluginName + '_absolute').appendTo('body').css({
-                        top: offset.top + 3,
+                        top: offset.top,
                         left: offset.left
                     });
 
@@ -2194,10 +2194,12 @@
                     settings.animation ? elements.popup.fadeIn() : elements.popup.show();
 
                 //set focus on input
-                if (settings.labelStyle)
-                    elements.wrapper.focus();
-                else
+                if (elements.input && elements.input.is(':visible')) {
                     elements.input.focus();
+                } else {
+                    //case label style
+                    elements.wrapper.focus();
+                }
             }
 
             //trigger keyup if remote source enable

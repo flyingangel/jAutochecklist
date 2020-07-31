@@ -1,4 +1,4 @@
-/*jAutochecklist CSS v1.3.3*/
+/*jAutochecklist CSS v1.4.2*/
 
 @import url(theme.css);
 .jAutochecklist_wrapper {
@@ -15,40 +15,16 @@
     border-top-right-radius: 3px;
     text-align: left;
     box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    background: rgb(255, 255, 255);
-    /* Old browsers */
-    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* IE10+ */
     background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7', GradientType=0);
-    /* IE6-9 */
     min-width: 20px;
 }
 
 .jAutochecklist_wrapper * {
     box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 .jAutochecklist_active {
-    background: rgb(247, 247, 247);
-    /* Old browsers */
-    background: -webkit-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* IE10+ */
     background: linear-gradient(to bottom, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ffffff', GradientType=0);
-    /* IE6-9 */
 }
 
 .jAutochecklist_popup {
@@ -202,7 +178,6 @@
 
 .jAutochecklist_dropdown .jAutochecklist_prediction {
     opacity: 0.3;
-    filter: alpha(opacity=30);
 }
 
 .jAutochecklist_dropdown input.fakeHidden {
@@ -214,7 +189,6 @@
     opacity: 0;
     min-width: 0;
     min-height: 0;
-    filter: alpha(opacity=0);
 }
 
 .jAutochecklist_dropdown input.loading {
@@ -229,18 +203,7 @@
 }
 
 .jAutochecklist_arrow:hover {
-    background: rgb(247, 247, 247);
-    /* Old browsers */
-    background: -webkit-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* IE10+ */
     background: linear-gradient(to bottom, rgba(247, 247, 247, 1) 0%, rgba(255, 255, 255, 1) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ffffff', GradientType=0);
-    /* IE6-9 */
 }
 
 .jAutochecklist_arrow div {
@@ -270,8 +233,6 @@
     text-shadow: 1px 1px white;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
-    background: white;
-    /*old browsers*/
     background: rgba(255, 255, 255, 0.95);
     min-width: 100%;
 }
@@ -310,30 +271,14 @@
     line-height: 22px;
     min-height: 22px;
     padding: 0 5px;
-    -moz-user-select: none;
-    /*only FF has selection bug*/
-    background: rgb(255, 255, 255);
-    /* Old browsers */
-    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* IE10+ */
+    user-select: none;
     background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7', GradientType=1);
-    /* IE6-9 */
     clear: both;
 }
 
 .jAutochecklist_listItem:hover {
     text-shadow: 1px 1px #fff;
-    background: rgb(240, 240, 240);
-    /*old browsers*/
     background: rgba(240, 240, 240, 0.8);
-    filter: none;
-    /*Disable filter for IE6-9*/
 }
 
 .jAutochecklist_list .over {
@@ -347,19 +292,7 @@
 .jAutochecklist_list .selected {
     color: white;
     text-shadow: 1px 1px #888;
-    background: rgb(85, 161, 237);
-    /*old browsers*/
-    background: rgba(85, 161, 237, 0.8);
-    background: -webkit-linear-gradient(left, rgba(153, 204, 255, 0.8) 0%, rgba(85, 161, 237, 0.8) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgba(153, 204, 255, 0.8) 0%, rgba(85, 161, 237, 0.8) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgba(153, 204, 255, 0.8) 0%, rgba(85, 161, 237, 0.8) 100%);
-    /* IE10+ */
     background: linear-gradient(to right, rgba(153, 204, 255, 0.8) 0%, rgba(85, 161, 237, 0.8) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc99ccff', endColorstr='#cc55a1ed', GradientType=1);
-    /* IE6-9 */
 }
 
 .jAutochecklist_listItem>a {
@@ -396,8 +329,6 @@
 
 .jAutochecklist_list .locked .jAutochecklist_listItem_input, .jAutochecklist_list .blocked .jAutochecklist_listItem_input, .jAutochecklist_list .maxBlocked .jAutochecklist_listItem_input {
     opacity: 0;
-    filter: alpha(opacity=0);
-    /* For IE8 and earlier */
 }
 
 .jAutochecklist_list .jAutochecklist_listItem_input {
@@ -526,7 +457,6 @@
 .jAutochecklist_absolute {
     position: absolute;
     z-index: 9999;
-    filter: none;
 }
 
 .jAutochecklist_popup.jAutochecklist_absolute {
@@ -579,18 +509,7 @@
     cursor: default;
     color: cornflowerblue;
     text-shadow: none;
-    background: rgb(255, 255, 255);
-    /* Old browsers */
-    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* IE10+ */
     background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(247, 247, 247, 1) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7', GradientType=1);
-    /* IE6-9 */
 }
 
 .jAutochecklist_widget {
@@ -728,7 +647,6 @@
 
 .mobile-style * {
     background-color: white;
-    filter: none;
     text-shadow: none;
     box-shadow: none;
 }
@@ -767,7 +685,6 @@
 .mobile-style .jAutochecklist_listItem {
     background: white;
     line-height: 50px;
-    filter: none;
 }
 
 .mobile-style .jAutochecklist_listItem:hover {

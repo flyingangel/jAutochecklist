@@ -12,11 +12,12 @@
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-uglify": "^4.0.1",
-    "jquery": "^1.7.2"
+    "jquery": "*"
   },
   "dependencies": {},
   "scripts": {
-    "test": "grunt test"
+    "verify": "grunt verify",
+    "build": "grunt build"
   },
   "repository": {
     "type": "git",
