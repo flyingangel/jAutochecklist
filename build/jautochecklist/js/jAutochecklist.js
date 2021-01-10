@@ -1,5 +1,5 @@
 /* jQuery plugin : jAutochecklist
- @Version: 1.4
+ @Version: 1.4.1
  @Desctrition: Create a list of checkbox with autocomplete
  @Website: https://github.com/flyingangel/jAutochecklist
  @Licence: MIT
@@ -199,8 +199,7 @@
                     return;
 
                 //clone the config setting
-                var settings = $.extend(true, {
-                }, config);
+                var settings = $.extend(true, {}, config);
 
                 //bind the current list
                 settings.originalObject = this;
@@ -902,7 +901,7 @@
                     if (delay > 3000)
                         delay = 3000;
 
-                    if (remote.source || remote.fnQuery)
+                    if (fn._isRemote(self))
                         delay = remote.delay;
 
                     //clear the previous timer
@@ -933,7 +932,7 @@
                         }
 
                         //if remote, replace the current list with new data
-                        if (remote.source || remote.fnQuery) {
+                        if (fn._isRemote(self)) {
                             var cache = $this.data('remote');
 
                             //if text length < minLength do nothing
@@ -1442,7 +1441,7 @@
                                 next.focus();
 
                             //autoselect if is single list
-                            if (!settings.multiple && settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery))
+                            if (!settings.multiple && settings.keyboardAutoSelect && !fn._isRemote(self))
                                 fn._select(self, next, true, true);
                         }
 
@@ -1460,7 +1459,7 @@
                             input.val(txt).trigger('keyup');
                         }
                         else {
-                            var autoSelect = settings.keyboardAutoSelect && !(settings.remote.source || settings.remote.fnQuery);
+                            var autoSelect = settings.keyboardAutoSelect && !fn._isRemote(self);
                             //trigger select only if list multiple or when autoselect is disabled
                             if (settings.multiple || !autoSelect)
                                 current.trigger('mousedown').trigger('mouseup');
@@ -1780,7 +1779,7 @@
 
             //if using remote source, check if there is any error
             var hasError = false;
-            if (settings.remote.source || settings.remote.fnQuery)
+            if (fn._isRemote(obj))
                 hasError = ul.children('li.isError').length > 0;
 
             if (!hasError) {
@@ -2109,6 +2108,15 @@
             if (isMobile) {
                 wrapper.addClass('mobile-style');
                 list.show();
+
+                //set focus on input in case of remote search
+                if (fn._isRemote(obj)) {
+                    if (elements.input && elements.input.is(':visible')) {
+                        elements.input.focus();
+                    } else {
+                        elements.wrapper.focus();
+                    }
+                }
             }
             else {
                 var offset = wrapper.offset();
@@ -2177,7 +2185,7 @@
                     //set a fix width for the wrapper
                     wrapper.width(wrapper.outerWidth() + 1);
                     //set input width if using remote
-                    if (settings.remote.source || settings.remote.fnQuery)
+                    if (fn._isRemote(obj))
                         elements.input.add(elements.prediction).width(list.outerWidth() - 22);
                 }
 
@@ -2203,7 +2211,7 @@
             }
 
             //trigger keyup if remote source enable
-            if ((triggerSearch === true || triggerSearch === undefined) && (settings.remote.source || settings.remote.fnQuery))
+            if ((triggerSearch === true || triggerSearch === undefined) && fn._isRemote(obj))
                 elements.input.trigger('keyup');
 
             //autoscroll to item
@@ -3827,6 +3835,15 @@
                     left: offset.left
                 });
             }
+        },
+        _isRemote: function (obj) {
+            var data = obj.data(pluginName);
+
+            if (!data) {
+                return false;
+            }
+
+            return data.settings.remote.source || data.settings.remote.fnQuery;
         }
     };
 
